@@ -8,6 +8,11 @@ import Resource from './routes/Resource/Resource';
 import Settlement from './routes/Settlement/Settlement';
 import Bills from './routes/Bills/Bills';
 import Manage from './routes/Manage/Manage';
+import CustomerBills from './routes/CustomerBills/CustomerBills';
+import SupplierBills from './routes/SupplierBills/SupplierBills';
+import Customers from './routes/Customers/Customers';
+import Products from './routes/Products/Products';
+import Suppliers from './routes/Suppliers/Suppliers';
 
 function RouterConfig({ history }) {
   return (
@@ -19,7 +24,16 @@ function RouterConfig({ history }) {
         <Route path="/resource" component={Resource} />
         <Route path="/settlement" component={Settlement} />
         <Route path="/bills" component={Bills} />
+        <Route component={Bills}>
+          <Route path="/customerBills" component={CustomerBills} />
+          <Route path="/supplierBills" component={SupplierBills} />
+        </Route>
         <Route path="/manage" component={Manage} />
+        <Route component={Manage}>
+          <Route path="/customer" component={Customers} />
+          <Route path="/product" component={Products} />
+          <Route path="/supplier" component={Suppliers} />
+        </Route>
       </Route>
     </Router>
   );

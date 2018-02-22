@@ -1,7 +1,8 @@
 import React from 'react';
+import {Link} from 'dva/router';
 import { Menu, Icon, Button } from 'antd';
 
-import { header, menuList } from './index.css';
+import { header, menuList, link } from './index.css';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -29,31 +30,55 @@ export default class Header extends React.Component {
     ],
   ]
 
+  constructor(props) {
+		super(props);
+		this.state = {
+			activeKeys: 'index'
+		};
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {pathname} = nextProps.location;
+    this.setState({
+      activeKeys:pathname.slice(1)
+    })
+  }
+
+
   render() {
+    const {activeKeys} = this.state;
     return (
       <div className={header}>
         <Menu
           defaultSelectedKeys={['index']}
+          selectedKeys={[activeKeys]}
           mode="inline"
           theme="dark"
           className={menuList}
         >
           {
             this.menus.map(([key, text, path, icon, subItem]) => {
-              console.log(subItem);
               if (subItem) {
                 return (
                   <SubMenu key={key} title={<span><Icon type={icon} /><span>{text}</span></span>}>
                     {
                       subItem.map(([key, text, path, icon]) => (
-                        <MenuItem key={key}>{text}</MenuItem>
+                        <MenuItem key={key}>
+                          <Link to={path} className={link}>
+                            {<span><Icon type={icon} /><span>{text}</span></span>}
+                          </Link>
+                        </MenuItem>
                       ))
                     }
                   </SubMenu>
                 )
               } else {
                 return (
-                  <MenuItem key={key}>{text}</MenuItem>
+                  <MenuItem key={key}>
+                    <Link to={path} className={link}>
+                      {<span><Icon type={icon} /><span>{text}</span></span>}
+                    </Link>
+                  </MenuItem>
                 )
               }
             })

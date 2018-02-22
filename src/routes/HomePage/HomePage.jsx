@@ -5,10 +5,10 @@ import { homePage, container, left, right } from './index.css';
 export default class IndexPage extends React.Component {
 
   render() {
-    const { children } = this.props;
+    const { children,location } = this.props;
     return (
       <div className={homePage}>
-        <Header />
+        <Header location={location}/>
         <div className={container}>
           {children}
         </div>
