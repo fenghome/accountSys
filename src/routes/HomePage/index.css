@@ -1,0 +1,15 @@
+.homePage {
+  display: flex;
+  flex-direction: row;
+  height:100%;
+  padding-top:64px;
+  background-color:#ececec;
+}
+
+.container {
+  position: relative;
+  box-sizing: border-box;
+  margin-left: 300px;
+  padding:25px;
+  border:1px solid red;
+}
