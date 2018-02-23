@@ -1,0 +1,30 @@
+.systemInfo {
+  position: fixed;
+  top:0;
+  left:300px;
+  right:0;
+  z-index: 999;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height:64px;
+  line-height: 64px;
+  padding:0 25px;
+  box-shadow: 0 1px 5px rgba(0,0,0,.2);
+  background-color: #fafafa;
+}
+
+.systemName {
+  color: #4a4a4a;
+  font-size: 18px;
+}
+.userName {
+  margin-right:10px;
+}
+
+.loginButton,
+.logupButton,
+.logoutButton {
+    cursor: pointer;
+    margin-right: 10px;
+}

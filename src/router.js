@@ -18,7 +18,7 @@ function RouterConfig({ history }) {
   return (
     <Router history={history}>
       <Route path="/" component={HomePage} >
-        <IndexRoute component={IndexPage} />
+        <Route path="/index" component={IndexPage} />
         <Route path="/orders" component={Orders} />
         <Route path="/storage" component={Storage} />
         <Route path="/resource" component={Resource} />

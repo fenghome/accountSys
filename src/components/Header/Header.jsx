@@ -10,7 +10,7 @@ const SubMenu = Menu.SubMenu;
 export default class Header extends React.Component {
 
   menus = [
-    ['index', '首页', '/', 'home'],
+    ['index', '首页', '/index', 'home'],
     ['orders', '订单', '/orders', 'solution'],
     ['storage', '入库', '/storage', 'database'],
     ['resource', '物资', '/resource', 'layout'],
