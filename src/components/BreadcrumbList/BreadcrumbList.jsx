@@ -8,7 +8,7 @@ export default function BreadcrumbList({ breadcrumbItems }) {
         <Breadcrumb className={breadcrmb}>
             {
                 breadcrumbItems.map(([text, path], index) => (
-                    <Breadcrumb.Item>
+                    <Breadcrumb.Item key={index}>
                         <Link to={path}>
                             {text}
                         </Link>

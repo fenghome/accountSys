@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
+import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
 import { orderContainer } from './index.css';
 
 class Orders extends Component {
@@ -13,20 +14,13 @@ class Orders extends Component {
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
         {
-          (pageType == 'show') && (
-            <div class={orderContainer}>
+          pageType == 'show' && (
+            <div className={orderContainer}>
+              <OrderSearchBar />
             </div>
           )
 
-          (pageType == 'add') && (
-            <div class={orderContainer}>
-            </div>
-          )
 
-          (pageType == 'edit') && (
-            <div class={orderContainer}>
-            </div>
-          )
 
         }
       </div>
