@@ -1,13 +1,60 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Modal } from 'antd';
+import LogupModal from '../LogupModal/LogupModal';
+import LoginModal from '../LoginModal/LoginModal';
 
 import { systemInfo, systemName, userName, loginButton, logupButton, logoutButton } from './index.css';
 
-function SystemInfo({systemUser}) {
+function SystemInfo({dispatch,systemUser}) {
 
-  const {isLogin,username} = systemUser;
+  const {isLogin,username,logupModalVisible,loginModalVisible} = systemUser;
 
+  function showLogupModal(){
+    dispatch({
+      type:'systemUser/showLogupModal'
+    })
+  }
+
+  function hideLogupModal(){
+    dispatch({
+      type:'systemUser/hideLogupModal'
+    })
+  }
+
+  function showLoginModal(){
+    dispatch({
+      type:'systemUser/showLoginModal'
+    })
+  }
+
+  function hideLoginModal(){
+    dispatch({
+      type:'systemUser/hideLoginModal'
+    })
+  }
+
+  function doLogup(userInfo){
+    dispatch({
+      type:'systemUser/doLogup',
+      payload:userInfo
+    });
+    hideLogupModal();
+  }
+
+  function doLogin(userInfo){
+    dispatch({
+      type:'systemUser/doLogin',
+      payload:userInfo
+    });
+    hideLoginModal();
+  }
+
+  function doLogout(){
+    dispatch({
+      type:'systemUser/logout'
+    });
+  }
 
   return (
     <div className={systemInfo}>
@@ -15,19 +62,20 @@ function SystemInfo({systemUser}) {
       {
         isLogin?
         (
-          <div className={userName}>
-            <span>欢迎您{username}</span>
-            <span className={logoutButton}>退出</span>
+          <div>
+            <span className={userName}>欢迎您{username}</span>
+            <span className={logoutButton} onClick={doLogout}>退出</span>
           </div>
         ):
         (
-          <div className={userName}>
-            <span className={loginButton}>登录</span>
-            <span className={logupButton}>注册</span>
+          <div>
+            <span className={loginButton} onClick={showLoginModal}>登录</span>
+            <span className={logupButton} onClick={showLogupModal}>注册</span>
           </div>
         )
       }
-
+      <LogupModal visible={logupModalVisible} onConfirm={doLogup} onCancel={hideLogupModal} />
+      <LoginModal visible={loginModalVisible} onConfirm={doLogin} onCancel={hideLogupModal} />
     </div>
   )
 }
