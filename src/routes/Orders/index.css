@@ -2,3 +2,9 @@
     padding:20px 25px 100px;
     background: #fff;
 }
+.orderBar {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
