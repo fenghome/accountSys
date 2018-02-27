@@ -3,7 +3,7 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({orders}) {
+function OrderList({orders,onModify,onDelete,onDetails}) {
 
   function onDelete(value){
     console.log(value);
@@ -53,37 +53,17 @@ function OrderList({orders}) {
     key:'operation',
     render: (text, record) => (
       <p>
-        <a>编辑</a>
+        <a onClick={()=>{onModify(record['_id'])}}>编辑</a>
         <Divider type="vertical" />
         <Popconfirm title="确定要删除记录？" onConfirm={()=>{onDelete(record['_id'])}}  okText="确定" cancelText="取消">
           <a>删除</a>
         </Popconfirm>
         <Divider type="vertical" />
-        <a>详情</a>
+        <a onClick={()=>{onDetails(record['_id'])}}>详情</a>
       </p>
     )
   }];
 
-  const data = [
-    {
-      serialNumber: '1',
-      createInstance:'2018-02-27' ,
-      orderNumber:'MDC201802270133',
-      customerName:'zs',
-      totalAmount:0,
-      paymentAmount:0,
-      mem:'ssss'
-    },
-    {
-      serialNumber: '2',
-      createInstance:'2018-02-27' ,
-      orderNumber:'MDC201802270134',
-      customerName:'zas',
-      totalAmount:0,
-      paymentAmount:0,
-      mem:'ssss'
-    }
-];
 
   // rowSelection object indicates the need for row selection
   const rowSelection = {

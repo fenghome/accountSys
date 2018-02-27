@@ -9,12 +9,12 @@ export default {
       ['首页', '/index'],
       ['订单', '/orders']
     ],
-    orders,
+    orders: [],
     customers: [
       { _id: 1, customerName: 'zs' },
       { _id: 2, customerName: 'zsaa' },
     ],
-		productList:[]
+    productList: []
   },
 
   subscriptions: {
@@ -23,67 +23,66 @@ export default {
         if (pathname === '/orders') {
           dispatch({
             type: 'changePageType',
-            payload:'show'
+            payload: 'show'
           });
-          dispatch({type:'getOrders'})
+          dispatch({ type: 'getOrders' })
         }
       });
     },
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {  // eslint-disable-line
-      yield put({ type: 'save' });
-    },
-    *getOrders({payload},{call,put}){
+    *getOrders({ payload }, { call, put }) {
       //访问service获得orders
-      const orders =[
+      const orders = [
         {
           serialNumber: '1',
-          createInstance:'2018-02-27' ,
-          orderNumber:'MDC201802270133',
-          customerName:'zs',
-          totalAmount:0,
-          paymentAmount:0,
-          mem:'ssss'
+          createInstance: '2018-02-27',
+          orderNumber: 'MDC201802270133',
+          customerName: 'zs',
+          totalAmount: '0',
+          paymentAmount: 0,
+          mem: 'ssss'
         },
         {
           serialNumber: '2',
-          createInstance:'2018-02-27' ,
-          orderNumber:'MDC201802270134',
-          customerName:'zas',
-          totalAmount:0,
-          paymentAmount:0,
-          mem:'ssss'
+          createInstance: '2018-02-27',
+          orderNumber: 'MDC201802270134',
+          customerName: 'zas',
+          totalAmount: 0,
+          paymentAmount: 0,
+          mem: 'ssss'
         }
       ];
-      yield puyt({
-        type:'getOrdersSuccess',
-        payload:orders
+      yield put({
+        type: 'getOrdersSuccess',
+        payload: orders
       })
     },
-    *getProducts({payload},{call,put}){
+    *getProducts({ payload }, { call, put }) {
 
+    },
+    *gitOrderNumber({payload},{call,put}){
+      const {data} = yield call(getOrderNumber,{});
+      if(data && data.success){
+        yield put({
+          type:'getOrderNumberSuccess',
+          payload:{
+            pageType:'add',
+          }
+        })
+      }
     }
   },
 
   reducers: {
-    getOrdersSuccess(state,{ payload:orders }){
+    getOrdersSuccess(state, { payload: orders }) {
+      return { ...state, orders }
 
     },
-    changePageType(state, { payload: pageType }) {
-      const breadcrumbItems = [
-        ['首页', '/index'],
-        ['订单', '/orders']
-      ];
-      if (pageType === 'add') {
-        breadcrumbItems.push(['新增订单', '/orders/addorder']);
-      }
-      if (pageType === 'edit') {
-        breadcrumbItems.push(['修改订单', '/orders/modifyorder']);
-      }
-      return { ...state, pageType, breadcrumbItems };
-    },
+    getOrderNumberSuccess(state,action){
+
+    }
   },
 
 };

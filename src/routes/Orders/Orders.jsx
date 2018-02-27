@@ -17,14 +17,30 @@ class Orders extends Component {
   onAdd = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'orders/changePageType',
-      payload: 'add'
-    })
+      type: 'orders/getOrderNumber'
+    });
+  }
+  onDetails = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'orders/changePageType',
+      payload:'details'
+    });
+  }
+  onModify = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'orders/changePageType',
+      payload:'modify'
+    });
+  }
+
+  onDelete = () => {
+
   }
 
   render() {
-    const { orders: { pageType, breadcrumbItems, customers } } = this.props;
-
+    const { orders: { pageType, breadcrumbItems, customers, orders } } = this.props;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
@@ -35,7 +51,12 @@ class Orders extends Component {
                 <OrderSearchBar customers={customers} onSearch={this.onSearch} />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
-              <OrderList />
+              <OrderList
+                orders={orders}
+                onModify={this.onModify}
+                onDelete={this.onDelete}
+                onDetails={this.onDetails}
+              />
             </div>
           )
         }
