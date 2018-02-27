@@ -4,6 +4,7 @@ import { Button } from 'antd';
 
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
+import OrderList from '../../components/Orders/OrderList/OrderList';
 import { orderContainer, orderBar } from './index.css';
 
 class Orders extends Component {
@@ -34,6 +35,7 @@ class Orders extends Component {
                 <OrderSearchBar customers={customers} onSearch={this.onSearch} />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
+              <OrderList />
             </div>
           )
         }
