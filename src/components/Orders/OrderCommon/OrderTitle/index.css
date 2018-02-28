@@ -1,0 +1,10 @@
+.orderTitle {
+  height:80px;
+  line-height: 80px;
+  border-bottom:2px solid red;
+  text-align: center;
+}
+
+.orderNumber {
+  float:right;
+}

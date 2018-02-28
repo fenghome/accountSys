@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
 import OrderList from '../../components/Orders/OrderList/OrderList';
+import AddOrder from '../../components/Orders/OrderCommon/OrderTitle/OrderTitle';
 import { orderContainer, orderBar } from './index.css';
 
 class Orders extends Component {
@@ -20,19 +21,12 @@ class Orders extends Component {
       type: 'orders/getOrderNumber'
     });
   }
+
   onDetails = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type:'orders/changePageType',
-      payload:'details'
-    });
+
   }
   onModify = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type:'orders/changePageType',
-      payload:'modify'
-    });
+
   }
 
   onDelete = () => {
@@ -63,7 +57,9 @@ class Orders extends Component {
         {
           pageType == 'add' && (
             <div className={orderContainer}>
-              <div>add</div>
+              <div>
+                <AddOrder />
+              </div>
             </div>
           )
         }
