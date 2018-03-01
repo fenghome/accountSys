@@ -116,7 +116,7 @@ export default {
         payload: {
           pageType: 'add',
           sequence: 'sequence',
-          orderNumber: 'orderNumber'
+          orderNumber: 'MDC201803010133'
         }
       })
       // }

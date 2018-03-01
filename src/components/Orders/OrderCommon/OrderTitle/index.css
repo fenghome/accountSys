@@ -1,10 +1,14 @@
 .orderTitle {
-  height:80px;
-  line-height: 80px;
-  border-bottom:2px solid red;
+  height:40px;
+  line-height: 40px;
+  padding-top:20px;
+  border-bottom:2px solid #979797;
   text-align: center;
+  font-size: 18px;
 }
 
 .orderNumber {
   float:right;
+  font-size: 14px;
+  color: #9b9b9b;
 }
