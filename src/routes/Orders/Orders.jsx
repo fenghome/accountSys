@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
 import OrderList from '../../components/Orders/OrderList/OrderList';
-import AddOrder from '../../components/Orders/OrderCommon/OrderTitle/OrderTitle';
+import AddOrder from '../../components/Orders/AddOrder/AddOrder';
 import { orderContainer, orderBar } from './index.css';
 
 class Orders extends Component {
@@ -59,7 +59,7 @@ class Orders extends Component {
           pageType == 'add' && (
             <div className={orderContainer}>
               <div>
-                <AddOrder number={orderNumber}/>
+                <AddOrder number={orderNumber} customers={customers}/>
               </div>
             </div>
           )

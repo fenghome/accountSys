@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { orderTitle, orderNumber } from './index.css';
-export default function OrderTitle({title,number}){
+export default function OrderTitle({number}){
   return (
     <div className={orderTitle}>
-      {title}
+      门窗出货单
       <div className={orderNumber}>
         {number}
       </div>
