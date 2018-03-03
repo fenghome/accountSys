@@ -34,8 +34,8 @@ class Orders extends Component {
   }
 
   render() {
-    const { orders: { pageType, breadcrumbItems, customers, orders, order } } = this.props;
-    const {orderNumber} = order;
+    const { pageType, breadcrumbItems, customers, orders, order, productList } = this.props.orders;
+    const { orderNumber } = order;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
@@ -59,7 +59,7 @@ class Orders extends Component {
           pageType == 'add' && (
             <div className={orderContainer}>
               <div>
-                <AddOrder number={orderNumber} customers={customers}/>
+                <AddOrder number={orderNumber} customers={customers} productList={productList} />
               </div>
             </div>
           )

@@ -34,10 +34,7 @@ export default {
     pageType: 'show', //show,edit,add
     breadcrumbItems: [],
     orders: [],
-    customers: [
-      { _id: 1, customerName: 'zs' },
-      { _id: 2, customerName: 'zsaa' },
-    ],
+    customers: [],
     productList: [],
     order: { ...defaultOrder }
   },
