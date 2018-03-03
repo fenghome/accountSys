@@ -1,4 +1,11 @@
-.select {
+.listEditCell{
+  float:right;
+}
+.selectClass,
+.textClass
+{
+  display:inline-block;
   width:150px;
+  text-align: right;
   margin-right:10px;
 }

@@ -29,12 +29,14 @@ class OrderGrid extends React.Component {
         title: '序号',
         dataIndex: 'serialNumber',
         key: 'serialNumber',
+        width:'10%',
         render: (text, record, index) => <span>{index + 1}</span>
       },
       {
         title: '操作',
         dataIndex: 'operation',
         key: 'operation',
+        width:'20%',
         render: (text, record, index) => (
           <span>
             <a onClick={this.onAddRow}><Icon type="plus" /></a>
@@ -47,6 +49,7 @@ class OrderGrid extends React.Component {
         title: '商品名称',
         dataIndex: 'productName',
         key: 'productName',
+        width:'20%',
         render: (text, record, index) => (
 
           <ListEditCell

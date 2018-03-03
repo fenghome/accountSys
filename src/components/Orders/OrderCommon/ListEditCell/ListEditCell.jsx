@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, Select } from 'antd';
-import { select } from './index.css';
+import { selectClass, textClass } from './index.css';
 const Option = Select.Option;
 
 
@@ -44,7 +44,7 @@ class ListEditCell extends React.Component {
     return (
       modifyState ?
         <div>
-          <Select className={select} onChange={this.onChange}>
+          <Select className={selectClass} onChange={this.onChange}>
             {
               productList.map((item, index) => (
                 <Option key={index} value={item._id}>{item.productName}</Option>
@@ -54,10 +54,10 @@ class ListEditCell extends React.Component {
           <Icon type="check" onClick={this.onSelect} />
         </div>
         :
-        <span>
-          {productName}
+        <div>
+          <span className={textClass}>{productName}</span>
           <Icon type="edit" onClick={this.changeModifyState} />
-        </span>
+        </div>
     )
   }
 
