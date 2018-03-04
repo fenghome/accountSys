@@ -85,8 +85,8 @@ export default {
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
       const productList = [
-        { '_id': 1, productName: 'zss' },
-        { '_id': 2, productName: 'ls' },
+        { '_id': 1, productName: 'zss' ,productUnit:'个'},
+        { '_id': 2, productName: 'ls' ,productUnit:'台'},
       ];
       yield put({
         type: 'getProductListSuccess',

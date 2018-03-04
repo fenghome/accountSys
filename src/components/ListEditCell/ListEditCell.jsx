@@ -14,12 +14,12 @@ class ListEditCell extends React.Component {
     }
   }
 
-  onChange = (value,option) => {
-    const productId = value;
-    const productName = option.props.children;
-    const selectProduct = {productId,productName};
+  onChange = (index) => {
+    const {productList} = this.props;
+    const product = productList[index];
+
     this.setState({
-      selectProduct:selectProduct
+      selectProduct:product
     })
   }
 
@@ -47,7 +47,7 @@ class ListEditCell extends React.Component {
           <Select className={selectClass} onChange={this.onChange}>
             {
               productList.map((item, index) => (
-                <Option key={index} value={item._id}>{item.productName}</Option>
+                <Option key={index} value={index}>{item.productName}</Option>
               ))
             }
           </Select>

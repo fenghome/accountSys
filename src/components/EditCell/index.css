@@ -1,0 +1,13 @@
+.editCell{
+    float:right;
+}
+
+.textClass {
+    display: inline-block;
+    width:150px;
+    margin-right:10px;
+    text-align: left;
+}
+.iconClass{
+    display: inline-block;
+}
