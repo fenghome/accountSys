@@ -1,13 +1,14 @@
 .editCell{
-    float:right;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .textClass {
-    display: inline-block;
-    width:150px;
-    margin-right:10px;
-    text-align: left;
+  flex:1;
+  margin-right: 10px;
 }
 .iconClass{
-    display: inline-block;
+
 }

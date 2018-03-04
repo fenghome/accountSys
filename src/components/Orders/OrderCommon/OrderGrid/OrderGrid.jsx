@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, Icon} from 'antd';
+import { Table, Icon } from 'antd';
 import Spliter from '../../../Spliter/Spliter';
 import ListEditCell from '../../../ListEditCell/ListEditCell';
 import EditCell from '../../../EditCell/EditCell';
@@ -17,12 +17,13 @@ class OrderGrid extends React.Component {
           product: {},
           quantity: 0,
           price: 0,
+          amount: 0,
           remarks: ''
         }
       ]
     }
 
-    const {productList} = this.props;
+    const { productList } = this.props;
 
     this.columns = [
       {
@@ -38,9 +39,9 @@ class OrderGrid extends React.Component {
         width: '20%',
         render: (text, record, index) => (
           <span>
-            <a onClick={this.onAddRow}><Icon type="plus"/></a>
-            <Spliter/>
-            <a onClick={this.onDeleteRow}><Icon type="minus"/></a>
+            <a onClick={this.onAddRow}><Icon type="plus" /></a>
+            <Spliter />
+            <a onClick={this.onDeleteRow}><Icon type="minus" /></a>
           </span>
         )
       }, {
@@ -51,64 +52,76 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (<ListEditCell
           productList={productList}
           record={record}
-          onSelectProduct={this.onSelectProduct}/>)
+          onSelectProduct={(product) => { this.updateOrder(index, {product}) }} />)
       }, {
         title: '数量',
         dataIndex: 'quantity',
         key: 'quantify',
         width: '10%',
-        render: (text, record, index) => (<EditCell onInputValue={this.onInputNmber}/>)
+        render: (text, record, index) => (
+          <EditCell type="number" onInputValue={(number) => this.updateOrder(index, {quantity:number})} />
+        )
       }, {
         title: '单位',
         dataIndex: 'productUnit',
         key: 'productUnit',
         width: '10%',
         render: (text, record, index) => {
-          const {product={}} = this.state;
-          const {  productUnit = ""  } = product;
+          const { product = {} } = this.state.order[index];
+          const { productUnit = "" } = product;
           return <span>{productUnit}</span>
         }
-      },{
-        title:'单价',
-        dataIndex:'price',
-        key:'price',
-        width:'10%',
-        render:()=>{
-          return <EditCell onInputValue={this.onInputPrice} />
+      }, {
+        title: '单价',
+        dataIndex: 'price',
+        key: 'price',
+        width: '10%',
+        render: (text, record, index) => {
+          return <EditCell type="number" onInputValue={(price) => this.updateOrder(index, {price})} />
         }
+      }, {
+        title: '金额/元',
+        dataIndex: 'amount',
+        key: 'amount',
+      },{
+        title:'备注',
+        dataIndex:'remarks',
+        key:'remarks',
+        render:(text,record,index)=>(
+          <EditCell type="text" onInputValue={(remarks)=>this.updateOrder(index,{remarks})} />
+        )
       }
     ];
   }
 
   onAddRow = () => {
-    const {order} = this.state;
-    const newOrder = order.push({key: 3});
-    this.setState({order: newOrder});
+    const { order } = this.state;
+    const newOrderRow = order.push({ key: 3 });
+    this.setState({ order: newOrderRow });
   }
 
   onDeleteRow = () => {
-    const {order} = this.state;
-    const newOrder = order.pop();
-    this.setState({order: newOrder});
+    const { order } = this.state;
+    const newOrderRow = order.pop();
+    this.setState({ order: newOrderRow });
   }
 
-  onSelectProduct = (product) => {
-    this.setState({product})
-    //将order传出
-  }
-
-  onInputNmber = (value) => {
-    console.log(value);
-  }
-  
-  onInputPrice = (value)=> {
-    console.log(value);
+  updateOrder(index, obj) {
+    const { order } = this.state;
+    const currOrderRow = order[index];
+    const newOrderRow = { ...currOrderRow, ...obj }
+    newOrderRow.amount = newOrderRow.quantity * newOrderRow.price;
+    order[index] = newOrderRow;
+    this.setState({
+      order
+    });
+    console.log(order);
   }
   render() {
-    const {order} = this.state;
+    const { order } = this.state;
     return (
       <div>
-        <Table dataSource={order} columns={this.columns}/>
+        <Table dataSource={order} columns={this.columns} bordered />
       </div>
     )
   }
