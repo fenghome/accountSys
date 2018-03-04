@@ -36,15 +36,15 @@ class EditCell extends React.Component {
     const { editState, value } = this.state;
     const { type } = this.props;
     return (
-      <div className={editCell}>
+      <div>
         {
           editState ?
-            <div>
+            <div className={editCell}>
               <Input type={type} className={textClass}  onChange={this.onChangeValue} />
               <Icon className={iconClass} type="check" onClick={this.onOk} />
             </div>
             :
-            <div>
+            <div className={editCell}>
               <span className={textClass}>{value}</span>
               <Icon className={iconClass} type="edit" onClick={this.changeEdit} />
             </div>

@@ -30,42 +30,45 @@ class OrderGrid extends React.Component {
         title: '序号',
         dataIndex: 'serialNumber',
         key: 'serialNumber',
-        width: '10%',
         render: (text, record, index) => <span>{index + 1}</span>
       }, {
         title: '操作',
         dataIndex: 'operation',
         key: 'operation',
-        width: '20%',
         render: (text, record, index) => (
-          <span>
+          <div style={{ textAlign: 'center' }}>
             <a onClick={this.onAddRow}><Icon type="plus" /></a>
             <Spliter />
             <a onClick={this.onDeleteRow}><Icon type="minus" /></a>
-          </span>
+          </div>
         )
       }, {
         title: '商品名称',
         dataIndex: 'productName',
         key: 'productName',
         width: '20%',
-        render: (text, record, index) => (<ListEditCell
+        render: (text, record, index) => (
+        <ListEditCell
           productList={productList}
           record={record}
-          onSelectProduct={(product) => { this.updateOrder(index, {product}) }} />)
+          onSelectProduct={(product) => { this.updateOrder(index, { product }) }}
+          />
+        )
       }, {
         title: '数量',
         dataIndex: 'quantity',
         key: 'quantify',
         width: '10%',
         render: (text, record, index) => (
-          <EditCell type="number" onInputValue={(number) => this.updateOrder(index, {quantity:number})} />
+          <EditCell
+            type="number"
+            onInputValue={(number) => this.updateOrder(index, { quantity: number })}
+          />
         )
       }, {
         title: '单位',
         dataIndex: 'productUnit',
         key: 'productUnit',
-        width: '10%',
         render: (text, record, index) => {
           const { product = {} } = this.state.order[index];
           const { productUnit = "" } = product;
@@ -76,19 +79,23 @@ class OrderGrid extends React.Component {
         dataIndex: 'price',
         key: 'price',
         width: '10%',
-        render: (text, record, index) => {
-          return <EditCell type="number" onInputValue={(price) => this.updateOrder(index, {price})} />
-        }
+        render: (text, record, index) => (
+          <EditCell
+          type="number"
+          onInputValue={(price) => this.updateOrder(index, { price })}
+         />
+        )
       }, {
         title: '金额/元',
         dataIndex: 'amount',
-        key: 'amount',
-      },{
-        title:'备注',
-        dataIndex:'remarks',
-        key:'remarks',
-        render:(text,record,index)=>(
-          <EditCell type="text" onInputValue={(remarks)=>this.updateOrder(index,{remarks})} />
+        key: 'amount'
+      }, {
+        title: '备注',
+        dataIndex: 'remarks',
+        key: 'remarks',
+        width: '20%',
+        render: (text, record, index) => (
+          <EditCell type="text" onInputValue={(remarks) => this.updateOrder(index, { remarks })} />
         )
       }
     ];

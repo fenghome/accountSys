@@ -1,11 +1,14 @@
+
 .listEditCell{
-  float:right;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 .selectClass,
 .textClass
 {
-  display:inline-block;
-  width:150px;
+  flex:1;
   text-align: left;
   margin-right:10px;
 }
