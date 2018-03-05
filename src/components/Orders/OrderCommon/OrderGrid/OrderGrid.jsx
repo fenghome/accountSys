@@ -3,24 +3,38 @@ import { Table, Icon } from 'antd';
 import Spliter from '../../../Spliter/Spliter';
 import ListEditCell from '../../../ListEditCell/ListEditCell';
 import EditCell from '../../../EditCell/EditCell';
+import {footerClass,footerItem} from './index.css';
 
 class OrderGrid extends React.Component {
 
   constructor(props) {
 
     super(props);
+    this.defaultProduct = {
+      key: '0',
+      productId: '',
+      productName: '',
+      quantity: 0,
+      productUnit: '',
+      price: 0,
+      amount: 0,
+      remarks: ''
+    }
 
     this.state = {
-      order: [
+      order:
         {
-          serialNumber: 1,
-          product: {},
-          quantity: 0,
-          price: 0,
-          amount: 0,
-          remarks: ''
+          sequence: null,
+          orderNumber: '',
+          customerId: null,
+          product: [
+            this.defaultProduct
+          ],
+          totalAmount: 0,
+          paymentAmount: 0,
+          men: ''
         }
-      ]
+
     }
 
     const { productList } = this.props;
@@ -48,10 +62,16 @@ class OrderGrid extends React.Component {
         key: 'productName',
         width: '20%',
         render: (text, record, index) => (
-        <ListEditCell
-          productList={productList}
-          record={record}
-          onSelectProduct={(product) => { this.updateOrder(index, { product }) }}
+          <ListEditCell
+            productList={productList}
+            record={record}
+            onSelectProduct={(product) => {
+              this.updateOrderProduct(index, {
+                productId: product['_id'],
+                productId: product['productName'],
+                productUnit: product['productUnit']
+              })
+            }}
           />
         )
       }, {
@@ -62,7 +82,7 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (
           <EditCell
             type="number"
-            onInputValue={(number) => this.updateOrder(index, { quantity: number })}
+            onInputValue={(number) => this.updateOrderProduct(index, { quantity: number })}
           />
         )
       }, {
@@ -70,8 +90,8 @@ class OrderGrid extends React.Component {
         dataIndex: 'productUnit',
         key: 'productUnit',
         render: (text, record, index) => {
-          const { product = {} } = this.state.order[index];
-          const { productUnit = "" } = product;
+          const { product = [] } = this.state.order;
+          const { productUnit = "" } = product[index];
           return <span>{productUnit}</span>
         }
       }, {
@@ -81,9 +101,9 @@ class OrderGrid extends React.Component {
         width: '10%',
         render: (text, record, index) => (
           <EditCell
-          type="number"
-          onInputValue={(price) => this.updateOrder(index, { price })}
-         />
+            type="number"
+            onInputValue={(price) => this.updateOrderProduct(index, { price })}
+          />
         )
       }, {
         title: '金额/元',
@@ -95,7 +115,7 @@ class OrderGrid extends React.Component {
         key: 'remarks',
         width: '20%',
         render: (text, record, index) => (
-          <EditCell type="text" onInputValue={(remarks) => this.updateOrder(index, { remarks })} />
+          <EditCell type="text" onInputValue={(remarks) => this.updateOrderProduct(index, { remarks })} />
         )
       }
     ];
@@ -103,22 +123,26 @@ class OrderGrid extends React.Component {
 
   onAddRow = () => {
     const { order } = this.state;
-    const newOrderRow = order.push({ key: 3 });
-    this.setState({ order: newOrderRow });
+    const newProductRow = { ...this.defaultProduct, key: order.product.length + 1 }
+    order.product.push(newProductRow);
+    this.setState({ order: order });
   }
 
   onDeleteRow = () => {
     const { order } = this.state;
-    const newOrderRow = order.pop();
-    this.setState({ order: newOrderRow });
+    if (order.product.length >= 2) {
+      order.product.pop();
+      this.setState({ order: order });
+    }
   }
 
-  updateOrder(index, obj) {
+  updateOrderProduct(index, obj) {
     const { order } = this.state;
-    const currOrderRow = order[index];
-    const newOrderRow = { ...currOrderRow, ...obj }
-    newOrderRow.amount = newOrderRow.quantity * newOrderRow.price;
-    order[index] = newOrderRow;
+    const { product } = order;
+    const currProductRow = product[index];
+    const newProductRow = { ...currProductRow, ...obj }
+    newProductRow.amount = newProductRow.quantity * newProductRow.price;
+    order.product[index] = newProductRow;
     this.setState({
       order
     });
@@ -128,7 +152,17 @@ class OrderGrid extends React.Component {
     const { order } = this.state;
     return (
       <div>
-        <Table dataSource={order} columns={this.columns} bordered />
+        <Table
+         dataSource={order.product}
+         columns={this.columns}
+         bordered
+         footer={()=>(
+            <div className={footerClass}>
+              <div className={footerItem}><span>合计金额：￥</span>{this.state.order.totalAmount}</div>
+              <div className={footerItem}><span>支付金额：￥</span><EditCell type="number" underLine="true"/></div>
+            </div>
+          )
+         } />
       </div>
     )
   }

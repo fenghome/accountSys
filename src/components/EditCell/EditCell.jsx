@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Icon } from 'antd';
-import { editCell, textClass, iconClass } from './index.css';
+import { editCell, textClass, iconClass, editCellUnderLine } from './index.css';
 class EditCell extends React.Component {
 
   constructor(props) {
@@ -34,7 +34,8 @@ class EditCell extends React.Component {
 
   render() {
     const { editState, value } = this.state;
-    const { type } = this.props;
+    const { type, underLine=false } = this.props;
+
     return (
       <div>
         {
@@ -44,7 +45,7 @@ class EditCell extends React.Component {
               <Icon className={iconClass} type="check" onClick={this.onOk} />
             </div>
             :
-            <div className={editCell}>
+            <div className={!underLine?editCell:editCellUnderLine}>
               <span className={textClass}>{value}</span>
               <Icon className={iconClass} type="edit" onClick={this.changeEdit} />
             </div>
