@@ -3,7 +3,7 @@ import { Table, Icon } from 'antd';
 import Spliter from '../../../Spliter/Spliter';
 import ListEditCell from '../../../ListEditCell/ListEditCell';
 import EditCell from '../../../EditCell/EditCell';
-import {footerClass,footerItem} from './index.css';
+import { footerClass, footerItem } from './index.css';
 
 class OrderGrid extends React.Component {
 
@@ -138,11 +138,17 @@ class OrderGrid extends React.Component {
 
   updateOrderProduct(index, obj) {
     const { order } = this.state;
-    const { product } = order;
+    let {totalAmount = 0} = this.state;
+    totalAmount = parseInt(totalAmount);
+    const { product=[] } = order;
     const currProductRow = product[index];
     const newProductRow = { ...currProductRow, ...obj }
     newProductRow.amount = newProductRow.quantity * newProductRow.price;
     order.product[index] = newProductRow;
+    for (let i in product) {
+      totalAmount = totalAmount + i;
+    }
+    order.totalAmount = totalAmount;
     this.setState({
       order
     });
@@ -153,16 +159,16 @@ class OrderGrid extends React.Component {
     return (
       <div>
         <Table
-         dataSource={order.product}
-         columns={this.columns}
-         bordered
-         footer={()=>(
+          dataSource={order.product}
+          columns={this.columns}
+          bordered
+          footer={() => (
             <div className={footerClass}>
               <div className={footerItem}><span>合计金额：￥</span>{this.state.order.totalAmount}</div>
-              <div className={footerItem}><span>支付金额：￥</span><EditCell type="number" underLine="true"/></div>
+              <div className={footerItem}><span>支付金额：￥</span><EditCell type="number" underLine="true" /></div>
             </div>
           )
-         } />
+          } />
       </div>
     )
   }
