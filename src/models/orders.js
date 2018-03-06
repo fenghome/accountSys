@@ -43,10 +43,10 @@ export default {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         if (pathname === '/orders') {
-          dispatch({type:'initState'})
-          dispatch({type: 'getOrders'});
-          dispatch({type: 'getProductList'});
-          dispatch({type:'getCustomers'});
+          dispatch({ type: 'initState' })
+          dispatch({ type: 'getOrders' });
+          dispatch({ type: 'getProductList' });
+          dispatch({ type: 'getCustomers' });
         }
       });
     },
@@ -58,22 +58,46 @@ export default {
       //访问service获得orders
       const orders = [
         {
-          serialNumber: '1',
-          createInstance: '2018-02-27',
+          sequence: null,
           orderNumber: 'MDC201802270133',
-          customerName: 'zs',
-          totalAmount: '0',
-          paymentAmount: 0,
-          mem: 'ssss'
+          customerId: 1,
+          customerName:'张三',
+          product: [
+            {
+              key: '0',
+              productId: 1,
+              productName: '桌布',
+              quantity: 2,
+              productUnit: '个',
+              price: 5,
+              amount: 10,
+              remarks: ''
+            }
+          ],
+          totalAmount: 10,
+          paymentAmount: 10,
+          men: ''
         },
         {
-          serialNumber: '2',
-          createInstance: '2018-02-27',
+          sequence: null,
           orderNumber: 'MDC201802270134',
-          customerName: 'zas',
-          totalAmount: 0,
-          paymentAmount: 0,
-          mem: 'ssss'
+          customerId: 2,
+          customerName:'李四',
+          product: [
+            {
+              key: '0',
+              productId: 2,
+              productName: '餐巾',
+              quantity: 3,
+              productUnit: '个',
+              price: 3,
+              amount: 9,
+              remarks: ''
+            }
+          ],
+          totalAmount: 9,
+          paymentAmount: 9,
+          men: ''
         }
       ];
       yield put({
@@ -85,8 +109,8 @@ export default {
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
       const productList = [
-        { '_id': 1, productName: 'zss' ,productUnit:'个'},
-        { '_id': 2, productName: 'ls' ,productUnit:'台'},
+        { '_id': 1, productName: '桌布', productUnit: '个' },
+        { '_id': 2, productName: '餐巾', productUnit: '台' },
       ];
       yield put({
         type: 'getProductListSuccess',
@@ -96,8 +120,8 @@ export default {
 
     *getCustomers({ payload }, { call, put }) {
       const customers = [
-        { '_id': 1, customerName: '地中海蓝' },
-        { '_id': 2, customerName: '米黄绸布' }
+        { '_id': 1, customerName: '张三' },
+        { '_id': 2, customerName: '李四' }
       ];
       yield put({
         type: 'getCustomersSuccess',
@@ -113,22 +137,22 @@ export default {
         payload: {
           pageType: 'add',
           sequence: 'sequence',
-          orderNumber: 'MDC201803010133'
+          orderNumber: 'MDC201803010135'
         }
       })
       // }
       yield put({
         type: 'addBreadcrumbItem',
         payload: {
-          item: ['新增订单','/orders/addorder']
+          item: ['新增订单', '/orders/addorder']
         }
       });
     },
   },
 
   reducers: {
-    initState(state,payload){
-      return { ...state, pageType:'show', breadcrumbItems:defaultBreadcrumbItems}
+    initState(state, payload) {
+      return { ...state, pageType: 'show', breadcrumbItems: defaultBreadcrumbItems }
     },
 
     getOrdersSuccess(state, { payload: orders }) {
@@ -155,6 +179,10 @@ export default {
       const breadcrumbItems = state.breadcrumbItems;
       const newItems = [...breadcrumbItems, action.payload.item];
       return { ...state, breadcrumbItems: newItems }
+    },
+
+    updateOrder(state, { payload: order }) {
+      return {...state,order}
     }
   },
 

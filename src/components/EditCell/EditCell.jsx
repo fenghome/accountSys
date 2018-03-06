@@ -7,7 +7,7 @@ class EditCell extends React.Component {
     super(props);
     this.state = {
       editState: false,
-      value: 0,
+      value: props.type === "number" ? 0 : "",
     }
   }
 
@@ -34,18 +34,18 @@ class EditCell extends React.Component {
 
   render() {
     const { editState, value } = this.state;
-    const { type, underLine=false } = this.props;
+    const { type, underLine = false } = this.props;
 
     return (
       <div>
         {
           editState ?
             <div className={editCell}>
-              <Input type={type} className={textClass}  onChange={this.onChangeValue} />
+              <Input type={type} className={textClass} value={value} onChange={this.onChangeValue} />
               <Icon className={iconClass} type="check" onClick={this.onOk} />
             </div>
             :
-            <div className={!underLine?editCell:editCellUnderLine}>
+            <div className={!underLine ? editCell : editCellUnderLine}>
               <span className={textClass}>{value}</span>
               <Icon className={iconClass} type="edit" onClick={this.changeEdit} />
             </div>

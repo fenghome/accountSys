@@ -24,8 +24,8 @@ class OrderGrid extends React.Component {
     this.state = {
       order:
         {
-          sequence: null,
-          orderNumber: '',
+          sequence: props.order.sequence,
+          orderNumber: props.order.orderNumber,
           customerId: null,
           product: [
             this.defaultProduct
@@ -136,24 +136,36 @@ class OrderGrid extends React.Component {
     }
   }
 
-  updateOrderProduct(index, obj) {
+  updateOrderProduct = (index, obj) => {
+    const { updateOrder } = this.props;
     const { order } = this.state;
-    let {totalAmount = 0} = this.state;
-    totalAmount = parseInt(totalAmount);
-    const { product=[] } = order;
+    let { totalAmount = 0 } = this.state;
+    const { product = [] } = order;
     const currProductRow = product[index];
     const newProductRow = { ...currProductRow, ...obj }
     newProductRow.amount = newProductRow.quantity * newProductRow.price;
     order.product[index] = newProductRow;
-    for (let i in product) {
-      totalAmount = totalAmount + i;
+    for (let i of product) {
+      totalAmount = totalAmount + i.amount;
     }
     order.totalAmount = totalAmount;
     this.setState({
       order
     });
-    console.log(order);
+    updateOrder(this.state.order);
   }
+
+  updatepaymentAmount = (value) => {
+    const { updateOrder } = this.props;
+    this.setState({
+      order: { ...this.state.order, paymentAmount: value }
+    });
+    console.log({ ...this.state.order, paymentAmount: value });
+    updateOrder(this.state.order);
+  }
+
+
+
   render() {
     const { order } = this.state;
     return (
@@ -164,8 +176,14 @@ class OrderGrid extends React.Component {
           bordered
           footer={() => (
             <div className={footerClass}>
-              <div className={footerItem}><span>合计金额：￥</span>{this.state.order.totalAmount}</div>
-              <div className={footerItem}><span>支付金额：￥</span><EditCell type="number" underLine="true" /></div>
+              <div className={footerItem}>
+                <span>合计金额：￥</span>
+                {this.state.order.totalAmount}
+              </div>
+              <div className={footerItem}>
+                <span>支付金额：￥</span>
+                <EditCell type="number" underLine="true" onInputValue={this.updatePaymentAmount} />
+              </div>
             </div>
           )
           } />
