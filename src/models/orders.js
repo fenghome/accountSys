@@ -61,7 +61,7 @@ export default {
           sequence: null,
           orderNumber: 'MDC201802270133',
           customerId: 1,
-          customerName:'张三',
+          customerName: '张三',
           product: [
             {
               key: '0',
@@ -82,7 +82,7 @@ export default {
           sequence: null,
           orderNumber: 'MDC201802270134',
           customerId: 2,
-          customerName:'李四',
+          customerName: '李四',
           product: [
             {
               key: '0',
@@ -182,7 +182,12 @@ export default {
     },
 
     updateOrder(state, { payload: order }) {
-      return {...state,order}
+      return { ...state, order }
+    },
+
+    changeOrderMem(state, { payload: mem }) {
+      const newOrder = {...state.order, mem}
+      return { ...state, order:newOrder}
     }
   },
 

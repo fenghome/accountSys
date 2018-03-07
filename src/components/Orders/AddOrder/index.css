@@ -1,0 +1,17 @@
+.buttonGroup{
+  position: absolute;
+  bottom: -30px;
+  left:0;
+  width:100%;
+  padding-top:25px;
+  background-color:#ececec;
+
+}
+.btnOk{
+  margin-right:25px;
+}
+.btnOk,
+.btnCanel{
+  width:200px;
+  height:40px;
+}

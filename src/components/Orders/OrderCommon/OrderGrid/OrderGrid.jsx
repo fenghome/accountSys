@@ -155,13 +155,14 @@ class OrderGrid extends React.Component {
     updateOrder(this.state.order);
   }
 
-  updatepaymentAmount = (value) => {
+  updatePaymentAmount = (value) => {
     const { updateOrder } = this.props;
+    const { order } = this.state;
+    order.paymentAmount = value;
     this.setState({
-      order: { ...this.state.order, paymentAmount: value }
+      order: order
     });
-    console.log({ ...this.state.order, paymentAmount: value });
-    updateOrder(this.state.order);
+    updateOrder(order);
   }
 
 
@@ -174,6 +175,7 @@ class OrderGrid extends React.Component {
           dataSource={order.product}
           columns={this.columns}
           bordered
+          pagination={false}
           footer={() => (
             <div className={footerClass}>
               <div className={footerItem}>
