@@ -58,6 +58,7 @@ export default {
       //访问service获得orders
       const orders = [
         {
+          _id:1,
           sequence: null,
           orderNumber: 'MDC201802270133',
           customerId: 1,
@@ -79,6 +80,7 @@ export default {
           men: ''
         },
         {
+          _id:2,
           sequence: null,
           orderNumber: 'MDC201802270134',
           customerId: 2,
@@ -103,7 +105,8 @@ export default {
       yield put({
         type: 'getOrdersSuccess',
         payload: orders
-      })
+      });
+      return 123;
     },
 
     *getProductList({ payload }, { call, put }) {
@@ -148,6 +151,19 @@ export default {
         }
       });
     },
+    *getOrderById({payload:orderId},{call,put}){
+      //远程获得order
+      //在这里我模拟获得的order
+      const orders = yield put({type:'getOrders'});
+      console.log('model orders is',orders);
+      yield put({
+        type:'getOrderByIdSuccess',
+        payload:{
+          payeType:'modify',
+          order:orders[orderId-1]
+        }
+      })
+    }
   },
 
   reducers: {

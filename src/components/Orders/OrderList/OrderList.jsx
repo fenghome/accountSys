@@ -3,16 +3,16 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({orders,onModify,onDelete,onDetails}) {
+function OrderList({ orders, onModify, onDelete, onDetails }) {
 
-  function onDelete(value){
+  function onDelete(value) {
     console.log(value);
   }
 
   const columns = [{
     title: '序号',
     dataIndex: 'serialNumber',
-    key:'serialNumber',
+    key: 'serialNumber',
     render: (text, record, index) => <sapn>{index + 1}</sapn>,
   },
   {
@@ -50,34 +50,44 @@ function OrderList({orders,onModify,onDelete,onDetails}) {
   },
   {
     title: '操作',
-    key:'operation',
+    key: 'operation',
     render: (text, record) => (
-      <p>
-        <a onClick={()=>{onModify(record['_id'])}}>编辑</a>
+      <div>
+        <a onClick={() => { onModify(record['_id']) }}>编辑</a>
         <Divider type="vertical" />
-        <Popconfirm title="确定要删除记录？" onConfirm={()=>{onDelete(record['_id'])}}  okText="确定" cancelText="取消">
+        <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record['_id']) }} okText="确定" cancelText="取消">
           <a>删除</a>
         </Popconfirm>
         <Divider type="vertical" />
-        <a onClick={()=>{onDetails(record['_id'])}}>详情</a>
-      </p>
+        <a onClick={() => { onDetails(record['_id']) }}>详情</a>
+      </div>
     )
-  }];
+  }
+  ];
 
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: record => ({
-      // disabled: record.name === 'Disabled User', // Column configuration not to be checked
-      // name: record.name,
-    }),
-  };
+	const rowSelection = {
+		onChange: (selectedRowKeys, selectedRows) => {
+			console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+		},
+		onSelect: (record, selected, selectedRows) => {
+			console.log(record, selected, selectedRows);
+		},
+		onSelectAll: (selected, selectedRows, changeRows) => {
+			console.log(selected, selectedRows, changeRows);
+		},
+		getCheckboxProps: record => ({
+			disabled: record.name === 'Disabled User',    // Column configuration not to be checked
+		}),
+	};
+
 
   return (
-    <Table rowSelection={rowSelection} columns={columns} dataSource={orders} />
+    <Table
+      columns={columns}
+      dataSource={orders}
+      rowKey={record => record.orderNumber}
+      rowSelection={rowSelection} />
   )
 }
 

@@ -25,8 +25,12 @@ class Orders extends Component {
   onDetails = () => {
 
   }
-  onModify = () => {
-
+  onModify = (orderId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'orders/getOrderById',
+      payload:orderId
+    });
   }
 
   onDelete = () => {
