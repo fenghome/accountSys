@@ -9,7 +9,7 @@ import { buttonGroup,btnOk, btnCanel } from './index.css';
 
 function ModifyOrder({dispatch, orders}) {
   const { customers, productList, order} = orders;
-  const { orderNumber } = order;
+  const { orderNumber, customerName } = order;
 
   function selectProduct(productId) {
 
@@ -32,7 +32,7 @@ function ModifyOrder({dispatch, orders}) {
   return (
     <div>
       <OrderTitle title="门窗出货单" number={orderNumber} />
-      <CustomersForm customers={customers} />
+      <CustomersForm customers={customers} selectCustomerName={customerName}/>
       <OrderGrid productList={productList} order={order} updateOrder={updateOrder}/>
       <RemarksForm changeOrderMem={changeOrderMem}/>
       <div className={buttonGroup}>

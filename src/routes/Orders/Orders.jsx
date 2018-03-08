@@ -6,6 +6,7 @@ import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
 import OrderList from '../../components/Orders/OrderList/OrderList';
 import AddOrder from '../../components/Orders/AddOrder/AddOrder';
+import ModifyOrder from '../../components/Orders/ModifyOrder/ModifyOrder';
 import { orderContainer, orderBar } from './index.css';
 
 class Orders extends Component {
@@ -29,7 +30,7 @@ class Orders extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'orders/getOrderById',
-      payload:orderId
+      payload: orderId
     });
   }
 
@@ -62,9 +63,14 @@ class Orders extends Component {
         {
           pageType == 'add' && (
             <div className={orderContainer}>
-              <div>
-                <AddOrder number={orderNumber} customers={customers} productList={productList} />
-              </div>
+              <AddOrder number={orderNumber} customers={customers} productList={productList} />
+            </div>
+          )
+        }
+        {
+          pageType == 'modify' && (
+            <div className={orderContainer}>
+              <ModifyOrder number={orderNumber} customers={customers} productList={productList} />
             </div>
           )
         }

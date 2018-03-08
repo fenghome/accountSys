@@ -7,6 +7,7 @@ const Option = Select.Option;
 
 function CustomersForm({
   customers,
+  selectCustomerName,
   form:{
     getFieldDecorator
   }
@@ -16,6 +17,7 @@ function CustomersForm({
         <FormItem label="客户名称：" {...formItemLayout}>
           {
             getFieldDecorator('customerId',{
+              initialValue: selectCustomerName,
               rules:[
                 {
                   required:true,
@@ -23,10 +25,10 @@ function CustomersForm({
                 }
               ]
             })(
-              <Select style={{width:340}}>
+              <Select style={{width:340}} >
                 {
                   customers.map((item,index)=>(
-                    <Option key={index} vaule={item.id}>{item.customerName}</Option>
+                    <Option key={index} vaule={item['_id']}>{item.customerName}</Option>
                   ))
                 }
               </Select>

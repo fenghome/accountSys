@@ -21,20 +21,19 @@ class OrderGrid extends React.Component {
       remarks: ''
     }
 
+    this.defaultOrder = {
+      sequence: props.order.sequence,
+      orderNumber: props.order.orderNumber,
+      customerId: null,
+      products: [
+        this.defaultProduct
+      ],
+      totalAmount: 0,
+      paymentAmount: 0,
+      men: ''
+    }
     this.state = {
-      order:
-        {
-          sequence: props.order.sequence,
-          orderNumber: props.order.orderNumber,
-          customerId: null,
-          product: [
-            this.defaultProduct
-          ],
-          totalAmount: 0,
-          paymentAmount: 0,
-          men: ''
-        }
-
+      order:props.order
     }
 
     const { productList } = this.props;
@@ -65,6 +64,7 @@ class OrderGrid extends React.Component {
           <ListEditCell
             productList={productList}
             record={record}
+            defaultProduct={record}
             onSelectProduct={(product) => {
               this.updateOrderProduct(index, {
                 productId: product['_id'],
@@ -90,8 +90,8 @@ class OrderGrid extends React.Component {
         dataIndex: 'productUnit',
         key: 'productUnit',
         render: (text, record, index) => {
-          const { product = [] } = this.state.order;
-          const { productUnit = "" } = product[index];
+          const { products = [] } = this.state.order;
+          const { productUnit = "" } = products[index];
           return <span>{productUnit}</span>
         }
       }, {
@@ -123,15 +123,15 @@ class OrderGrid extends React.Component {
 
   onAddRow = () => {
     const { order } = this.state;
-    const newProductRow = { ...this.defaultProduct, key: order.product.length + 1 }
-    order.product.push(newProductRow);
+    const newProductRow = { ...this.defaultProduct, key: order.products.length + 1 }
+    order.products.push(newProductRow);
     this.setState({ order: order });
   }
 
   onDeleteRow = () => {
     const { order } = this.state;
-    if (order.product.length >= 2) {
-      order.product.pop();
+    if (order.products.length >= 2) {
+      order.products.pop();
       this.setState({ order: order });
     }
   }
@@ -140,12 +140,12 @@ class OrderGrid extends React.Component {
     const { updateOrder } = this.props;
     const { order } = this.state;
     let { totalAmount = 0 } = this.state;
-    const { product = [] } = order;
-    const currProductRow = product[index];
+    const { products = [] } = order;
+    const currProductRow = products[index];
     const newProductRow = { ...currProductRow, ...obj }
     newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    order.product[index] = newProductRow;
-    for (let i of product) {
+    order.products[index] = newProductRow;
+    for (let i of products) {
       totalAmount = totalAmount + i.amount;
     }
     order.totalAmount = totalAmount;
@@ -172,7 +172,7 @@ class OrderGrid extends React.Component {
     return (
       <div>
         <Table
-          dataSource={order.product}
+          dataSource={order.products}
           columns={this.columns}
           bordered
           pagination={false}

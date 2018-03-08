@@ -31,7 +31,7 @@ export default {
   namespace: 'orders',
 
   state: {
-    pageType: 'show', //show,edit,add
+    pageType: 'show', //show,modify,add
     breadcrumbItems: [],
     orders: [],
     customers: [],
@@ -58,12 +58,12 @@ export default {
       //访问service获得orders
       const orders = [
         {
-          _id:1,
+          _id: 1,
           sequence: null,
           orderNumber: 'MDC201802270133',
           customerId: 1,
           customerName: '张三',
-          product: [
+          products: [
             {
               key: '0',
               productId: 1,
@@ -80,12 +80,12 @@ export default {
           men: ''
         },
         {
-          _id:2,
+          _id: 2,
           sequence: null,
           orderNumber: 'MDC201802270134',
           customerId: 2,
           customerName: '李四',
-          product: [
+          products: [
             {
               key: '0',
               productId: 2,
@@ -106,14 +106,13 @@ export default {
         type: 'getOrdersSuccess',
         payload: orders
       });
-      return 123;
     },
 
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
       const productList = [
-        { '_id': 1, productName: '桌布', productUnit: '个' },
-        { '_id': 2, productName: '餐巾', productUnit: '台' },
+        { '_id': 1, productId: 1, productName: '桌布', productUnit: '个', price: 5, },
+        { '_id': 2, productId: 2, productName: '餐巾', productUnit: '台', price: 3, },
       ];
       yield put({
         type: 'getProductListSuccess',
@@ -151,16 +150,22 @@ export default {
         }
       });
     },
-    *getOrderById({payload:orderId},{call,put}){
+    *getOrderById({ payload: orderId }, { call, put, select }) {
       //远程获得order
       //在这里我模拟获得的order
-      const orders = yield put({type:'getOrders'});
-      console.log('model orders is',orders);
+      const orders = yield select(state => state.orders.orders);
+      console.log('model orders is', orders);
       yield put({
-        type:'getOrderByIdSuccess',
-        payload:{
-          payeType:'modify',
-          order:orders[orderId-1]
+        type: 'getOrderByIdSuccess',
+        payload: {
+          pageType: 'modify',
+          order: orders[orderId - 1]
+        }
+      });
+      yield put({
+        type: 'addBreadcrumbItem',
+        payload: {
+          item: ['编辑订单', '/orders/modifyorder']
         }
       })
     }
@@ -191,6 +196,11 @@ export default {
       return { ...state, order: newOrder, pageType };
     },
 
+    getOrderByIdSuccess(state, action) {
+      const { pageType, order } = action.payload;
+      return { ...state, order, pageType };
+    },
+
     addBreadcrumbItem(state, action) {
       const breadcrumbItems = state.breadcrumbItems;
       const newItems = [...breadcrumbItems, action.payload.item];
@@ -202,8 +212,8 @@ export default {
     },
 
     changeOrderMem(state, { payload: mem }) {
-      const newOrder = {...state.order, mem}
-      return { ...state, order:newOrder}
+      const newOrder = { ...state.order, mem }
+      return { ...state, order: newOrder }
     }
   },
 

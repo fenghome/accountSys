@@ -10,7 +10,7 @@ class ListEditCell extends React.Component {
     super(props);
     this.state = {
       modifyState: false,
-      selectProduct: null,
+      selectProduct: props.defaultProduct || null,
     }
   }
 
@@ -38,17 +38,17 @@ class ListEditCell extends React.Component {
   }
 
   render() {
-    const { productList, record } = this.props;
+    const { productList, record, defaultProductName="" } = this.props;
     const { modifyState, selectProduct } = this.state;
-    const productName = selectProduct?selectProduct.productName:"";
+    const productName = selectProduct.productName || "";
     return (
       modifyState ?
         <div className={listEditCell}>
-          <Select className={selectClass} onChange={this.onChange}>
+          <Select className={selectClass} onChange={this.onChange} defaultValue={productName}>
             {
               productList.map((item, index) => (
-                <Option key={index} value={index}>{item.productName}</Option>
-              ))
+              <Option key={item.productId} value={item.productId}>{item.productName}</Option>
+            ))
             }
           </Select>
           <Icon type="check" onClick={this.onSelect} />
