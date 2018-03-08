@@ -173,6 +173,7 @@ class OrderGrid extends React.Component {
 
 
   render() {
+    const { disabled } = this.props;
     const { order } = this.state;
     return (
       <div>
@@ -180,6 +181,7 @@ class OrderGrid extends React.Component {
           dataSource={order.products}
           columns={this.columns}
           bordered
+          disabled={disabled}
           pagination={false}
           footer={() => (
             <div className={footerClass}>

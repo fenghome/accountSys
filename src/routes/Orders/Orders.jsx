@@ -21,17 +21,40 @@ class Orders extends Component {
     dispatch({
       type: 'orders/getOrderNumber'
     });
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['新增订单', '/orders/addorder']
+      }
+    })
   }
 
-  onDetails = () => {
-
+  onDetails = (orderId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'orders/getOrerById',
+      payload: orderId
+    });
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['浏览订单', '/orders/detailsorder']
+      }
+    })
   }
+
   onModify = (orderId) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'orders/getOrderById',
       payload: orderId
     });
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['编辑订单', '/orders/modifyorder']
+      }
+    })
   }
 
   onDelete = () => {
@@ -63,14 +86,34 @@ class Orders extends Component {
         {
           pageType == 'add' && (
             <div className={orderContainer}>
-              <AddOrder number={orderNumber} customers={customers} productList={productList} />
+              <AddOrder
+                number={orderNumber}
+                customers={customers}
+                productList={productList} />
             </div>
           )
         }
         {
           pageType == 'modify' && (
             <div className={orderContainer}>
-              <ModifyOrder number={orderNumber} customers={customers} productList={productList} />
+              <ModifyOrder
+                number={orderNumber}
+                customers={customers}
+                productList={productList}
+                disabled={true}
+              />
+            </div>
+          )
+        }
+        {
+          pageType == 'details' && (
+            <div className={orderContainer}>
+              <ModifyOrder
+                number={orderNumber}
+                customers={customers}
+                productList={productList}
+                disabled={false}
+              />
             </div>
           )
         }

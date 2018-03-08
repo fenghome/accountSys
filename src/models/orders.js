@@ -142,14 +142,8 @@ export default {
           orderNumber: 'MDC201803010135'
         }
       })
-      // }
-      yield put({
-        type: 'addBreadcrumbItem',
-        payload: {
-          item: ['新增订单', '/orders/addorder']
-        }
-      });
     },
+    
     *getOrderById({ payload: orderId }, { call, put, select }) {
       //远程获得order
       //在这里我模拟获得的order
@@ -162,12 +156,7 @@ export default {
           order: orders[orderId - 1]
         }
       });
-      yield put({
-        type: 'addBreadcrumbItem',
-        payload: {
-          item: ['编辑订单', '/orders/modifyorder']
-        }
-      })
+     
     }
   },
 

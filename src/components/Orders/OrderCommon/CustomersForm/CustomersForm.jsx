@@ -8,6 +8,7 @@ const Option = Select.Option;
 function CustomersForm({
   customers,
   selectCustomerName,
+  disabled,
   form:{
     getFieldDecorator
   }
@@ -25,7 +26,7 @@ function CustomersForm({
                 }
               ]
             })(
-              <Select style={{width:340}} >
+              <Select style={{width:340}} disabled={disabled}>
                 {
                   customers.map((item,index)=>(
                     <Option key={index} vaule={item['_id']}>{item.customerName}</Option>
