@@ -3,7 +3,7 @@ import { Input } from 'antd';
 const { TextArea } = Input;
 import { remarksForm } from './index.css';
 
-export default function ({changeOrderMem}) {
+export default function ({defaultValue,changeOrderMem}) {
   return (
     <div className={remarksForm}>
       填写备注：
@@ -11,6 +11,7 @@ export default function ({changeOrderMem}) {
         style={{ width: 500 }}
         rows={4}
         placeholder="在此处填写备注..."
+        defaultValue={defaultValue}
         onBlur = {(e)=>{changeOrderMem(e.target.value)}}
       />
     </div>

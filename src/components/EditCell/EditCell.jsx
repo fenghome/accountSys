@@ -5,9 +5,10 @@ class EditCell extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       editState: false,
-      value: props.type === "number" ? 0 : "",
+      value: props.defaultValue || (props.type === "number" ? 0 : "")
     }
   }
 

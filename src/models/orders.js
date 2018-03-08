@@ -77,7 +77,7 @@ export default {
           ],
           totalAmount: 10,
           paymentAmount: 10,
-          men: ''
+          mem: 'aaaaa'
         },
         {
           _id: 2,
@@ -99,7 +99,7 @@ export default {
           ],
           totalAmount: 9,
           paymentAmount: 9,
-          men: ''
+          mem: 'bbbb'
         }
       ];
       yield put({

@@ -14,9 +14,11 @@ class ListEditCell extends React.Component {
     }
   }
 
-  onChange = (index) => {
+  onChange = (productId) => {
     const {productList} = this.props;
-    const product = productList[index];
+    const product = productList.find((item)=>{
+      return item.productId == productId;
+    })
 
     this.setState({
       selectProduct:product

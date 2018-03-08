@@ -82,6 +82,7 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (
           <EditCell
             type="number"
+            defaultValue={text}
             onInputValue={(number) => this.updateOrderProduct(index, { quantity: number })}
           />
         )
@@ -102,6 +103,7 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (
           <EditCell
             type="number"
+            defaultValue={text}
             onInputValue={(price) => this.updateOrderProduct(index, { price })}
           />
         )
@@ -115,7 +117,10 @@ class OrderGrid extends React.Component {
         key: 'remarks',
         width: '20%',
         render: (text, record, index) => (
-          <EditCell type="text" onInputValue={(remarks) => this.updateOrderProduct(index, { remarks })} />
+          <EditCell
+           type="text"
+           defaultValue={text}
+           onInputValue={(remarks) => this.updateOrderProduct(index, { remarks })} />
         )
       }
     ];
@@ -184,7 +189,7 @@ class OrderGrid extends React.Component {
               </div>
               <div className={footerItem}>
                 <span>支付金额：￥</span>
-                <EditCell type="number" underLine="true" onInputValue={this.updatePaymentAmount} />
+                <EditCell type="number" underLine="true" defaultValue={order.paymentAmount} onInputValue={this.updatePaymentAmount} />
               </div>
             </div>
           )

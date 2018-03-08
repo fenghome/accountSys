@@ -34,7 +34,7 @@ function ModifyOrder({dispatch, orders}) {
       <OrderTitle title="门窗出货单" number={orderNumber} />
       <CustomersForm customers={customers} selectCustomerName={customerName}/>
       <OrderGrid productList={productList} order={order} updateOrder={updateOrder}/>
-      <RemarksForm changeOrderMem={changeOrderMem}/>
+      <RemarksForm defaultValue={order.mem} changeOrderMem={changeOrderMem}/>
       <div className={buttonGroup}>
         <Button type="primary" className={btnOk}>确定</Button>
         <Button className={btnCanel}>取消</Button>
