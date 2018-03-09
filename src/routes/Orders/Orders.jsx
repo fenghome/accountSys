@@ -28,8 +28,8 @@ class Orders extends Component {
       }
     });
     dispatch({
-      type:'orders/changePageType',
-      payload:'add'
+      type: 'orders/changePageType',
+      payload: 'add'
     });
   }
 
@@ -46,8 +46,8 @@ class Orders extends Component {
       }
     });
     dispatch({
-      type:'orders/changePageType',
-      payload:'details'
+      type: 'orders/changePageType',
+      payload: 'details'
     });
   }
 
@@ -64,8 +64,8 @@ class Orders extends Component {
       }
     });
     dispatch({
-      type:'orders/changePageType',
-      payload:'modify'
+      type: 'orders/changePageType',
+      payload: 'modify'
     });
   }
 
