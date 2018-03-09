@@ -35,7 +35,7 @@ class EditCell extends React.Component {
 
   render() {
     const { editState, value } = this.state;
-    const { type, underLine = false } = this.props;
+    const { type, underLine = false, disabled=false } = this.props;
 
     return (
       <div>
@@ -46,9 +46,9 @@ class EditCell extends React.Component {
               <Icon className={iconClass} type="check" onClick={this.onOk} />
             </div>
             :
-            <div className={!underLine ? editCell : editCellUnderLine}>
+            <div className={ disabled || !underLine ? editCell : editCellUnderLine}>
               <span className={textClass}>{value}</span>
-              <Icon className={iconClass} type="edit" onClick={this.changeEdit} />
+              {disabled || <Icon className={iconClass} type="edit" onClick={this.changeEdit} />}
             </div>
         }
       </div>

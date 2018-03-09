@@ -7,7 +7,7 @@ import OrderGrid from '../OrderCommon/OrderGrid/OrderGrid';
 import RemarksForm from '../OrderCommon/RemarksForm/RemarksForm';
 import { buttonGroup, btnOk, btnCanel } from './index.css';
 
-function ModifyOrder({ dispatch, orders, disabled }) {
+function ModifyOrder({ dispatch, orders, disabled = false }) {
   const { customers, productList, order } = orders;
   const { orderNumber, customerName } = order;
 
@@ -41,24 +41,26 @@ function ModifyOrder({ dispatch, orders, disabled }) {
       <OrderGrid
         productList={productList}
         order={order}
-        updateOrder={updateOrder} 
+        updateOrder={updateOrder}
         disabled={disabled} />
 
       <RemarksForm
         defaultValue={order.mem}
-        changeOrderMem={changeOrderMem} 
+        changeOrderMem={changeOrderMem}
         disabled={disabled} />
-
-      <div className={buttonGroup}>
-        <Button type="primary" className={btnOk}>确定</Button>
-        <Button className={btnCanel}>取消</Button>
-      </div>
+      {
+        disabled ||
+        <div className={buttonGroup}>
+          <Button type="primary" className={btnOk}>确定</Button>
+          <Button className={btnCanel}>取消</Button>
+        </div>
+      }
     </div>
-  )
+    )
 }
 
 function mapStateToProps(state) {
-  return { orders: state.orders }
+  return {orders: state.orders }
 }
 
 export default connect(mapStateToProps)(ModifyOrder)

@@ -137,13 +137,13 @@ export default {
       yield put({
         type: 'getOrderNumberSuccess',
         payload: {
-          pageType: 'add',
+          // pageType: 'add',
           sequence: 'sequence',
           orderNumber: 'MDC201803010135'
         }
       })
     },
-    
+
     *getOrderById({ payload: orderId }, { call, put, select }) {
       //远程获得order
       //在这里我模拟获得的order
@@ -152,19 +152,22 @@ export default {
       yield put({
         type: 'getOrderByIdSuccess',
         payload: {
-          pageType: 'modify',
+          // pageType: 'modify',
           order: orders[orderId - 1]
         }
       });
-     
+
     }
   },
 
   reducers: {
-    initState(state, payload) {
+    initState(state, action) {
       return { ...state, pageType: 'show', breadcrumbItems: defaultBreadcrumbItems }
     },
 
+    changePageType(state, { payload: pageType }) {
+      return { ...state, pageType }
+    },
     getOrdersSuccess(state, { payload: orders }) {
       return { ...state, orders }
 
@@ -179,15 +182,15 @@ export default {
     },
 
     getOrderNumberSuccess(state, action) {
-      const { sequence, orderNumber, pageType } = action.payload;
+      const { sequence, orderNumber } = action.payload;
       const order = state.order;
       const newOrder = { ...order, sequence, orderNumber };
-      return { ...state, order: newOrder, pageType };
+      return { ...state, order: newOrder };
     },
 
     getOrderByIdSuccess(state, action) {
-      const { pageType, order } = action.payload;
-      return { ...state, order, pageType };
+      const { order } = action.payload;
+      return { ...state, order };
     },
 
     addBreadcrumbItem(state, action) {

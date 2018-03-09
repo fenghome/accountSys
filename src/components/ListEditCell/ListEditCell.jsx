@@ -40,13 +40,13 @@ class ListEditCell extends React.Component {
   }
 
   render() {
-    const { productList, record, defaultProductName="" } = this.props;
+    const { productList, record, defaultProductName="", disabled=false } = this.props;
     const { modifyState, selectProduct } = this.state;
     const productName = selectProduct.productName || "";
     return (
       modifyState ?
         <div className={listEditCell}>
-          <Select className={selectClass} onChange={this.onChange} defaultValue={productName}>
+          <Select className={selectClass} onChange={this.onChange} defaultValue={productName} >
             {
               productList.map((item, index) => (
               <Option key={item.productId} value={item.productId}>{item.productName}</Option>
@@ -58,7 +58,7 @@ class ListEditCell extends React.Component {
         :
         <div className={listEditCell}>
           <span className={textClass}>{productName}</span>
-          <Icon type="edit" onClick={this.changeModifyState} />
+          {disabled || <Icon type="edit" onClick={this.changeModifyState} />}
         </div>
     )
   }

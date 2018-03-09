@@ -8,7 +8,7 @@ const Option = Select.Option;
 function CustomersForm({
   customers,
   selectCustomerName,
-  disabled,
+  disabled=false,
   form:{
     getFieldDecorator
   }

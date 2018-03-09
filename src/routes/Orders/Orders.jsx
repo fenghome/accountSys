@@ -26,13 +26,17 @@ class Orders extends Component {
       payload: {
         item: ['新增订单', '/orders/addorder']
       }
-    })
+    });
+    dispatch({
+      type:'orders/changePageType',
+      payload:'add'
+    });
   }
 
   onDetails = (orderId) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'orders/getOrerById',
+      type: 'orders/getOrderById',
       payload: orderId
     });
     dispatch({
@@ -40,7 +44,11 @@ class Orders extends Component {
       payload: {
         item: ['浏览订单', '/orders/detailsorder']
       }
-    })
+    });
+    dispatch({
+      type:'orders/changePageType',
+      payload:'details'
+    });
   }
 
   onModify = (orderId) => {
@@ -54,7 +62,11 @@ class Orders extends Component {
       payload: {
         item: ['编辑订单', '/orders/modifyorder']
       }
-    })
+    });
+    dispatch({
+      type:'orders/changePageType',
+      payload:'modify'
+    });
   }
 
   onDelete = () => {
@@ -100,7 +112,6 @@ class Orders extends Component {
                 number={orderNumber}
                 customers={customers}
                 productList={productList}
-                disabled={true}
               />
             </div>
           )
@@ -112,7 +123,7 @@ class Orders extends Component {
                 number={orderNumber}
                 customers={customers}
                 productList={productList}
-                disabled={false}
+                disabled={true}
               />
             </div>
           )

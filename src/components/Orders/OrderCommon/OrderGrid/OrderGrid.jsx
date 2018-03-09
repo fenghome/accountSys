@@ -8,8 +8,9 @@ import { footerClass, footerItem } from './index.css';
 class OrderGrid extends React.Component {
 
   constructor(props) {
-
     super(props);
+    const { disabled = false } = props
+    console.log(disabled);
     this.defaultProduct = {
       key: '0',
       productId: '',
@@ -33,7 +34,7 @@ class OrderGrid extends React.Component {
       men: ''
     }
     this.state = {
-      order:props.order
+      order: props.order
     }
 
     const { productList } = this.props;
@@ -49,6 +50,7 @@ class OrderGrid extends React.Component {
         dataIndex: 'operation',
         key: 'operation',
         render: (text, record, index) => (
+          disabled ||
           <div style={{ textAlign: 'center' }}>
             <a onClick={this.onAddRow}><Icon type="plus" /></a>
             <Spliter />
@@ -65,6 +67,7 @@ class OrderGrid extends React.Component {
             productList={productList}
             record={record}
             defaultProduct={record}
+            disabled={disabled}
             onSelectProduct={(product) => {
               this.updateOrderProduct(index, {
                 productId: product['_id'],
@@ -83,6 +86,7 @@ class OrderGrid extends React.Component {
           <EditCell
             type="number"
             defaultValue={text}
+            disabled={disabled}
             onInputValue={(number) => this.updateOrderProduct(index, { quantity: number })}
           />
         )
@@ -104,6 +108,7 @@ class OrderGrid extends React.Component {
           <EditCell
             type="number"
             defaultValue={text}
+            disabled={disabled}
             onInputValue={(price) => this.updateOrderProduct(index, { price })}
           />
         )
@@ -118,9 +123,10 @@ class OrderGrid extends React.Component {
         width: '20%',
         render: (text, record, index) => (
           <EditCell
-           type="text"
-           defaultValue={text}
-           onInputValue={(remarks) => this.updateOrderProduct(index, { remarks })} />
+            type="text"
+            defaultValue={text}
+            disabled={disabled}
+            onInputValue={(remarks) => this.updateOrderProduct(index, { remarks })} />
         )
       }
     ];
@@ -173,7 +179,7 @@ class OrderGrid extends React.Component {
 
 
   render() {
-    const { disabled } = this.props;
+    const { disabled = false } = this.props;
     const { order } = this.state;
     return (
       <div>
@@ -181,7 +187,6 @@ class OrderGrid extends React.Component {
           dataSource={order.products}
           columns={this.columns}
           bordered
-          disabled={disabled}
           pagination={false}
           footer={() => (
             <div className={footerClass}>
@@ -191,7 +196,13 @@ class OrderGrid extends React.Component {
               </div>
               <div className={footerItem}>
                 <span>支付金额：￥</span>
-                <EditCell type="number" underLine="true" defaultValue={order.paymentAmount} onInputValue={this.updatePaymentAmount} />
+                <EditCell
+                  type="number"
+                  underLine="true"
+                  defaultValue={order.paymentAmount}
+                  onInputValue={this.updatePaymentAmount}
+                  disabled={disabled}
+                />
               </div>
             </div>
           )
