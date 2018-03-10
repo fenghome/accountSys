@@ -9,7 +9,7 @@ import AddOrder from '../../components/Orders/AddOrder/AddOrder';
 import ModifyOrder from '../../components/Orders/ModifyOrder/ModifyOrder';
 import { orderContainer, orderBar } from './index.css';
 
-class Orders extends Component {
+class Storage extends Component {
 
   onSearch = (values) => {
     //取得values对orders的数据进行筛选
@@ -137,7 +137,7 @@ class Orders extends Component {
 }
 
 function mapStateToProps(state) {
-  return { orders: state.orders }
+  return { storages: state.storages }
 }
 
-export default connect(mapStateToProps)(Orders);
+export default connect(mapStateToProps)(Storage);
