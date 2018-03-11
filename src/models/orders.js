@@ -13,6 +13,7 @@ const defaultOrder = {
   sequence: null,
   orderNumber: '',
   customerId: null,
+  customerName:null,
   products: [
     { ...defaultProduct }
   ],

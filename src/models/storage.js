@@ -13,6 +13,7 @@ const defaultStorage = {
   sequence: null,
   noteNumber: '',
   supplierId: null,
+  supplierName:null,
   products: [
     { ...defaultProduct }
   ],
@@ -52,7 +53,7 @@ export default {
           dispatch({ type: 'getSuppliers' });
           dispatch({ type: 'getproductList' });
         }
-      }); 
+      });
     },
   },
 

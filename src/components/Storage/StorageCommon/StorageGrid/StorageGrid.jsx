@@ -147,7 +147,7 @@ class StorageGrid extends React.Component {
   }
 
   updateStorageProduct = (index, obj) => {
-    const { updateStorage } = this.props;
+    const { updateStorageSingle } = this.props;
     const { storageSingle } = this.state;
     let { totalAmount = 0 } = this.state;
     const { products = [] } = order;
@@ -162,17 +162,17 @@ class StorageGrid extends React.Component {
     this.setState({
       storageSingle
     });
-    updateStorage(this.state.storageSingle);
+    updateStorageSingle(this.state.storageSingle);
   }
 
   updatePaymentAmount = (value) => {
-    const { updateStorage } = this.props;
+    const { updateStorageSingle } = this.props;
     const { storageSingle } = this.state;
     storageSingle.paymentAmount = value;
     this.setState({
       storageSingle
     });
-    updateStorage(order);
+    updateStorageSingle(order);
   }
 
 

@@ -15,10 +15,10 @@ function AddStorage({dispatch, storage}) {
 
   }
 
-  function updateStorage(storageSingle) {
+  function updateStorageSingle(storageSingle) {
     dispatch({
       type: 'storage/updateStorageSingle',
-      payload: order
+      payload: storageSingle
     })
   }
 
@@ -33,8 +33,8 @@ function AddStorage({dispatch, storage}) {
     <div>
       <Storagetitle title="门窗入库单" number={noteNumber} />
       <SuppliersForm suppliers={suppliers} />
-      <StorageGrid productList={productList} order={order} updateOrder={updateOrder}/>
-      <RemarksForm changeOrderMem={changeOrderMem}/>
+      <StorageGrid productList={productList} storageSingle={storageSingle} updateStorageSingle={updateStorageSingle}/>
+      <RemarksForm changeStorageMem={changeStorageMem}/>
       <div className={buttonGroup}>
         <Button type="primary" className={btnOk}>确定</Button>
         <Button className={btnCanel}>取消</Button>
