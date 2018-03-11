@@ -24,13 +24,34 @@ const defaultStorage = {
 
 const initState = {
   pageType: 'show',
-  list: [],
+  list: [
+    {
+      sequence:null,
+      noteNumber:'',
+      supplierId:'',
+      supplierName:'',
+      products:[
+        {
+          key: '0',
+          productId: '',
+          productName: '',
+          quantity: 0,
+          productUnit: '',
+          price: 0,
+          amount: 0,
+          remarks: ''
+        }
+      ],
+      totalAmount:'',
+      paymentAmount:'',
+      mem:''
+    }
+  ],
   timeRange: [],
-  supplierId: '',
-  NoteNumber: '',
+  supplierId: '',  
   current: null,
   currentItem: {},
-  breadcrumbITems: [
+  breadcrumbItems: [
     ['/', '首页'],
     ['/storage', '入库'],
   ],
@@ -85,7 +106,14 @@ export default {
         type: 'getProductListSuccess',
         payload: productList
       })
+    },
 
+    *getStorageNumber({payload},{call,put}){
+
+    },
+
+    *getStorageById({payload},{call,put}){
+      
     }
   },
 

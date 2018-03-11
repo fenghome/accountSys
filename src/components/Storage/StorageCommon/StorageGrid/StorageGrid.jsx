@@ -24,7 +24,7 @@ class StorageGrid extends React.Component {
     this.defaultStorageSingle = {
       sequence: props.order.sequence,
       orderNumber: props.order.orderNumber,
-      customerId: null,
+      supplierId: null,
       products: [
         this.defaultProduct
       ],

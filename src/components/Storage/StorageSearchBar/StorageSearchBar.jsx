@@ -7,8 +7,8 @@ const { RangePicker } = DatePicker;
 const Option = Select.Option;
 
 
-function OrderSearchBar({
-  customers,
+function StorageSearchBar({
+  suppliers,
   onSearch,
   form: {
     getFieldDecorator,
@@ -33,13 +33,13 @@ function OrderSearchBar({
           )
         }
       </FormItem>
-      <FormItem layout={formItemLayout} label="客户名称：">
+      <FormItem layout={formItemLayout} label="供应商名称：">
         {
-          getFieldDecorator('customerId')(
+          getFieldDecorator('supplierId')(
             <Select style={{ width: 150 }}>
               {
-                customers.map(({ _id, customerName }) => (
-                  <Option key={_id}>{customerName}</Option>
+                suppliers.map(({ supplierId, supplierName }) => (
+                  <Option key={supplierId}>{supplierName}</Option>
                 ))
               }
             </Select>
@@ -60,4 +60,4 @@ function OrderSearchBar({
   )
 }
 
-export default Form.create()(OrderSearchBar);
+export default Form.create()(StorageSearchBar);

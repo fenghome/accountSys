@@ -3,7 +3,7 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({ orders, onModify, onDelete, onDetails }) {
+function StorageList({ list, onModify, onDelete, onDetails }) {
 
   function onDelete(value) {
     console.log(value);
@@ -23,13 +23,13 @@ function OrderList({ orders, onModify, onDelete, onDetails }) {
   },
   {
     title: '单据编号',
-    dataIndex: 'orderNumber',
-    key: 'orderNumber'
+    dataIndex: 'noteNumber',
+    key: 'noteNumber'
   },
   {
     title: '客户名称',
-    dataIndex: 'customerName',
-    key: 'customerName'
+    dataIndex: 'supplierName',
+    key: 'supplierName'
   },
   {
     title: '应付金额',
@@ -85,10 +85,10 @@ function OrderList({ orders, onModify, onDelete, onDetails }) {
   return (
     <Table
       columns={columns}
-      dataSource={orders}
-      rowKey={record => record.orderNumber}
+      dataSource={list}
+      rowKey={record => record.noteNumber}
       rowSelection={rowSelection} />
   )
 }
 
-export default OrderList;
+export default StorageList;

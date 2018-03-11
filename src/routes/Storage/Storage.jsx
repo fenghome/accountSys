@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import { Button } from 'antd';
 
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
-import OrderSearchBar from '../../components/Orders/OrderSearchBar/OrederSearchBar';
-import OrderList from '../../components/Orders/OrderList/OrderList';
-import AddOrder from '../../components/Orders/AddOrder/AddOrder';
-import ModifyOrder from '../../components/Orders/ModifyOrder/ModifyOrder';
-import { orderContainer, orderBar } from './index.css';
+import StorageSearchBar from '../../components/Storage/StorageSearchBar/StorageSearchBar';
+import StorageList from '../../components/Storage/StorageList/Storagelist';
+import AddStorage from '../../components/Storage/AddStorage/AddStorage';
+import ModifyStorage from '../../components/Storage/ModifyStorage/ModifyStorage';
+import { storageContainer, storageBar } from './index.css';
 
 class Storage extends Component {
 
@@ -19,16 +19,16 @@ class Storage extends Component {
   onAdd = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'orders/getOrderNumber'
+      type: 'storage/getOrderNumber'
     });
     dispatch({
-      type: 'orders/addBreadcrumbItem',
+      type: 'storage/addBreadcrumbItem',
       payload: {
-        item: ['新增订单', '/orders/addorder']
+        item: ['新增入库', '/storage/add']
       }
     });
     dispatch({
-      type: 'orders/changePageType',
+      type: 'storage/changePageType',
       payload: 'add'
     });
   }
@@ -36,17 +36,17 @@ class Storage extends Component {
   onDetails = (orderId) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'orders/getOrderById',
+      type: 'storage/getStorageById',
       payload: orderId
     });
     dispatch({
-      type: 'orders/addBreadcrumbItem',
+      type: 'storage/addBreadcrumbItem',
       payload: {
-        item: ['浏览订单', '/orders/detailsorder']
+        item: ['浏览入库', '/storage/details']
       }
     });
     dispatch({
-      type: 'orders/changePageType',
+      type: 'storage/changePageType',
       payload: 'details'
     });
   }
@@ -54,17 +54,17 @@ class Storage extends Component {
   onModify = (orderId) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'orders/getOrderById',
-      payload: orderId
+      type: 'storage/getStorageById',
+      payload: storage
     });
     dispatch({
-      type: 'orders/addBreadcrumbItem',
+      type: 'storage/addBreadcrumbItem',
       payload: {
-        item: ['编辑订单', '/orders/modifyorder']
+        item: ['编辑入库', '/storage/modify']
       }
     });
     dispatch({
-      type: 'orders/changePageType',
+      type: 'storage/changePageType',
       payload: 'modify'
     });
   }
@@ -74,20 +74,20 @@ class Storage extends Component {
   }
 
   render() {
-    const { pageType, breadcrumbItems, customers, orders, order, productList } = this.props.orders;
-    const { orderNumber } = order;
+    const { pageType, breadcrumbItems, suppliers, list, storageSingle, productList } = this.props.storage;
+    const { noteNumber } = storageSingle;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
         {
           pageType == 'show' && (
-            <div className={orderContainer}>
-              <div className={orderBar}>
-                <OrderSearchBar customers={customers} onSearch={this.onSearch} />
+            <div className={storageContainer}>
+              <div className={storageBar}>
+                <StorageSearchBar suppliers={suppliers} onSearch={this.onSearch} />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
-              <OrderList
-                orders={orders}
+              <StorageList
+                list={list}
                 onModify={this.onModify}
                 onDelete={this.onDelete}
                 onDetails={this.onDetails}
@@ -97,20 +97,20 @@ class Storage extends Component {
         }
         {
           pageType == 'add' && (
-            <div className={orderContainer}>
-              <AddOrder
-                number={orderNumber}
-                customers={customers}
+            <div className={storageContainer}>
+              <AddStorage
+                number={noteNumber}
+                suppliers={suppliers}
                 productList={productList} />
             </div>
           )
         }
         {
           pageType == 'modify' && (
-            <div className={orderContainer}>
-              <ModifyOrder
-                number={orderNumber}
-                customers={customers}
+            <div className={storageContainer}>
+              <ModifyStorage
+                number={noteNumber}
+                suppliers={suppliers}
                 productList={productList}
               />
             </div>
@@ -118,26 +118,23 @@ class Storage extends Component {
         }
         {
           pageType == 'details' && (
-            <div className={orderContainer}>
-              <ModifyOrder
-                number={orderNumber}
-                customers={customers}
+            <div className={storageContainer}>
+              <ModifyStorage
+                number={noteNumber}
+                suppliers={suppliers}
                 productList={productList}
                 disabled={true}
               />
             </div>
           )
         }
-
-
-
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-  return { storages: state.storages }
+  return { storage: state.storage }
 }
 
 export default connect(mapStateToProps)(Storage);
