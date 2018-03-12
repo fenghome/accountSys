@@ -31,9 +31,6 @@ export default {
   effects: {
     *queryProducts({ payload }, { call, put, select }) {
       const isLogin = yield select(({ systemUser }) => systemUser.isLogin);
-      if (!isLogin) {
-        return;
-      }
       const data = {
         success: 'ok',
         products: [
@@ -43,16 +40,34 @@ export default {
           }
         ]
       };
-      yield call({
+      yield put({
         type: 'queryProductsSuccess',
         payload: data.products
       });
     },
 
-    *query({payload},{select,call,put}){
-      console.log('payload is %s',payload);
-      let productId = payload && payload.productId!='00000'?payload.productId:'sss';
-      console.log('productId is %s',productId);
+    *query({ payload }, { select, call, put }) {
+      let productId = payload && payload.productId != '00000' ? payload.productId : '';
+      const data = {
+        success: 'ok',
+        products: [
+          {
+            productId:0,
+            productName:'被子'
+          },
+          {
+            productId:1,
+            productName:'枕头'
+          }
+        ]
+      };
+      if (data && data.success) {
+        yield put({
+          type: 'querySuccess',
+          stocks: [...data.products],
+          funds: [...data.products]
+        });
+      }
     }
   },
 
@@ -60,6 +75,10 @@ export default {
     queryProductsSuccess(state, { payload: products }) {
       return { ...state, products };
     },
+
+    querySuccess(state, { stocks, funds }) {
+      return { ...state, stocks, funds };
+    }
   },
 
 };
