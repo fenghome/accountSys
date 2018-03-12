@@ -34,7 +34,7 @@ function AddStorage({dispatch, storage}) {
       <Storagetitle title="门窗入库单" number={noteNumber} />
       <SuppliersForm suppliers={suppliers} />
       <StorageGrid productList={productList} storageSingle={storageSingle} updateStorageSingle={updateStorageSingle}/>
-      <RemarksForm changeStorageMem={changeStorageMem}/>
+      <RemarksForm changeStorageSingleMem={changeStorageSingleMem}/>
       <div className={buttonGroup}>
         <Button type="primary" className={btnOk}>确定</Button>
         <Button className={btnCanel}>取消</Button>

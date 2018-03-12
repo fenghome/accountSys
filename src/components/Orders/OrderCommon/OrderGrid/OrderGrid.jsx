@@ -148,6 +148,7 @@ class OrderGrid extends React.Component {
   }
 
   updateOrderProduct = (index, obj) => {
+
     const { updateOrder } = this.props;
     const { order } = this.state;
     let { totalAmount = 0 } = this.state;

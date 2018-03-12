@@ -149,7 +149,6 @@ export default {
       //远程获得order
       //在这里我模拟获得的order
       const orders = yield select(state => state.orders.orders);
-      console.log('model orders is', orders);
       yield put({
         type: 'getOrderByIdSuccess',
         payload: {

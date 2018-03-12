@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Button } from 'antd';
-import Storagetitle from '../StorageCommon/StorageTitle/StorageTitle'
-import SuppliersForm from '../StorageCommon/SuppliersForm/SuppliersForm';
+import StorageTitle from '../StorageCommon/StorageTitle/StorageTitle'
+import SuppilersForm from '../StorageCommon/SuppliersForm/SuppliersForm';
 import StorageGrid from '../StorageCommon/StorageGrid/StorageGrid';
 import RemarksForm from '../StorageCommon/RemarksForm/RemarksForm';
 import { buttonGroup,btnOk, btnCanel } from './index.css';

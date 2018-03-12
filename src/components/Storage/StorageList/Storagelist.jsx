@@ -53,13 +53,13 @@ function StorageList({ list, onModify, onDelete, onDetails }) {
     key: 'operation',
     render: (text, record) => (
       <div>
-        <a onClick={() => { onModify(record['_id']) }}>编辑</a>
+        <a onClick={() => { onModify(record.noteNumber) }}>编辑</a>
         <Divider type="vertical" />
-        <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record['_id']) }} okText="确定" cancelText="取消">
+        <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record.noteNumber) }} okText="确定" cancelText="取消">
           <a>删除</a>
         </Popconfirm>
         <Divider type="vertical" />
-        <a onClick={() => { onDetails(record['_id']) }}>详情</a>
+        <a onClick={() => { onDetails(record.noteNumber) }}>详情</a>
       </div>
     )
   }

@@ -2,7 +2,7 @@ const defaultProduct = {
   key: '0',
   productId: '',
   productName: '',
-  quantify: 0,
+  quantity: 0,
   productUnit: '',
   price: 0,
   amount: 0,
@@ -13,7 +13,7 @@ const defaultStorage = {
   sequence: null,
   noteNumber: '',
   supplierId: null,
-  supplierName:null,
+  supplierName: null,
   products: [
     { ...defaultProduct }
   ],
@@ -26,11 +26,11 @@ const initState = {
   pageType: 'show',
   list: [
     {
-      sequence:null,
-      noteNumber:'',
-      supplierId:'',
-      supplierName:'',
-      products:[
+      sequence: null,
+      noteNumber: '',
+      supplierId: '',
+      supplierName: '',
+      products: [
         {
           key: '0',
           productId: '',
@@ -42,18 +42,18 @@ const initState = {
           remarks: ''
         }
       ],
-      totalAmount:'',
-      paymentAmount:'',
-      mem:''
+      totalAmount: '',
+      paymentAmount: '',
+      mem: ''
     }
   ],
   timeRange: [],
-  supplierId: '',  
+  supplierId: '',
   current: null,
   currentItem: {},
   breadcrumbItems: [
-    ['/', '首页'],
-    ['/storage', '入库'],
+    ['首页', '/'],
+    ['入库', '/storage'],
   ],
   storageSingle: { ...defaultStorage },
   suppliers: [],
@@ -68,9 +68,10 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
-      history.listen(({ patname }) => {
+      history.listen(({ pathname }) => {
         if (pathname === '/storage') {
           dispatch({ type: 'initState' });
+          dispatch({ type: 'getList' });
           dispatch({ type: 'getSuppliers' });
           dispatch({ type: 'getproductList' });
         }
@@ -79,10 +80,41 @@ export default {
   },
 
   effects: {
+    *getList({ payload }, { call, put }) {
+      const list = [
+        {
+          _id: 1,
+          sequence: null,
+          createInstance: '2017-06-01',
+          noteNumber: 'MDC201802270001',
+          supplierId: 1,
+          supplierName: '张三',
+          products: [
+            {
+              key: '0',
+              productId: 1,
+              productName: '桌布',
+              quantity: 2,
+              productUnit: '个',
+              price: 5,
+              amount: 10,
+              remarks: ''
+            }
+          ],
+          totalAmount: 10,
+          paymentAmount: 10,
+          mem: 'aaaaa'
+        }
+      ];
+      yield put({
+        type: 'getListSuccess',
+        payload: list
+      })
+    },
     *getSuppliers({ payload }, { call, put }) {  // eslint-disable-line
       const suppliers = [
         {
-          _id:0,
+          _id: 0,
           supplierId: 0,
           supplierName: '张三家'
         }
@@ -98,22 +130,37 @@ export default {
       const productList = [
         {
           productId: 0,
-          productName: '锤子'
+          productName: '锤子',
+          productUnit: '个'
         }
       ];
-
       yield put({
         type: 'getProductListSuccess',
         payload: productList
       })
     },
 
-    *getStorageNumber({payload},{call,put}){
-
+    *getStorageNumber({ payload }, { call, put }) {
+      //模拟服务器产生1个number
+      const noteNumber = 'MDC201802270003';
+      const newStorageSingle = { ...defaultStorage, noteNumber };
+      yield put({
+        type:'getStorageNumberSuccess',
+        payload: newStorageSingle
+      });
     },
 
-    *getStorageById({payload},{call,put}){
-      
+    *getStorageById({ payload: noteNumber }, { call, put, select }) {
+      //根据noteNumber得到storageSingle
+      const list = yield select(state => state.storage.list);
+      const storageSingle = list.find(item => item.noteNumber === noteNumber);
+      yield put(
+        {
+          type: 'updateStorageSingle',
+          payload: storageSingle
+        }
+      )
+
     }
   },
 
@@ -122,13 +169,37 @@ export default {
       return { ...initState };
     },
 
-    getSuppliers(state, { payload: suppliers }) {
+    getListSuccess(state, { payload: list }) {
+      return { ...state, list }
+    },
+
+    getSuppliersSuccess(state, { payload: suppliers }) {
       return { ...state, suppliers }
     },
 
     getProductListSuccess(state, { payload: productList }) {
       return { ...state, productList }
-    }
+    },
+
+    getStorageNumberSuccess(state, { payload: newStorageSingle }) {
+      return { ...state, storageSingle: newStorageSingle }
+    },
+
+    changePageType(state, { payload: pageType }) {
+      return { ...state, pageType }
+    },
+
+    updateStorageSingle(state, { payload: storageSingle }) {
+      return { ...state, storageSingle }
+    },
+
+    changeStorageSingleMem(state, { payload: mem }) {
+      const storageSingle = { ...state.storageSingle, mem }
+      return { ...state, storageSingle }
+    },
+
+
+
   },
 
 };

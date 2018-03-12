@@ -22,8 +22,8 @@ class StorageGrid extends React.Component {
     }
 
     this.defaultStorageSingle = {
-      sequence: props.order.sequence,
-      orderNumber: props.order.orderNumber,
+      sequence: props.storageSingle.sequence,
+      orderNumber: props.storageSingle.orderNumber,
       supplierId: null,
       products: [
         this.defaultProduct
@@ -68,9 +68,9 @@ class StorageGrid extends React.Component {
             defaultProduct={record}
             disabled={disabled}
             onSelectProduct={(product) => {
-              this.updateOrderProduct(index, {
+              this.updateStorageProduct(index, {
                 productId: product['_id'],
-                productId: product['productName'],
+                productName: product['productName'],
                 productUnit: product['productUnit']
               })
             }}
@@ -86,7 +86,7 @@ class StorageGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(number) => this.updateOrderProduct(index, { quantity: number })}
+            onInputValue={(number) => this.updateStorageProduct(index, { quantity: number })}
           />
         )
       }, {
@@ -94,7 +94,7 @@ class StorageGrid extends React.Component {
         dataIndex: 'productUnit',
         key: 'productUnit',
         render: (text, record, index) => {
-          const { products = [] } = this.state.order;
+          const { products = [] } = this.state.storageSingle;
           const { productUnit = "" } = products[index];
           return <span>{productUnit}</span>
         }
@@ -150,11 +150,12 @@ class StorageGrid extends React.Component {
     const { updateStorageSingle } = this.props;
     const { storageSingle } = this.state;
     let { totalAmount = 0 } = this.state;
-    const { products = [] } = order;
+    const { products = [] } = storageSingle;
     const currProductRow = products[index];
-    const newProductRow = { ...currProductRow, ...obj }
+    const newProductRow = { ...currProductRow, ...obj };
     newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    order.products[index] = newProductRow;
+    console.log('amount',newProductRow.amount);
+    storageSingle.products[index] = newProductRow;
     for (let i of products) {
       totalAmount = totalAmount + i.amount;
     }
@@ -172,7 +173,7 @@ class StorageGrid extends React.Component {
     this.setState({
       storageSingle
     });
-    updateStorageSingle(order);
+    updateStorageSingle(storageSingle);
   }
 
 

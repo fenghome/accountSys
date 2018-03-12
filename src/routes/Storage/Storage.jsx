@@ -19,7 +19,7 @@ class Storage extends Component {
   onAdd = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'storage/getOrderNumber'
+      type: 'storage/getStorageNumber'
     });
     dispatch({
       type: 'storage/addBreadcrumbItem',
@@ -51,11 +51,11 @@ class Storage extends Component {
     });
   }
 
-  onModify = (orderId) => {
+  onModify = (noteNumber) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'storage/getStorageById',
-      payload: storage
+      payload: noteNumber
     });
     dispatch({
       type: 'storage/addBreadcrumbItem',
