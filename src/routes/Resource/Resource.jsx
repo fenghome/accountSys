@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Button } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
-import SearchBar from '../../components/SearchBar/SearchBar';
+import SearchBar from '../../components/Resource/SearchBar/SearchBar';
 import { reaourceBar } from './index.css';
 
 class Resource extends Component {

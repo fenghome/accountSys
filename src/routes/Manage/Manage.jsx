@@ -5,7 +5,6 @@ class Manage extends Component{
     const {children} = this.props;
     return (
       <div>
-        Manage
         {children}
       </div>
     )
