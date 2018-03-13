@@ -29,12 +29,26 @@ export default {
     *getProducts({ payload }, { call, put }) {  // eslint-disable-line
       const products = [
         {
-          productCode: 0,
+          productCode: 'P0001',
           productImg: null,
-          productName: '',
-          productType: '',
-          productUnit: '',
-        }
+          productName: '杯子',
+          productType: '餐具',
+          productUnit: '个',
+        },
+        {
+          productCode: 'p0002',
+          productImg: null,
+          productName: '床单',
+          productType: '床品',
+          productUnit: '条',
+        },
+        {
+          productCode: 'p0003',
+          productImg: null,
+          productName: '字典',
+          productType: '书',
+          productUnit: '本',
+        },
       ]
       yield put({
         type: 'getProductsSuccess',

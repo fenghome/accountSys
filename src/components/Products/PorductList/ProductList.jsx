@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Button, Divider } from 'antd';
 
-function ProductList() {
+function ProductList({products}) {
   const columns = [
     {
       title: '序号',
@@ -54,18 +54,13 @@ function ProductList() {
     }
   ];
 
-  const data = [
-
-  ];
-
-
   const rowSelection = {
 
   };
 
   return (
     <div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table rowSelection={rowSelection} columns={columns} dataSource={products} />
     </div>
   )
 }

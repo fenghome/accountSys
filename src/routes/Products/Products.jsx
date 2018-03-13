@@ -28,7 +28,7 @@ class Products extends Component {
           <Button type="primary">添加</Button>
         </div>
         <div className={productContainer}>
-          <ProductList />
+          <ProductList products={products}/>
         </div>
       </div>
     )
