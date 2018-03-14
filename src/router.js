@@ -13,6 +13,7 @@ import SupplierBills from './routes/SupplierBills/SupplierBills';
 import Customers from './routes/Customers/Customers';
 import Products from './routes/Products/Products';
 import Suppliers from './routes/Suppliers/Suppliers';
+import Test from './routes/Test/Test';
 
 function RouterConfig({ history }) {
   return (
@@ -34,6 +35,7 @@ function RouterConfig({ history }) {
           <Route path="/product" component={Products} />
           <Route path="/supplier" component={Suppliers} />
         </Route>
+        <Route path="/test" component={Test} />
       </Route>
     </Router>
   );

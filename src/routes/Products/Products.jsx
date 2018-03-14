@@ -9,7 +9,7 @@ import { productsBar, productContainer } from './index.css';
 
 class Products extends Component {
 
-  onSearch = (value)=>{ 
+  onSearch = (value)=>{
     console.log(value);
   }
 
@@ -32,7 +32,7 @@ class Products extends Component {
         <BreadcrumbList
           breadcrumbItems={breadcrmbItems}
         />
-   
+
           {
             pageType === "show" &&
             <div className={productContainer}>
@@ -45,7 +45,7 @@ class Products extends Component {
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
               <ProductList products={products}/>
-            </div> 
+            </div>
           }
           {
             pageType === "add" &&
@@ -54,7 +54,7 @@ class Products extends Component {
             </div>
           }
 
-      
+
       </div>
     )
   }
