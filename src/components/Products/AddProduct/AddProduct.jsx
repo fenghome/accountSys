@@ -72,8 +72,11 @@ function AddProduct({
         </FormItem>
         <FormItem label="商品图片：" { ...formItemLayout}>
           {
-            getFieldDecorator('productImg')(
-              <Input type="text"  />
+            getFieldDecorator('productImg',{
+              valuePropName:'fileList',
+              getValueFormEvent:normFile
+            })(
+              <Input type="text" />
             )
           }
         </FormItem>
