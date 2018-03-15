@@ -15,27 +15,48 @@ const formItemLayout = {
 
 class Test extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      projectImage:''
+      fileList: []
     }
   }
 
-  handleUpload = (e)=>{
+  handleUpload = (e) => {
+
     console.log(e);
   }
 
+  onClick = ()=>{
+    const { validateFields } = this.props.form;
+    validateFields((errors,values)=>{
+      console.log(values);
+    })
+  }
+
   render() {
+    const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <Upload name="files" action="/api/upload" listType="picture" onChange={(e) => this.handleUpload(e)}>
-          <Button type="ghost">
-            <Icon type="upload" />上传
-          </Button>
-        </Upload>
+        <Form>
+          <FormItem>
+            {
+              getFieldDecorator('files')(
+                <Upload action="/upload" listType="picture" fileList={this.state.fileList}
+                >
+                  <Button type="ghost">
+                    <Icon type="upload" />上传
+                  </Button>
+                </Upload>
+              )
+            }
+          </FormItem>
+          <Button onClick={this.onClick}>确定</Button>
+        </Form>
+
 
       </div>
+
 
     )
   }
