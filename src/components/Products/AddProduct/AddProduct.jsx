@@ -1,14 +1,9 @@
 import React from 'react';
 import { Form, Input, Upload, Button, Icon } from 'antd';
+import { connect } from 'dva';
 import Title from '../../Title/Title';
-import { addProduct } from './index.css';
-
+import ProductForm from '../ProdctCommon/ProductForm/ProductForm';
 const FormItem = Form.Item;
-
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 16 }
-}
 
 class AddProduct extends React.Component {
   constructor(props) {
@@ -18,83 +13,40 @@ class AddProduct extends React.Component {
     }
   }
 
-  onUploadFiles = (e) => {
-    console.log(e);
+  onConfirm = (values) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'products/saveProduct',
+      payload: values
+    });
+    console.log(values);
+  }
+
+  onCancel = (values) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'products/changePageType',
+      payload: 'show'
+    });
+    dispatch({
+      type: 'products/initCurrentProduct'
+    })
+    console.log(values);
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <div>
         <Title title="商品信息" />
-        <Form className={addProduct}>
-          <h2>基础资料</h2>
-          <FormItem label="商品编号：" { ...formItemLayout}>
-            {
-              getFieldDecorator('productCode')(
-                <Input type="text" />
-              )
-            }
-          </FormItem>
-          <FormItem label="商品名称：" { ...formItemLayout}>
-            {
-              getFieldDecorator('productName', {
-                rules: [
-                  {
-                    required: true,
-                    message: '商品名称不能为空'
-                  }
-                ]
-              })(
-                <Input type="text" />
-                )
-            }
-          </FormItem>
-          <FormItem label="商品类别：" { ...formItemLayout}>
-            {
-              getFieldDecorator('productType', {
-                rules: [
-                  {
-                    required: true,
-                    message: '商品名称不能为空'
-                  }
-                ]
-              })(
-                <Input type="text" />
-                )
-            }
-          </FormItem>
-          <FormItem label="商品单位：" { ...formItemLayout}>
-            {
-              getFieldDecorator('productUnit', {
-                rules: [
-                  {
-                    required: true,
-                    message: '商品名称不能为空'
-                  }
-                ]
-              })(
-                <Input type="text" />
-                )
-            }
-          </FormItem>
-          <FormItem label="商品图片：" { ...formItemLayout}>
-            {
-              getFieldDecorator('productImg')(
-                <Upload action="/api/upload"
-                  listType="picture"
-                  fileList={this.state.fileList}
-                  onChange={(e)=>this.onUploadFiles(e)}
-                >
-                  <Button><Icon type="upload">上传</Icon></Button>
-                </Upload>
-              )
-            }
-          </FormItem>
-        </Form>
+        <ProductForm
+          onConfirm={values => this.onConfirm(values)}
+          onCancel={values => this.onCancel(values)} />
       </div>
     )
   }
 }
 
-export default Form.create()(AddProduct);
+function mapStateToProps(state) {
+  return { products: state.products }
+}
+export default connect(mapStateToProps)(AddProduct);

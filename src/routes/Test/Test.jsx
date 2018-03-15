@@ -27,6 +27,7 @@ class Test extends React.Component {
     console.log(e);
   }
 
+
   onClick = ()=>{
     const { validateFields } = this.props.form;
     validateFields((errors,values)=>{
@@ -42,7 +43,10 @@ class Test extends React.Component {
           <FormItem>
             {
               getFieldDecorator('files')(
-                <Upload action="/upload" listType="picture" fileList={this.state.fileList}
+                <Upload action="/upload"
+                  listType="picture"
+                  fileList={this.state.fileList}
+
                 >
                   <Button type="ghost">
                     <Icon type="upload" />上传

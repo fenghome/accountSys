@@ -7,30 +7,28 @@ const defaultBreadcrumb = [
 
 export default {
 
-  namespace : 'products',
+  namespace: 'products',
 
-  state : {
+  state: {
     pageType: 'show',
     breadcrmbItems: defaultBreadcrumb,
     products: [],
     currProduct: null
   },
 
-  subscriptions : {
-    setup({dispatch, history}) { // eslint-disable-line
-      history.listen(({pathname}) => {
+  subscriptions: {
+    setup({ dispatch, history }) { // eslint-disable-line
+      history.listen(({ pathname }) => {
         if (pathname === '/product') {
-          dispatch({type: 'initState'});
-          dispatch({type: 'getProducts'});
+          dispatch({ type: 'initState' });
+          dispatch({ type: 'getProducts' });
         }
       })
     }
   },
 
-  effects : {
-    *getProducts({
-      payload
-    }, {call, put}) { // eslint-disable-line
+  effects: {
+    *getProducts({ payload }, { call, put }) { // eslint-disable-line
       const products = [
         {
           productCode: 'P0001',
@@ -52,36 +50,41 @@ export default {
           productUnit: '本'
         }
       ];
+      yield put({
+        type: 'getProductsSuccess',
+        payload: products
+      });
+    },
 
-      yield put({type: 'getProductsSuccess', payload: products});
+    *saveProduct({ payload: data }, { call, put }) {
+
+      //
+      yield put({
+        type: 'changePageType',
+        payload: 'show'
+      });
+
+      yield put({
+        type: 'initCurrentProduct'
+      });
     }
   },
 
-  reducers : {
+  reducers: {
     initState(state, action) {
-      return {
-        ...state,
-        pageType: 'show',
-        breadcrmbItems: defaultBreadcrumb,
-        currProduct: null
-      };
+      return { ...state, pageType: 'show', breadcrmbItems: defaultBreadcrumb, currProduct: null };
     },
 
-    getProductsSuccess(state, {payload: products}) {
+    getProductsSuccess(state, { payload: products }) {
+      return { ...state, products }
+    },
 
-      return {
-        ...state,
-        products
-      }
+    changePageType(state, { payload: pageType }) {
+      return { ...state, pageType }
     },
-    changePageType(state, {payload: pageType}) {
-      return {
-        ...state,
-        pageType
-      }
-    },
-    initCurrentProduct(state,action){
-      return { ...state, currProduct:null}
+
+    initCurrentProduct(state, action) {
+      return { ...state, currProduct: null }
     }
 
   }
