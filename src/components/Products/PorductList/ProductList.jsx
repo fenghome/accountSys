@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table, Button, Divider} from 'antd';
 
-function ProductList({products}) {
+function ProductList({products,onModify,onDetails}) {
   const columns = [
     {
       title: '序号',
@@ -16,7 +16,7 @@ function ProductList({products}) {
         if (text) {
           return <img style={{
             width: 100
-          }} src={text} alert="商品图片"/>
+          }} src={text} alt="商品图片"/>
         } else {
           return <span>暂无图片</span>
         }
@@ -42,9 +42,9 @@ function ProductList({products}) {
       key: 'option',
       render: (text, record, index) => (
         <span>
-          <a>编辑</a>
+          <a onClick={()=>{onModify(record)}}>编辑</a>
           <Divider type="vertical"/>
-          <a>详情</a>
+          <a onClick={()=>{onDetails(record)}}>详情</a>
         </span>
       )
     }
@@ -57,7 +57,7 @@ function ProductList({products}) {
       <Table
         rowKey={record=>record.productCode}
         rowSelection={rowSelection}
-        columns={columns} 
+        columns={columns}
         dataSource={products}/>
     </div>
   )

@@ -75,7 +75,7 @@ function SystemInfo({dispatch,systemUser}) {
         )
       }
       <LogupModal visible={logupModalVisible} onConfirm={doLogup} onCancel={hideLogupModal} />
-      <LoginModal visible={loginModalVisible} onConfirm={doLogin} onCancel={hideLogupModal} />
+      <LoginModal visible={loginModalVisible} onConfirm={doLogin} onCancel={hideLoginModal} />
     </div>
   )
 }

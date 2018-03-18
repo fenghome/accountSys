@@ -1,0 +1,25 @@
+.supplierForm {
+  display: flex;
+  flex-direction: row;
+  padding:40px 15px 0 15px;
+
+  background: #fff;
+}
+
+.formClass {
+  width:50%;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  padding-top:15px;
+}
+
+.buttonGroup Button {
+  width:150px;
+}
+
+.buttonGroup :first-child {
+  margin-right:20px;
+}

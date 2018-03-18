@@ -36,21 +36,40 @@ class ProductForm extends React.Component {
   }
 
   render() {
+    const { product = {}, disabled = false } = this.props;
+    const {
+      productCode = '',
+      productImg = '',
+      productName = '',
+      productType = '',
+      productUnit = ''
+    } = product;
+    const fileList = productImg ? [
+      {
+        uid: '-1',
+        url: productImg
+      }
+    ] : [];
+
     const { getFieldDecorator } = this.props.form;
+
     return (
       <div className={productForm}>
         <Form>
           <h2>基础资料</h2>
           <FormItem label="商品编号：" { ...formItemLayout}>
             {
-              getFieldDecorator('productCode')(
-                <Input type="text" />
-              )
+              getFieldDecorator('productCode', {
+                initialValue: productCode
+              })(
+                <Input type="text" disabled={disabled} />
+                )
             }
           </FormItem>
           <FormItem label="商品名称：" { ...formItemLayout}>
             {
               getFieldDecorator('productName', {
+                initialValue: productName,
                 rules: [
                   {
                     required: true,
@@ -58,13 +77,14 @@ class ProductForm extends React.Component {
                   }
                 ]
               })(
-                <Input type="text" />
+                <Input type="text" disabled={disabled} />
                 )
             }
           </FormItem>
           <FormItem label="商品类别：" { ...formItemLayout}>
             {
               getFieldDecorator('productType', {
+                initialValue: productType,
                 rules: [
                   {
                     required: true,
@@ -72,13 +92,14 @@ class ProductForm extends React.Component {
                   }
                 ]
               })(
-                <Input type="text" />
+                <Input type="text" disabled={disabled} />
                 )
             }
           </FormItem>
           <FormItem label="商品单位：" { ...formItemLayout}>
             {
               getFieldDecorator('productUnit', {
+                initialValue: productUnit,
                 rules: [
                   {
                     required: true,
@@ -86,27 +107,36 @@ class ProductForm extends React.Component {
                   }
                 ]
               })(
-                <Input type="text" />
+                <Input type="text" disabled={disabled} />
                 )
             }
           </FormItem>
           <FormItem label="商品图片：" { ...formItemLayout}>
             {
-              getFieldDecorator('productImg')(
+              getFieldDecorator('productImg', {
+                initialValue: productImg
+              })(
                 <Upload action="/api/upload"
                   listType="picture"
+                  fileList={fileList}
+                  disabled={disabled}
                   onChange={(e) => this.onUploadFiles(e)}
                 >
                   <Button><Icon type="upload">上传</Icon></Button>
                 </Upload>
-              )
+                )
             }
           </FormItem>
         </Form>
+
         <div className={buttonGroup}>
-          <Button type="primary" onClick={this.handleConfirm}>确定</Button>
-          <Button onClick={this.handleCancel}>取消</Button>
+          {
+            disabled || <Button type="primary" onClick={this.handleConfirm}>确定</Button>
+          }
+          <Button type={disabled ? "primary" : ""} onClick={this.handleCancel}>取消</Button>
         </div>
+
+
       </div>
 
     )

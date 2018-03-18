@@ -5,7 +5,7 @@ import Title from '../../Title/Title';
 import ProductForm from '../ProdctCommon/ProductForm/ProductForm';
 const FormItem = Form.Item;
 
-class AddProduct extends React.Component {
+class ProductComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,6 +35,7 @@ class AddProduct extends React.Component {
   }
 
   render() {
+    const { product,disabled}
     return (
       <div>
         <Title title="商品信息" />
@@ -49,4 +50,4 @@ class AddProduct extends React.Component {
 function mapStateToProps(state) {
   return { products: state.products }
 }
-export default connect(mapStateToProps)(AddProduct);
+export default connect(mapStateToProps)(ProductComponent);

@@ -1,11 +1,13 @@
-export default  {
+import { doLogin, doLogup } from '../services/systemUser';
+
+export default {
   namespace: 'systemUser',
 
   state: {
-    isLogin:false,
-    username:'',
-    logupModalVisible:false,
-    loginModalVisible:false,
+    isLogin: false,
+    username: '',
+    logupModalVisible: false,
+    loginModalVisible: false,
   },
 
   subscriptions: {
@@ -14,47 +16,51 @@ export default  {
   },
 
   effects: {
-    *doLogup({ payload:userInfo }, { call, put }) {  // eslint-disable-line
+    *doLogup({ payload: userInfo }, { call, put }) {  // eslint-disable-line
+      const data = yield call(doLogup, userInfo);
+      if(data.success){
+
+      }
       //调用service的logup函数并取得数据
       //如果成功调用logupSuccess
-      yield put({type:'logupSuccess',payload:userInfo})
+      yield put({ type: 'logupSuccess', payload: userInfo })
     },
-    *doLogin({ payload:userInfo},{call,put}){
+    *doLogin({ payload: userInfo }, { call, put }) {
       //调用service的login函数并获取数据
       //如果成功调用loginSuccess
-      yield put({type:'loginSuccess',payload:userInfo})
+      yield put({ type: 'loginSuccess', payload: userInfo })
     }
   },
 
   reducers: {
     showLogupModal(state, action) {
-      return { ...state, logupModalVisible:true};
+      return { ...state, logupModalVisible: true };
     },
-    hideLogupModal(state,action) {
-      return { ...state, logupModalVisible:false}
+    hideLogupModal(state, action) {
+      return { ...state, logupModalVisible: false }
     },
-    showLoginModal(state,action) {
-      return { ...state, loginModalVisible:true};
+    showLoginModal(state, action) {
+      return { ...state, loginModalVisible: true };
     },
-    hideLoginModal(state,action) {
-      return { ...state, loginModalVisible:false}
+    hideLoginModal(state, action) {
+      return { ...state, loginModalVisible: false }
     },
-    logupSuccess(state,{payload:userInfo}){
-      const {username} = userInfo;
+    logupSuccess(state, { payload: userInfo }) {
+      const { username } = userInfo;
       const sessionStorage = window.sessionStorage;
-			sessionStorage.setItem('userInfo', JSON.stringify(username));
-      return { ...state,username,isLogin:true}
+      sessionStorage.setItem('userInfo', JSON.stringify(username));
+      return { ...state, username, isLogin: true }
     },
-    loginSuccess(state,{payload:userInfo}){
-      const {username} = userInfo;
+    loginSuccess(state, { payload: userInfo }) {
+      const { username } = userInfo;
       const sessionStorage = window.sessionStorage;
-			sessionStorage.setItem('userInfo', JSON.stringify(username));
-      return { ...state,username,isLogin:true}
+      sessionStorage.setItem('userInfo', JSON.stringify(username));
+      return { ...state, username, isLogin: true }
     },
-    logout(state,action){
+    logout(state, action) {
       const sessionStorage = window.sessionStorage;
       sessionStorage.setItem('userInfo', JSON.stringify({}));
-      return { ...state,isLogin:false,username:''}
+      return { ...state, isLogin: false, username: '' }
     },
 
   },

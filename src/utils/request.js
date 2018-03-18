@@ -21,8 +21,13 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
+const defaultOptions = {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+}
 export default function request(url, options) {
-  return fetch(url, options)
+  return fetch(url, { ...options, ...defaultOptions })
     .then(checkStatus)
     .then(parseJSON)
     .then(data => ({ data }))

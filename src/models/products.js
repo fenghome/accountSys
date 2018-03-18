@@ -1,7 +1,5 @@
 const defaultBreadcrumb = [
-  [
-    '首页', '/'
-  ],
+  ['首页', '/'],
   ['商品管理', '/product']
 ];
 
@@ -32,7 +30,7 @@ export default {
       const products = [
         {
           productCode: 'P0001',
-          productImg: null,
+          productImg: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
           productName: '杯子',
           productType: '餐具',
           productUnit: '个'
@@ -59,14 +57,9 @@ export default {
     *saveProduct({ payload: data }, { call, put }) {
 
       //
-      yield put({
-        type: 'changePageType',
-        payload: 'show'
-      });
+      yield put({ type: 'initState' });
+      yield put({ type: 'getProducts' });
 
-      yield put({
-        type: 'initCurrentProduct'
-      });
     }
   },
 
@@ -75,16 +68,30 @@ export default {
       return { ...state, pageType: 'show', breadcrmbItems: defaultBreadcrumb, currProduct: null };
     },
 
+    initBreadcrmbItems(state, action) {
+      return { ...state, breadcrmbItems: defaultBreadcrumb }
+    },
+
+    initCurrentProduct(state, action) {
+      return { ...state, currProduct: null }
+    },
+
     getProductsSuccess(state, { payload: products }) {
       return { ...state, products }
+    },
+
+    addBreadcrumb(state, { payload: breadcrmbItem }) {
+      const { breadcrmbItems } = state;
+      const newBreadcrmbItems = [...breadcrmbItems, breadcrmbItem]
+      return { ...state, breadcrmbItems: newBreadcrmbItems }
     },
 
     changePageType(state, { payload: pageType }) {
       return { ...state, pageType }
     },
 
-    initCurrentProduct(state, action) {
-      return { ...state, currProduct: null }
+    changeCurrentProduct(state, { payload: currProduct }) {
+      return { ...state, currProduct }
     }
 
   }

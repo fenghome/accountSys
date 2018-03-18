@@ -13,6 +13,8 @@ app.model(require('./models/orders'));
 app.model(require('./models/storage'));
 app.model(require('./models/resource'));
 app.model(require('./models/products'));
+app.model(require('./models/customers'));
+app.model(require('./models/suppliers'));
 
 // 4. Router
 app.router(require('./router'));
