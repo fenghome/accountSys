@@ -20,33 +20,33 @@ router.post('/logup', function (req, res, next) {
         success: false,
         code: 3
       });
-    }
-
-    let user = new User(userInfo);
-    user.save(function (err, user) {
-      if (err) {
-        res.send({
-          error: err
-        })
-      } else {
-        let authToken = utils.getAuthToken(10);
-        res.send({
-          success: true,
-          userInfo: {
-            username: userInfo['username'],
-            authToken: authToken,
-          }
-        });
-        global[Symbol.for('currentUser')] = user;
-        if (global[Symbol.for('authObject')]) {
-          global[Symbol.for('authObject')][`${authToken}`] = user['_id'];
+    }else{
+      let user = new User(userInfo);
+      user.save(function (err, user) {
+        if (err) {
+          res.send({
+            error: err
+          })
         } else {
-          global[Symbol.for('authObject')] = { [`${authToken}`]: user['_id'] }
+          let authToken = utils.getAuthToken(10);
+          res.send({
+            success: true,
+            userInfo: {
+              username: userInfo['username'],
+              authToken: authToken,
+            }
+          });
+          global[Symbol.for('currentUser')] = user;
+          if (global[Symbol.for('authObject')]) {
+            global[Symbol.for('authObject')][`${authToken}`] = user['_id'];
+          } else {
+            global[Symbol.for('authObject')] = { [`${authToken}`]: user['_id'] }
+          }
         }
-      }
-    })
-
+      });
+    }
   })
+
 });
 
 module.exports = router;

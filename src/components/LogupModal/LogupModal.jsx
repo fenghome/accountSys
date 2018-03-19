@@ -2,10 +2,12 @@ import React from 'react';
 import {Modal,Form,Input,Button} from 'antd';
 
 import {formItemLayout} from '../../constents/constents';
+import { errClass } from './index.css';
 const FormItem = Form.Item;
 
 function LogupModal({
   visible,
+  errMsg,
   onConfirm,
   onCancel,
   form:{
@@ -84,6 +86,7 @@ function LogupModal({
             )
           }
         </FormItem>
+        <div className={errClass}>{errMsg}</div>
       </Form>
     </Modal>
   )
