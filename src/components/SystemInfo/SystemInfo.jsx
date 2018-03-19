@@ -46,7 +46,6 @@ function SystemInfo({ dispatch, systemUser }) {
       type: 'systemUser/doLogin',
       payload: userInfo
     });
-    hideLoginModal();
   }
 
   function doLogout() {
@@ -81,6 +80,7 @@ function SystemInfo({ dispatch, systemUser }) {
       />
       <LoginModal
         visible={loginModalVisible}
+        errMsg={loginErrMsg}
         onConfirm={doLogin}
         onCancel={hideLoginModal}
       />
