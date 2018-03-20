@@ -21,6 +21,11 @@ class Test extends React.Component {
       fileList: []
     }
   }
+  componentDidMount(){
+    console.log(Object.keys(null));
+  }
+
+
 
   handleUpload = (e) => {
 

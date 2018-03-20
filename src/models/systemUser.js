@@ -18,7 +18,8 @@ export default {
       history.listen(({ pathname }) => {
         if (pathname === '/index') {
           const sessionStorage = window.sessionStorage;
-          if (sessionStorage.getItem('userInfo')) {
+          const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+          if (userInfo && Object.keys(userInfo).length > 0) {
             dispatch({
               type: 'loginSuccess',
               payload: JSON.parse(sessionStorage.getItem('userInfo'))
