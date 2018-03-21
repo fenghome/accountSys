@@ -1,30 +1,30 @@
 import { doLogin, doLogup } from '../services/systemUser';
 
+const defaultState = {
+  isLogin: false,
+  username: '',
+  authToken: '',
+  logupModalVisible: false,
+  loginModalVisible: false,
+  logupErrMsg: '',
+  loginErrMsg: '',
+}
+
 export default {
   namespace: 'systemUser',
 
-  state: {
-    isLogin: false,
-    username: '',
-    authToken: '',
-    logupModalVisible: false,
-    loginModalVisible: false,
-    logupErrMsg: '',
-    loginErrMsg: '',
-  },
+  state: defaultState,
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
       history.listen(({ pathname }) => {
-        if (pathname === '/index') {
-          const sessionStorage = window.sessionStorage;
-          const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-          if (userInfo && Object.keys(userInfo).length > 0) {
-            dispatch({
-              type: 'loginSuccess',
-              payload: JSON.parse(sessionStorage.getItem('userInfo'))
-            })
-          }
+        const sessionStorage = window.sessionStorage;
+        const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        if (userInfo && Object.keys(userInfo).length > 0) {
+          dispatch({
+            type: 'loginSuccess',
+            payload: JSON.parse(sessionStorage.getItem('userInfo'))
+          })
         }
       })
     },
@@ -100,7 +100,7 @@ export default {
     logout(state, action) {
       const sessionStorage = window.sessionStorage;
       sessionStorage.setItem('userInfo', JSON.stringify({}));
-      return { ...state, isLogin: false, username: '' }
+      return { ...defaultState, isLogin: false, username: '' }
     },
   },
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Modal } from 'antd';
 import LogupModal from '../LogupModal/LogupModal';
 import LoginModal from '../LoginModal/LoginModal';
@@ -52,6 +53,7 @@ function SystemInfo({ dispatch, systemUser }) {
     dispatch({
       type: 'systemUser/logout'
     });
+    dispatch(routerRedux.push('/index'));
   }
 
   return (

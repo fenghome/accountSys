@@ -117,7 +117,7 @@ export default {
     },
 
     *saveCustomer({ payload: customer }, { call, put }) {
-      const data = yield call(customersService.create(customer));
+      const data = yield call(customersService.create,customer);
       //异步保存
       //成功
       yield put({ type: 'initCustomers' });

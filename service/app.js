@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var upload = require('./routes/upload');
+var customers = require('./routes/customsers');
 
 mongoose.connect('mongodb://localhost:27017/accountSys');
 
@@ -31,6 +32,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/upload', upload);
+app.use('/customers',customers);
 
 
 // catch 404 and forward to error handler

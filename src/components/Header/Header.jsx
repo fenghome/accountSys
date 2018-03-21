@@ -37,10 +37,19 @@ export default class Header extends React.Component {
 		};
   }
 
+  componentWillMount(){
+    const {pathname} = this.props.location;
+    const activeKeys = pathname.slice(1) || 'index';
+    this.setState({
+      activeKeys
+    })
+  }
+
   componentWillReceiveProps(nextProps){
     const {pathname} = nextProps.location;
+    const activeKeys = pathname.slice(1) || 'index';
     this.setState({
-      activeKeys:pathname.slice(1)
+      activeKeys
     })
   }
 
@@ -50,7 +59,7 @@ export default class Header extends React.Component {
     return (
       <div className={header}>
         <Menu
-          defaultSelectedKeys={['index']}
+          defaultSelectedKeys={[activeKeys]}
           selectedKeys={[activeKeys]}
           mode="inline"
           theme="dark"
