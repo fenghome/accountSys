@@ -27,6 +27,8 @@ router.post('/logup', function (req, res, next) {
           })
         } else {
           let authToken = utils.getAuthToken(10);
+          delete user.password;
+          req.session.userInfo = user;
           res.send({
             success: true,
             userInfo: {
@@ -57,6 +59,12 @@ router.post('/', function (req, res, next) {
     }
     if (userInfo['password'] === userList[0]['password']) {
       let authToken = utils.getAuthToken(10);
+      let user = {
+        _id:userList[0]['_id'],
+        username:userList[0].username
+      }
+      req.session.userInfo = user;
+      console.log(req.session.userInfo);
       return res.send({
         success: true,
         userInfo: {
@@ -72,7 +80,5 @@ router.post('/', function (req, res, next) {
     }
   })
 });
-
-router.
 
 module.exports = router;

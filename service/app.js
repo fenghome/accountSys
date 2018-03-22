@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -27,6 +29,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  name:'accountSys', //设置cookie中保存session id 的字段名称
+  secret:'acc',//通过设置secret来计算hash
+  resave:true,//强制更新session
+  saveUninitialized:false,
+  cookie:{
+    maxAge:80000
+  },
+  store:new MongoStore({
+    url:'mongodb://localhost:27017/accountSys'
+  })
+}));
 
 app.use('/', index);
 app.use('/users', users);
