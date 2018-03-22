@@ -13,3 +13,7 @@ export function doLogin(params){
     body:JSON.stringify(params)
   })
 }
+
+export function doLogout(params){
+  return request('/api/login/logout');
+}

@@ -29,6 +29,7 @@ router.post('/logup', function (req, res, next) {
           let authToken = utils.getAuthToken(10);
           delete user.password;
           req.session.userInfo = user;
+          console.log(req.session.userInfo);
           res.send({
             success: true,
             userInfo: {
@@ -80,5 +81,12 @@ router.post('/', function (req, res, next) {
     }
   })
 });
+
+router.get('/logout',function(req,res,next){
+  req.session.userInfo = null;
+  return res.send({
+    success:true
+  })
+})
 
 module.exports = router;

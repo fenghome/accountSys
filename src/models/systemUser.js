@@ -1,4 +1,4 @@
-import { doLogin, doLogup } from '../services/systemUser';
+import { doLogin, doLogup, doLogout } from '../services/systemUser';
 
 const defaultState = {
   isLogin: false,
@@ -56,6 +56,14 @@ export default {
         }
       } else {
         yield put({ type: 'loginSuccess', payload: res.data.userInfo })
+      }
+    },
+
+    *doLogout({payload},{call,put}){
+      const res = yield call(doLogout);
+      console.log(res);
+      if(res.data.success){
+        yield put({type:'logout'});
       }
     }
   },

@@ -51,7 +51,7 @@ function SystemInfo({ dispatch, systemUser }) {
 
   function doLogout() {
     dispatch({
-      type: 'systemUser/logout'
+      type: 'systemUser/doLogout'
     });
     dispatch(routerRedux.push('/index'));
   }
