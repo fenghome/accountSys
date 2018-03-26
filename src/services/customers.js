@@ -13,3 +13,16 @@ export function getCustomers(params){
     method:'GET'
   })
 }
+
+export function getCustomerById(params){
+  return request(`/api/customers/${params.customerId}`,{
+    method:'PUT',
+    body:JSON.stringify(params)
+  })
+}
+
+export function deleteCustomerById(params){
+  return request(`/api/customers/${params}`,{
+    method:'DELETE'
+  })
+}

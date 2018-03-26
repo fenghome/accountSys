@@ -43,6 +43,8 @@ router.route('/:customerId')
   .put(function(req,res,next){
     const customerId = req.params.customerId;
     const customer = req.body;
+    console.log('aaaa',customer);
+    console.log('id ',customerId);
     Customer.findByIdAndUpdate({_id:customerId},customer,function(err,docs){
       if(err){
         return res.send({

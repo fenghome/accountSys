@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Divider } from 'antd';
 import { tableClass } from './index.css';
 
-function CustomerList({ customers, onModify, onDetails }) {
+function CustomerList({ customers, onModify, onDetails, onDelete }) {
 
   const columns = [
     {
@@ -44,6 +44,8 @@ function CustomerList({ customers, onModify, onDetails }) {
           <a onClick={() => onModify(record)}>编辑</a>
           <Divider type="vertical" />
           <a onClick={() => onDetails(record)}>浏览</a>
+          <Divider type="vertical" />
+          <a onClick={() => onDelete(record['_id'])}>删除</a>
         </span>
       )
     }

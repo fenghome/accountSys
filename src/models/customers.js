@@ -1,4 +1,4 @@
-import * as customersService from '../services/customers';
+import {create,getCustomers,getCustomerById} from '../services/customers';
 const defaultBreadcrumb = [
   ['首页', '/'],
   ['客户管理', '/customer']
@@ -46,9 +46,9 @@ export default {
 
     *getCustomers({ payload }, { call, put }) {  // eslint-disable-line
       //异步操作，获取customers
-      const res = yield call(customersService.getCustomers);
-      console.log(res);
+      const res = yield call(getCustomers);
       const customers = res.data.success ? res.data.customers : {};
+      console.log('cuslist',customers);
       yield put({
         type:'getCustomersSuccess',
         payload:customers
@@ -74,11 +74,24 @@ export default {
     },
 
     *saveCustomer({ payload: customer }, { call, put }) {
-      const data = yield call(customersService.create, customer);
+      const data = yield call(create, customer);
       //异步保存
       //成功
       yield put({ type: 'initCustomers' });
       //失败
+    },
+
+    *updateCustomer({ payload: customer},{ call, put, select }){
+      const customerId = yield select(({customers})=>{ return customers.currentCustomer._id});
+      const newCustomer = { ...customer,customerId};
+      const res = yield call(getCustomerById,newCustomer)
+      if(res.data.success){
+        yield put({ type:'initCustomers' });
+      }
+    },
+
+    *deleteCustomer({ payload: customerId},{ call, put}){
+      const res = yield call(deleteCustomerById,customerId);
     }
   },
 

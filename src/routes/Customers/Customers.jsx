@@ -22,6 +22,7 @@ class Customers extends Component {
   }
 
   onModify = (currentCustomer) => {
+    console.log('onMOdify ',currentCustomer);
     const { dispatch } = this.props;
     dispatch({
       type: 'customers/changeToModifyPage',
@@ -36,6 +37,15 @@ class Customers extends Component {
       payload: currentCustomer
     })
   }
+  
+  onDelete = (customerId)=>{
+    const { dispatch } = this.porps;
+    dispatch({
+      type:'customers/deleteCustomer',
+      payload:customerId
+    })
+  }
+
 
   saveCustomer = (values) => {
     const { dispatch } = this.props;
@@ -43,6 +53,15 @@ class Customers extends Component {
       type: 'customers/saveCustomer',
       payload: values
     });
+  }
+
+  updateCustomer = (values)=>{
+    console.log('updateCustomer: ',values);
+    const { dispatch } = this.props;
+    dispatch({
+      type:'customers/updateCustomer',
+      payload:values
+    })
   }
 
   onCancel = () => {
@@ -64,7 +83,11 @@ class Customers extends Component {
               <SearchForm label="客户名称：" fieldName="customerName" onSearch={value => this.onSearch(value)} />
               <Button type="primary" onClick={this.onAdd}>添加</Button>
             </div>
-            <CustomerList customers={customers} onModify={this.onModify} onDetails={this.onDetails} />
+            <CustomerList
+             customers={customers} 
+             onModify={this.onModify} 
+             onDetails={this.onDetails} 
+             onDelete={this.onDelete}/>
           </div>
         }
         {
@@ -78,7 +101,7 @@ class Customers extends Component {
           pageType === 'modify' &&
           <div className={customersContainer}>
             <Title title="客户资料" />
-            <CustomerForm customer={currentCustomer} onConfirm={this.saveCustomer} onCancel={this.onCancel} />
+            <CustomerForm customer={currentCustomer} onConfirm={this.updateCustomer} onCancel={this.onCancel} />
           </div>
         }
         {
