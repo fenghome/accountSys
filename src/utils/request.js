@@ -24,7 +24,8 @@ function checkStatus(response) {
 const defaultOptions = {
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  credentials:'include'
 }
 export default function request(url, options) {
   return fetch(url, { ...options, ...defaultOptions })

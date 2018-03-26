@@ -19,17 +19,7 @@ export default {
       history.listen(({ pathname }) => {
         if (pathname === '/customer') {
           dispatch({
-            type: 'changePageType',
-            payload: 'show'
-          });
-          dispatch({
-            type: 'initBreadcreumb'
-          });
-          dispatch({
-            type: 'getCustomers'
-          });
-          dispatch({
-            type: 'initCurrentCustomer'
+            type: 'initCustomers'
           });
         }
       })
@@ -56,45 +46,12 @@ export default {
 
     *getCustomers({ payload }, { call, put }) {  // eslint-disable-line
       //异步操作，获取customers
-      const customers = [
-        {
-          _id: '0',
-          customerName: '中邮科技',
-          contactPeople: '张三',
-          contactPhone: '86951197',
-          address: '新开路58号',
-          mem: '',
-          accountName: '',
-          accountBank: '',
-          accountNo: '',
-        },
-        {
-          _id: '1',
-          customerName: '大众科技',
-          contactPeople: '李四',
-          contactPhone: '13966555568',
-          address: '东方大厦',
-          mem: '',
-          accountName: '',
-          accountBank: '',
-          accountNo: '',
-        },
-        {
-          _id: '2',
-          customerName: '银凯集团',
-          contactPeople: '王五',
-          contactPhone: '1223545687',
-          address: '建设大街66号',
-          mem: '',
-          accountName: '',
-          accountBank: '',
-          accountNo: '',
-        },
-      ];
-
+      const res = yield call(customersService.getCustomers);
+      console.log(res);
+      const customers = res.data.success ? res.data.customers : {};
       yield put({
-        type: 'getCustomersSuccess',
-        payload: customers
+        type:'getCustomersSuccess',
+        payload:customers
       });
     },
 
@@ -117,7 +74,7 @@ export default {
     },
 
     *saveCustomer({ payload: customer }, { call, put }) {
-      const data = yield call(customersService.create,customer);
+      const data = yield call(customersService.create, customer);
       //异步保存
       //成功
       yield put({ type: 'initCustomers' });

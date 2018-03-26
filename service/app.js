@@ -33,8 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   name:'accountSys', //设置cookie中保存session id 的字段名称
   secret:'acc',//通过设置secret来计算hash
-  resave:true,//强制更新session
-  saveUninitialized:false,
+  resave:false,//强制更新session
+  saveUninitialized:true,
   cookie:{
     maxAge:80000
   },
@@ -48,7 +48,6 @@ app.use('/users', users);
 app.use('/login', login);
 app.use('/upload', upload);
 app.use('/customers',customers);
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
