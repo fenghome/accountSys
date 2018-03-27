@@ -1,4 +1,4 @@
-import {create,getCustomers,getCustomerById} from '../services/customers';
+import { create, getCustomers, getCustomerById, deleteCustomerById,searchCustomers } from '../services/customers';
 const defaultBreadcrumb = [
   ['首页', '/'],
   ['客户管理', '/customer']
@@ -12,6 +12,7 @@ export default {
     breadcrumbItems: defaultBreadcrumb,
     customers: null,
     currentCustomer: null,
+    msg: ''
   },
 
   subscriptions: {
@@ -44,15 +45,19 @@ export default {
       });
     },
 
-    *getCustomers({ payload }, { call, put }) {  // eslint-disable-line
+    *getCustomers({ payload:params=null }, { call, put }) {  // eslint-disable-line
+
       //异步操作，获取customers
-      const res = yield call(getCustomers);
-      const customers = res.data.success ? res.data.customers : {};
-      console.log('cuslist',customers);
+      const res = yield call(getCustomers,params);
+      const customers = res && res.data && res.data.success ? res.data.customers : {};
       yield put({
-        type:'getCustomersSuccess',
-        payload:customers
+        type: 'getCustomersSuccess',
+        payload: customers
       });
+    },
+
+    *searchCustomers({ payload:customerName},{call,put}){
+      const res = yield call(searchCustomers,customerName);
     },
 
     *changeToAddPage({ payload }, { call, put }) {
@@ -74,24 +79,33 @@ export default {
     },
 
     *saveCustomer({ payload: customer }, { call, put }) {
-      const data = yield call(create, customer);
-      //异步保存
-      //成功
-      yield put({ type: 'initCustomers' });
-      //失败
+      const res = yield call(create, customer);
+      if (res && res.data.success) {
+        yield put({ type: 'initCustomers' });
+      } else {
+        yield put({ type: 'setMessage', payload: '新增失败' })
+      }
+
     },
 
-    *updateCustomer({ payload: customer},{ call, put, select }){
-      const customerId = yield select(({customers})=>{ return customers.currentCustomer._id});
-      const newCustomer = { ...customer,customerId};
-      const res = yield call(getCustomerById,newCustomer)
-      if(res.data.success){
-        yield put({ type:'initCustomers' });
+    *updateCustomer({ payload: customer }, { call, put, select }) {
+      const customerId = yield select(({ customers }) => { return customers.currentCustomer._id });
+      const newCustomer = { ...customer, customerId };
+      const res = yield call(getCustomerById, newCustomer)
+      if (res && res.data && res.data.success) {
+        yield put({ type: 'initCustomers' });
+      } else {
+        yield put({ type: 'setMessage', payload: '编辑失败' });
       }
     },
 
-    *deleteCustomer({ payload: customerId},{ call, put}){
-      const res = yield call(deleteCustomerById,customerId);
+    *deleteCustomer({ payload: customerId }, { call, put }) {
+      const res = yield call(deleteCustomerById, customerId);
+      if (res && res.data && res.data.success) {
+        yield put({ type: 'initCustomers' });
+      } else {
+        yield put({ type: 'setMessage', payload: '删除失败' });
+      }
     }
   },
 
@@ -120,6 +134,10 @@ export default {
     setCurrentCustomer(state, { payload: currentCustomer }) {
       return { ...state, currentCustomer }
     },
+
+    setMessage(state, { payload: msg }) {
+      return { ...state, msg }
+    }
   },
 
 };

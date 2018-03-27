@@ -8,21 +8,28 @@ export function create(params) {
   })
 }
 
-export function getCustomers(params){
-  return request(`/api/customers/all`,{
-    method:'GET'
+export function getCustomers(value) {
+  const params = value ? qs.stringify(value) : '';
+  return request(`/api/customers?${params}`, {
+    method: 'GET'
   })
 }
 
-export function getCustomerById(params){
-  return request(`/api/customers/${params.customerId}`,{
-    method:'PUT',
-    body:JSON.stringify(params)
+export function getCustomerById(params) {
+  return request(`/api/customers/${params.customerId}`, {
+    method: 'PUT',
+    body: JSON.stringify(params)
   })
 }
 
-export function deleteCustomerById(params){
-  return request(`/api/customers/${params}`,{
-    method:'DELETE'
+export function deleteCustomerById(params) {
+  return request(`/api/customers/${params}`, {
+    method: 'DELETE'
+  })
+}
+
+export function searchCustomers(params) {
+  return request(`/api/customers/${params}`, {
+    method: 'GET'
   })
 }

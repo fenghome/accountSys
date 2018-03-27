@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Popconfirm } from 'antd';
 import { tableClass } from './index.css';
 
 function CustomerList({ customers, onModify, onDetails, onDelete }) {
@@ -45,7 +45,13 @@ function CustomerList({ customers, onModify, onDetails, onDelete }) {
           <Divider type="vertical" />
           <a onClick={() => onDetails(record)}>浏览</a>
           <Divider type="vertical" />
-          <a onClick={() => onDelete(record['_id'])}>删除</a>
+          <Popconfirm title="确定要删除这个客户吗？"
+            onConfirm={() => { onDelete(record['_id']) }}
+            okText="是"
+            cancelText="否"
+          >
+            <a>删除</a>
+          </Popconfirm>
         </span>
       )
     }

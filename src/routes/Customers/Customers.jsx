@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import CustomerList from '../../components/Customers/CustomerList/CustomerList';
@@ -10,8 +10,23 @@ import { customersContainer, customersBar } from './index.css';
 
 class Customers extends Component {
 
+  componentWillReceiveProps(nextProps){
+    const { dispatch, customers} = nextProps;
+    if(customers.msg){
+      message.info(customers.msg);
+      dispatch({
+        type:'customers/setMessage',
+        payload:''
+      })
+    }
+  }
+
   onSearch = (value) => {
-    console.log(value);
+    const { dispatch } = this.props;
+    dispatch({
+      type:'customers/getCustomers',
+      payload:value
+    })
   }
 
   onAdd = () => {
@@ -22,7 +37,6 @@ class Customers extends Component {
   }
 
   onModify = (currentCustomer) => {
-    console.log('onMOdify ',currentCustomer);
     const { dispatch } = this.props;
     dispatch({
       type: 'customers/changeToModifyPage',
@@ -37,15 +51,14 @@ class Customers extends Component {
       payload: currentCustomer
     })
   }
-  
+
   onDelete = (customerId)=>{
-    const { dispatch } = this.porps;
+    const { dispatch } = this.props;
     dispatch({
       type:'customers/deleteCustomer',
       payload:customerId
     })
   }
-
 
   saveCustomer = (values) => {
     const { dispatch } = this.props;
@@ -56,7 +69,6 @@ class Customers extends Component {
   }
 
   updateCustomer = (values)=>{
-    console.log('updateCustomer: ',values);
     const { dispatch } = this.props;
     dispatch({
       type:'customers/updateCustomer',
@@ -72,7 +84,7 @@ class Customers extends Component {
   }
 
   render() {
-    const { pageType, breadcrumbItems, customers, currentCustomer } = this.props.customers;
+    const { pageType, breadcrumbItems, customers, currentCustomer, msg } = this.props.customers;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
@@ -84,9 +96,9 @@ class Customers extends Component {
               <Button type="primary" onClick={this.onAdd}>添加</Button>
             </div>
             <CustomerList
-             customers={customers} 
-             onModify={this.onModify} 
-             onDetails={this.onDetails} 
+             customers={customers}
+             onModify={this.onModify}
+             onDetails={this.onDetails}
              onDelete={this.onDelete}/>
           </div>
         }
@@ -111,6 +123,7 @@ class Customers extends Component {
             <CustomerForm customer={currentCustomer} onConfirm={this.saveCustomer} onCancel={this.onCancel} disabled={true} />
           </div>
         }
+
       </div>
 
     )

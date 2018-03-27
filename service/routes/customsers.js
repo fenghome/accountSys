@@ -20,6 +20,27 @@ router.route('/all')
   })
 
 router.route('/')
+  .get(function(req,res,next){
+    let query = {}
+    if(Object.keys(req.query).length > 0){
+      query = {
+        customerName:new RegExp(req.query.customerName)
+      }
+    }
+    Customer.find(query,function(err,docs){
+      if(err){
+        return res.send({
+          success:false,
+          error:err
+        });
+      }else{
+        return res.send({
+          success:true,
+          customers:docs
+        })
+      }
+    });
+  })
   .post(function(req,res,next){
     let customer = req.body;
     const userId = req.session.userInfo['_id'];
@@ -43,8 +64,6 @@ router.route('/:customerId')
   .put(function(req,res,next){
     const customerId = req.params.customerId;
     const customer = req.body;
-    console.log('aaaa',customer);
-    console.log('id ',customerId);
     Customer.findByIdAndUpdate({_id:customerId},customer,function(err,docs){
       if(err){
         return res.send({
@@ -59,5 +78,23 @@ router.route('/:customerId')
       }
     })
   })
+  .delete(function(req,res,next){
+    const customerId = req.params.customerId;
+    Customer.deleteOne({_id:customerId},function(err,docs){
+      if(err){
+        return res.send({
+          success:false,
+          err:err
+        })
+      }else{
+        return res.send({
+          success:true,
+          customer:docs
+        })
+      }
+    })
+  });
+
+
 
 module.exports = router;
