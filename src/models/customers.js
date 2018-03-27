@@ -9,9 +9,12 @@ export default {
 
   state: {
     pageType: 'show',
+    searchCustomerName:'',
     breadcrumbItems: defaultBreadcrumb,
     customers: null,
     currentCustomer: null,
+    total:1,
+    currentPage:1,
     msg: ''
   },
 
@@ -45,9 +48,11 @@ export default {
       });
     },
 
-    *getCustomers({ payload:params=null }, { call, put }) {  // eslint-disable-line
-
-      //异步操作，获取customers
+    *getCustomers({ payload }, { call, put, select }) {  // eslint-disable-line
+      const {searchCustomerName, currentPage } = yield select(state=>{return state.customers})
+      let params = {};
+      searchCustomerName && (params.searchCustomerName = searchCustomerName);
+      currentPage && (params.currentPage = currentPage);
       const res = yield call(getCustomers,params);
       const customers = res && res.data && res.data.success ? res.data.customers : {};
       yield put({
@@ -85,7 +90,6 @@ export default {
       } else {
         yield put({ type: 'setMessage', payload: '新增失败' })
       }
-
     },
 
     *updateCustomer({ payload: customer }, { call, put, select }) {
@@ -131,8 +135,16 @@ export default {
       return { ...state, currentCustomer: null }
     },
 
+    setSearchCustomerName(state,{payload:searchCustomerName}){
+      return { ...state, searchCustomerName}
+    },
+
     setCurrentCustomer(state, { payload: currentCustomer }) {
       return { ...state, currentCustomer }
+    },
+
+    setCurrentPage(state,{payload:currentPage}){
+      return { ...state, currentPage}
     },
 
     setMessage(state, { payload: msg }) {

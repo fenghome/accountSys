@@ -24,8 +24,11 @@ class Customers extends Component {
   onSearch = (value) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'customers/getCustomers',
-      payload:value
+      type:'customers/setSearchCustomerName',
+      payload:value.customerName
+    });
+    dispatch({
+      type:'customers/getCustomers'
     })
   }
 
@@ -83,8 +86,21 @@ class Customers extends Component {
     });
   }
 
+  onPageChange = (page) =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type:'customers/setCurrentPage',
+      payload:{
+        currentPage:page
+      }
+    });
+    dispatch({
+      type:'customers/getCustomers'
+    })
+  }
+
   render() {
-    const { pageType, breadcrumbItems, customers, currentCustomer, msg } = this.props.customers;
+    const { pageType, breadcrumbItems, customers, currentCustomer, msg,total,currentPage } = this.props.customers;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
@@ -99,7 +115,11 @@ class Customers extends Component {
              customers={customers}
              onModify={this.onModify}
              onDetails={this.onDetails}
-             onDelete={this.onDelete}/>
+             onDelete={this.onDelete}
+             onPageChange={this.onPageChange}
+             total={total}
+             currentPage={currentPage}
+            />
           </div>
         }
         {

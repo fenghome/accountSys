@@ -1,8 +1,8 @@
 import React from 'react';
-import { Table, Divider, Popconfirm } from 'antd';
+import { Table, Divider, Popconfirm,Pagination } from 'antd';
 import { tableClass } from './index.css';
 
-function CustomerList({ customers, onModify, onDetails, onDelete }) {
+function CustomerList({ customers, onModify, onDetails, onDelete, onPageChange,total,currentPage }) {
 
   const columns = [
     {
@@ -58,12 +58,23 @@ function CustomerList({ customers, onModify, onDetails, onDelete }) {
   ]
 
   return (
-    <Table
+    <div>
+      <Table
       className={tableClass}
       columns={columns}
       dataSource={customers}
+      pagination={false}
       rowKey={record => record._id}
     />
+    <Pagination 
+      className="ant-table-pagination"
+      total={total}
+      pageSize={2}
+      current={parseInt(currentPage)}
+      onChange={onPageChange}
+    />
+    </div>
+
   )
 }
 
