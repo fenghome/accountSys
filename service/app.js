@@ -36,7 +36,7 @@ app.use(session({
   resave:false,//强制更新session
   saveUninitialized:true,
   cookie:{
-    maxAge:80000
+    maxAge:800000
   },
   store:new MongoStore({
     url:'mongodb://localhost:27017/accountSys'

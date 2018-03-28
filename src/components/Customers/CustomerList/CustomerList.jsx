@@ -68,7 +68,7 @@ function CustomerList({ customers, onModify, onDetails, onDelete, onPageChange,t
     />
     <Pagination 
       className="ant-table-pagination"
-      total={total}
+      total={10}
       pageSize={2}
       current={parseInt(currentPage)}
       onChange={onPageChange}

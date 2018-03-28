@@ -3,20 +3,22 @@ const defaultBreadcrumb = [
   ['首页', '/'],
   ['客户管理', '/customer']
 ];
+
+const defaultState = {
+  pageType: 'show',
+  searchCustomerName:'',
+  breadcrumbItems: defaultBreadcrumb,
+  customers: null,
+  currentCustomer: null,
+  total:1,
+  currentPage:1,
+  msg: ''
+}
 export default {
 
   namespace: 'customers',
 
-  state: {
-    pageType: 'show',
-    searchCustomerName:'',
-    breadcrumbItems: defaultBreadcrumb,
-    customers: null,
-    currentCustomer: null,
-    total:1,
-    currentPage:1,
-    msg: ''
-  },
+  state: defaultState,
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
@@ -34,17 +36,10 @@ export default {
 
     *initCustomers({ payload }, { call, put }) {
       yield put({
-        type: 'changePageType',
-        payload: 'show'
-      });
-      yield put({
-        type: 'initBreadcreumb'
+        type: 'initState'
       });
       yield put({
         type: 'getCustomers'
-      });
-      yield put({
-        type: 'initCurrentCustomer'
       });
     },
 
@@ -54,7 +49,16 @@ export default {
       searchCustomerName && (params.searchCustomerName = searchCustomerName);
       currentPage && (params.currentPage = currentPage);
       const res = yield call(getCustomers,params);
-      const customers = res && res.data && res.data.success ? res.data.customers : {};
+      const {data = {}} = res;
+      const { customers=null,total=1,current=1 } = data;
+      yield put({
+        type:'setTotalPage',
+        payload:total
+      });
+      yield put({
+        type:'setCurrentPage',
+        payload:current
+      });
       yield put({
         type: 'getCustomersSuccess',
         payload: customers
@@ -114,6 +118,9 @@ export default {
   },
 
   reducers: {
+    initState(state,action){
+      return { ...defaultState };
+    },
     changePageType(state, { payload: pageType }) {
       return { ...state, pageType };
     },
@@ -145,6 +152,10 @@ export default {
 
     setCurrentPage(state,{payload:currentPage}){
       return { ...state, currentPage}
+    },
+
+    setTotalPage(state,{payload:total}){
+      return { ...state, total}
     },
 
     setMessage(state, { payload: msg }) {

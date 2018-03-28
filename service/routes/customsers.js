@@ -19,23 +19,46 @@ router
   .route('/')
   .get(function (req, res, next) {
     const userId = req.session.userInfo['_id'];
+    const page = req.query && req.query.currentPage || 1;
+    console.log('page is : %s',page);
+    const limit = 2;
+    const skip = (page - 1) * limit;
     let query = {
       userId: userId
     }
-    if (Object.keys(req.query).length > 0) {
+    if (req.query && req.query.customerName) {
       query.customerName = new RegExp(req.query.customerName);
     }
     Customer
-      .find(query, function (err, docs) {
+      .count(query, function (err, count) {
         if (err) {
           return res.send({success: false, error: err});
-        } else {
-          return res.send({success: true, customers: docs})
-        }
+        } 
+        Customer.find(query)
+          .limit(limit)
+          .skip(skip)
+          .exec(function(err,docs){
+            if(err){
+              return res.send({
+                success:false,
+                error:err
+              })
+            }else{
+              return res.send({
+                success: true,
+                customers: docs,
+                page:{
+                  total:count,
+                  current:page
+                }
+              })
+            }
+          })  
       });
   })
   .post(function (req, res, next) {
     let customer = req.body;
+    console.log('session',req.session.userInfo);
     const userId = req.session.userInfo['_id'];
     customer.userId = userId;
     Customer.create(customer, function (err, docs) {
@@ -45,7 +68,7 @@ router
         return res.send({success: true, customers: docs})
       }
     })
-  })
+  });
 
 router
   .route('/:customerId')
