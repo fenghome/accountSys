@@ -50,7 +50,7 @@ export default {
       currentPage && (params.currentPage = currentPage);
       const res = yield call(getCustomers,params);
       const {data = {}} = res;
-      const { customers=null,total=1,current=1 } = data;
+      const { customers=null,total=1,current=1} = data;
       yield put({
         type:'setTotalPage',
         payload:total
@@ -101,7 +101,8 @@ export default {
       const newCustomer = { ...customer, customerId };
       const res = yield call(getCustomerById, newCustomer)
       if (res && res.data && res.data.success) {
-        yield put({ type: 'initCustomers' });
+        yield put({ type:'changePageType',payload:'show'});
+        yield put({ type: 'getCustomers' });
       } else {
         yield put({ type: 'setMessage', payload: '编辑失败' });
       }

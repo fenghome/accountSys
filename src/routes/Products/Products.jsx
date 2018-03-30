@@ -67,7 +67,6 @@ class Products extends Component {
       type: 'products/saveProduct',
       payload: values
     });
-    console.log(values);
   }
 
   onFormCancel = (values) => {

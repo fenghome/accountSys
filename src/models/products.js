@@ -3,16 +3,21 @@ const defaultBreadcrumb = [
   ['商品管理', '/product']
 ];
 
+const defautState = {
+  pageType: 'show',
+  breadcrmbItems: defaultBreadcrumb,
+  products: [],
+  currProduct: null,
+  serachProductName:null,
+  total:1,
+  currentPage:1,
+}
+
 export default {
 
   namespace: 'products',
 
-  state: {
-    pageType: 'show',
-    breadcrmbItems: defaultBreadcrumb,
-    products: [],
-    currProduct: null
-  },
+  state: defaultStatus,
 
   subscriptions: {
     setup({ dispatch, history }) { // eslint-disable-line
@@ -27,27 +32,7 @@ export default {
 
   effects: {
     *getProducts({ payload }, { call, put }) { // eslint-disable-line
-      const products = [
-        {
-          productCode: 'P0001',
-          productImg: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-          productName: '杯子',
-          productType: '餐具',
-          productUnit: '个'
-        }, {
-          productCode: 'p0002',
-          productImg: null,
-          productName: '床单',
-          productType: '床品',
-          productUnit: '条'
-        }, {
-          productCode: 'p0003',
-          productImg: null,
-          productName: '字典',
-          productType: '书',
-          productUnit: '本'
-        }
-      ];
+      
       yield put({
         type: 'getProductsSuccess',
         payload: products
@@ -65,7 +50,7 @@ export default {
 
   reducers: {
     initState(state, action) {
-      return { ...state, pageType: 'show', breadcrmbItems: defaultBreadcrumb, currProduct: null };
+      return { ...defaultStatus };
     },
 
     initBreadcrmbItems(state, action) {

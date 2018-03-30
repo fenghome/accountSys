@@ -20,15 +20,16 @@ router
   .get(function (req, res, next) {
     const userId = req.session.userInfo['_id'];
     const page = req.query && req.query.currentPage || 1;
-    console.log('page is : %s',page);
+    
     const limit = 2;
     const skip = (page - 1) * limit;
     let query = {
       userId: userId
     }
-    if (req.query && req.query.customerName) {
-      query.customerName = new RegExp(req.query.customerName);
+    if (req.query && req.query.searchCustomerName) {
+      query.customerName = new RegExp(req.query.searchCustomerName);
     }
+    console.log(req.query);
     Customer
       .count(query, function (err, count) {
         if (err) {
@@ -47,10 +48,8 @@ router
               return res.send({
                 success: true,
                 customers: docs,
-                page:{
-                  total:count,
-                  current:page
-                }
+                total:count,
+                current:page 
               })
             }
           })  

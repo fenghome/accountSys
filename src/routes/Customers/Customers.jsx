@@ -90,9 +90,7 @@ class Customers extends Component {
     const { dispatch } = this.props;
     dispatch({
       type:'customers/setCurrentPage',
-      payload:{
-        currentPage:page
-      }
+      payload:page
     });
     dispatch({
       type:'customers/getCustomers'
