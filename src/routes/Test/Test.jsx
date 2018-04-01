@@ -1,74 +1,54 @@
 import React from 'react';
-import { Form, Input, Upload, Button, Icon } from 'antd';
-import { productForm, formColumn, formTitle } from './index.css';
-
+import { Upload, Button, Icon, Form } from 'antd';
 const FormItem = Form.Item;
 
-const formItemLayout = {
-  labelCol: {
-    span: 4
-  },
-  wrapperCol: {
-    span: 20
-  }
-};
-
 class Test extends React.Component {
-
-  constructor(props) {
+  constructor(props){
     super(props);
     this.state = {
-      fileList: []
+      fileList:[]
     }
   }
-  componentDidMount(){
-    console.log(Object.keys(null));
+
+  onChange = (info) => {
+    console.log(info);
   }
 
-
-
-  handleUpload = (e) => {
-
-    console.log(e);
-  }
-
-
-  onClick = ()=>{
-    const { validateFields } = this.props.form;
-    validateFields((errors,values)=>{
-      console.log(values);
-    })
-  }
+  normFile = (e) => {
+		if (Array.isArray(e)) {
+			return e;
+		}
+		return e && e.fileList;
+	};
 
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <div>
-        <Form>
-          <FormItem>
-            {
-              getFieldDecorator('files')(
-                <Upload action="/upload"
-                  listType="picture"
-                  fileList={this.state.fileList}
+      <Form>
+        <h2>上传文件</h2>
+        <FormItem>
+          {
+            getFieldDecorator('file',{
+              valuePropName: 'fileList',
+							getValueFromEvent: this.normFile
+            })(
+              <Upload
+                action='/api/upload'
+                onChange={this.onChange}
+              >
+                <Button>
+                  <Icon type="upload" />Click
+                </Button>
+              </Upload>
+            )
+          }
 
-                >
-                  <Button type="ghost">
-                    <Icon type="upload" />上传
-                  </Button>
-                </Upload>
-              )
-            }
-          </FormItem>
-          <Button onClick={this.onClick}>确定</Button>
-        </Form>
-
-
-      </div>
-
-
+        </FormItem>
+      </Form>
     )
   }
 }
 
 export default Form.create()(Test);
+
+

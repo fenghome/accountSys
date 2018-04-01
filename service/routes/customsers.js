@@ -20,7 +20,7 @@ router
   .get(function (req, res, next) {
     const userId = req.session.userInfo['_id'];
     const page = req.query && req.query.currentPage || 1;
-    
+
     const limit = 2;
     const skip = (page - 1) * limit;
     let query = {
@@ -34,7 +34,7 @@ router
       .count(query, function (err, count) {
         if (err) {
           return res.send({success: false, error: err});
-        } 
+        }
         Customer.find(query)
           .limit(limit)
           .skip(skip)
@@ -49,15 +49,14 @@ router
                 success: true,
                 customers: docs,
                 total:count,
-                current:page 
+                current:page
               })
             }
-          })  
+          })
       });
   })
   .post(function (req, res, next) {
     let customer = req.body;
-    console.log('session',req.session.userInfo);
     const userId = req.session.userInfo['_id'];
     customer.userId = userId;
     Customer.create(customer, function (err, docs) {

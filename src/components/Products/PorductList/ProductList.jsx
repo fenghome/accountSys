@@ -1,7 +1,7 @@
 import React from 'react';
-import {Table, Button, Divider} from 'antd';
+import { Table, Button, Divider, Pagination } from 'antd';
 
-function ProductList({products,onModify,onDetails}) {
+function ProductList({ products, total, currentPage, onModify, onDetails, onPageChange }) {
   const columns = [
     {
       title: '序号',
@@ -16,7 +16,7 @@ function ProductList({products,onModify,onDetails}) {
         if (text) {
           return <img style={{
             width: 100
-          }} src={text} alt="商品图片"/>
+          }} src={text} alt="商品图片" />
         } else {
           return <span>暂无图片</span>
         }
@@ -42,9 +42,9 @@ function ProductList({products,onModify,onDetails}) {
       key: 'option',
       render: (text, record, index) => (
         <span>
-          <a onClick={()=>{onModify(record)}}>编辑</a>
-          <Divider type="vertical"/>
-          <a onClick={()=>{onDetails(record)}}>详情</a>
+          <a onClick={() => { onModify(record) }}>编辑</a>
+          <Divider type="vertical" />
+          <a onClick={() => { onDetails(record) }}>详情</a>
         </span>
       )
     }
@@ -55,10 +55,19 @@ function ProductList({products,onModify,onDetails}) {
   return (
     <div>
       <Table
-        rowKey={record=>record.productCode}
+        rowKey={record => record._id}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={products}/>
+        dataSource={products}
+        pagination={false}
+      />
+      <Pagination
+        className="ant-table-pagination"
+        total={total}
+        pageSize={2}
+        current={parseInt(currentPage)}
+        onChange={onPageChange}
+      />
     </div>
   )
 }

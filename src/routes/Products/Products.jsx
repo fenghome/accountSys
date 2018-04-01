@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import ProductList from '../../components/Products/PorductList/ProductList';
@@ -10,8 +10,25 @@ import { productsBar, productContainer } from './index.css';
 
 class Products extends Component {
 
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, products: { msg } } = nextProps;
+    if (msg) {
+      message.info(msg);
+      dispatch({
+        type: 'products/setMessage',
+        payload: ''
+      })
+    }
+  }
+
   onSearch = (value) => {
-    console.log(value);
+    this.props.dispatch({
+      type: 'products/setSearchProductName',
+      payload: value.productName
+    });
+    this.props.dispatch({
+      type: 'products/getProducts'
+    })
   }
 
   onAdd = () => {
@@ -21,8 +38,8 @@ class Products extends Component {
       payload: 'add'
     });
     dispatch({
-      type:'products/addBreadcrumb',
-      payload:['新增商品', '/product/add']
+      type: 'products/addBreadcrumb',
+      payload: ['新增商品', '/product/add']
     });
     dispatch({
       type: 'products/initCurrentProduct'
@@ -36,8 +53,8 @@ class Products extends Component {
       payload: 'modify'
     });
     dispatch({
-      type:'products/addBreadcrumb',
-      payload:['修改商品', '/product/modify']
+      type: 'products/addBreadcrumb',
+      payload: ['修改商品', '/product/modify']
     });
     dispatch({
       type: 'products/changeCurrentProduct',
@@ -48,24 +65,26 @@ class Products extends Component {
   onDetails = (recoder) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'products/changePageType',
-      payload:'details'
+      type: 'products/changePageType',
+      payload: 'details'
     });
     dispatch({
-      type:'products/addBreadcrumb',
-      payload:['浏览商品', '/product/details']
+      type: 'products/addBreadcrumb',
+      payload: ['浏览商品', '/product/details']
     });
     dispatch({
-      type:'products/changeCurrentProduct',
-      payload:recoder
+      type: 'products/changeCurrentProduct',
+      payload: recoder
     })
   }
 
   onFormConfirm = (values) => {
     const { dispatch } = this.props;
+    const url = values.productImg.length > 0 ? values.productImg[0].response.data.url : '';
+    const data = { ...values, productImg: url };
     dispatch({
       type: 'products/saveProduct',
-      payload: values
+      payload: data
     });
   }
 
@@ -79,8 +98,18 @@ class Products extends Component {
     })
   }
 
+  onRemoveFile = (values) => {
+    this.props.dispatch({
+      type: 'products/removeFile',
+      payload: { fileName: values.file.name }
+    })
+  }
+
+  onPageChange = (values)=>{
+
+  }
   render() {
-    const { pageType, breadcrmbItems, products, currProduct } = this.props.products;
+    const { pageType, breadcrmbItems, products, currProduct,total,currentPage } = this.props.products;
     return (
       <div>
         <BreadcrumbList
@@ -98,7 +127,14 @@ class Products extends Component {
               />
               <Button type="primary" onClick={this.onAdd}>添加</Button>
             </div>
-            <ProductList products={products} onModify={this.onModify} onDetails={this.onDetails} />
+            <ProductList
+              products={products}
+              onModify={this.onModify}
+              onDetails={this.onDetails}
+              total={total}
+              currentPage={currentPage}
+              onPageChange={this.onPageChange}
+            />
           </div>
         }
         {
@@ -108,6 +144,7 @@ class Products extends Component {
             <ProductForm
               onConfirm={values => this.onFormConfirm(values)}
               onCancel={values => this.onFormCancel(values)}
+              onRemoveFile={values => this.onRemoveFile(values)}
             />
           </div>
         }
@@ -119,10 +156,11 @@ class Products extends Component {
               product={currProduct}
               onConfirm={values => this.onFormConfirm(values)}
               onCancel={values => this.onFormCancel(values)}
+              onRemoveFile={values => this.onRemoveFile(values)}
             />
           </div>
         }
-                {
+        {
           pageType === "details" &&
           <div className={productContainer}>
             <Title title="商品信息" />

@@ -1,3 +1,5 @@
+import { getProducts, saveProduct, removeFile } from '../services/products';
+
 const defaultBreadcrumb = [
   ['首页', '/'],
   ['商品管理', '/product']
@@ -8,16 +10,17 @@ const defautState = {
   breadcrmbItems: defaultBreadcrumb,
   products: [],
   currProduct: null,
-  serachProductName:null,
-  total:1,
-  currentPage:1,
+  searchProductName: '',
+  total: 1,
+  currentPage: 1,
+  msg: ''
 }
 
 export default {
 
   namespace: 'products',
 
-  state: defaultStatus,
+  state: defautState,
 
   subscriptions: {
     setup({ dispatch, history }) { // eslint-disable-line
@@ -31,8 +34,15 @@ export default {
   },
 
   effects: {
-    *getProducts({ payload }, { call, put }) { // eslint-disable-line
-      
+
+    *getProducts({ payload }, { call, put, select }) { // eslint-disable-line
+      const searchProductName = yield select(state => state.products.searchProductName);
+      const params = { searchProductName };
+      const res = yield call(getProducts,params);
+      let products = [];
+      if (res && res.data && res.data.success) {
+        products = res.data.products;
+      }
       yield put({
         type: 'getProductsSuccess',
         payload: products
@@ -41,16 +51,23 @@ export default {
 
     *saveProduct({ payload: data }, { call, put }) {
 
-      //
-      yield put({ type: 'initState' });
-      yield put({ type: 'getProducts' });
+      const res = yield call(saveProduct, data);
+      if (res && res.data && res.data.success) {
+        yield put({ type: 'initState' });
+        yield put({ type: 'getProducts' });
+      } else {
+        yield put({ type: 'setMessage', payload: '新增产品失败' });
+      }
+    },
 
+    *removeFile({ payload: fileName }, { call, put }) {
+      const res = yield call(removeFile, fileName);
     }
   },
 
   reducers: {
     initState(state, action) {
-      return { ...defaultStatus };
+      return { ...defautState };
     },
 
     initBreadcrmbItems(state, action) {
@@ -77,6 +94,14 @@ export default {
 
     changeCurrentProduct(state, { payload: currProduct }) {
       return { ...state, currProduct }
+    },
+
+    setSearchProductName(state, { payload: searchProductName }) {
+      return { ...state, searchProductName }
+    },
+
+    setMessage(state, { payload: msg }) {
+      return { ...state, msg }
     }
 
   }

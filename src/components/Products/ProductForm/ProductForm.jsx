@@ -12,19 +12,39 @@ class ProductForm extends React.Component {
 
   constructor(props) {
     super(props);
+    const fileList = props.product ? [{ uid: '-1', url: props.product.productImg }] : [];
     this.state = {
-
+      fileList,
     }
   }
 
+  normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
   onUploadFiles = (e) => {
-    console.log(e);
+    let fileList = [];
+    if (e.file.status === 'done') {
+      fileList = [{
+        uid: '-1',
+        url: e.file.response.data.url
+      }]
+    }
+    if (e.file.status === 'removed') {
+      this.props.onRemoveFile(e);
+    }
+    this.setState({
+      fileList: fileList
+    })
   }
 
   handleConfirm = () => {
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
-        this.props.onConfirm(values);
+        this.props.onConfirm({ ...values });
       }
     })
   }
@@ -44,12 +64,8 @@ class ProductForm extends React.Component {
       productType = '',
       productUnit = ''
     } = product;
-    const fileList = productImg ? [
-      {
-        uid: '-1',
-        url: productImg
-      }
-    ] : [];
+
+    const { fileList } = this.state;
 
     const { getFieldDecorator } = this.props.form;
 
@@ -111,16 +127,17 @@ class ProductForm extends React.Component {
                 )
             }
           </FormItem>
-          <FormItem label="商品图片：" { ...formItemLayout}>
+          <FormItem label="商品图片：" { ...formItemLayout }>
             {
               getFieldDecorator('productImg', {
-                initialValue: productImg
+                initialValue: productImg,
+                valuePropName: 'fileList',
+                getValueFromEvent: this.normFile
               })(
                 <Upload action="/api/upload"
                   listType="picture"
-                  fileList={fileList}
                   disabled={disabled}
-                  onChange={(e) => this.onUploadFiles(e)}
+                  onChange={this.onUploadFiles}
                 >
                   <Button><Icon type="upload">上传</Icon></Button>
                 </Upload>
