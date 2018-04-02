@@ -29,3 +29,11 @@ export function removeFile(params) {
     body: JSON.stringify(params)
   })
 }
+
+export function updateProductById(params){
+  const porductId = params.porductId;
+  return request(`/api/products/${porductId}`,{
+    method:'PUT',
+    body:JSON.stringify(params)
+  })
+}

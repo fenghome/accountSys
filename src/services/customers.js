@@ -15,7 +15,7 @@ export function getCustomers(value) {
   })
 }
 
-export function getCustomerById(params) {
+export function updateCustomerById(params) {
   return request(`/api/customers/${params.customerId}`, {
     method: 'PUT',
     body: JSON.stringify(params)

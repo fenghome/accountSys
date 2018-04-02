@@ -1,4 +1,4 @@
-import { getProducts, saveProduct, removeFile } from '../services/products';
+import { getProducts, saveProduct, removeFile,updateProductById } from '../services/products';
 
 const defaultBreadcrumb = [
   ['首页', '/'],
@@ -51,7 +51,6 @@ export default {
     },
 
     *saveProduct({ payload: data }, { call, put }) {
-
       const res = yield call(saveProduct, data);
       if (res && res.data && res.data.success) {
         yield put({ type: 'initState' });
@@ -59,6 +58,12 @@ export default {
       } else {
         yield put({ type: 'setMessage', payload: '新增产品失败' });
       }
+    },
+
+    *updateProduct({ payload: data }, { call, put, select }) {
+      const productId = yield select(state=>state.products.currentProduct._id);
+      data.productId = productId;
+      const res = yield call(updateProductById,data);
     },
 
     *removeFile({ payload: fileName }, { call, put }) {

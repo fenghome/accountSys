@@ -2,21 +2,19 @@ let express = require('express');
 let router = express.Router();
 let Customer = require('../models/customers');
 
-router
-  .route('/all')
+router.route('/all')
   .get(function (req, res, next) {
     Customer
       .find({}, function (err, docs) {
         if (err) {
-          return res.send({success: false, error: err});
+          return res.send({ success: false, error: err });
         } else {
-          return res.send({success: true, customers: docs})
+          return res.send({ success: true, customers: docs })
         }
       })
   })
 
-router
-  .route('/')
+router.route('/')
   .get(function (req, res, next) {
     const userId = req.session.userInfo['_id'];
     const page = req.query && req.query.currentPage || 1;
@@ -29,30 +27,29 @@ router
       query.customerName = new RegExp(req.query.searchCustomerName);
     }
 
-    Customer
-      .count(query, function (err, count) {
-        if (err) {
-          return res.send({success: false, error: err});
-        }
-        Customer.find(query)
-          .limit(limit)
-          .skip(skip)
-          .exec(function(err,docs){
-            if(err){
-              return res.send({
-                success:false,
-                error:err
-              })
-            }else{
-              return res.send({
-                success: true,
-                customers: docs,
-                total:count,
-                current:page
-              })
-            }
-          })
-      });
+    Customer.count(query, function (err, count) {
+      if (err) {
+        return res.send({ success: false, error: err });
+      }
+      Customer.find(query)
+        .limit(limit)
+        .skip(skip)
+        .exec(function (err, docs) {
+          if (err) {
+            return res.send({
+              success: false,
+              error: err
+            })
+          } else {
+            return res.send({
+              success: true,
+              customers: docs,
+              total: count,
+              current: page
+            })
+          }
+        })
+    });
   })
   .post(function (req, res, next) {
     let customer = req.body;
@@ -60,15 +57,14 @@ router
     customer.userId = userId;
     Customer.create(customer, function (err, docs) {
       if (err) {
-        return res.send({success: false, error: err})
+        return res.send({ success: false, error: err })
       } else {
-        return res.send({success: true, customers: docs})
+        return res.send({ success: true, customers: docs })
       }
     })
   });
 
-router
-  .route('/:customerId')
+router.route('/:customerId')
   .put(function (req, res, next) {
     const customerId = req.params.customerId;
     const customer = req.body;
@@ -76,9 +72,9 @@ router
       _id: customerId
     }, customer, function (err, docs) {
       if (err) {
-        return res.send({success: false, err: err})
+        return res.send({ success: false, err: err })
       } else {
-        return res.send({success: true, customer: customer})
+        return res.send({ success: true, customer: customer })
       }
     })
   })
@@ -88,9 +84,9 @@ router
       _id: customerId
     }, function (err, docs) {
       if (err) {
-        return res.send({success: false, err: err})
+        return res.send({ success: false, err: err })
       } else {
-        return res.send({success: true, customer: docs})
+        return res.send({ success: true, customer: docs })
       }
     })
   });

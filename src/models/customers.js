@@ -1,4 +1,4 @@
-import { create, getCustomers, getCustomerById, deleteCustomerById,searchCustomers } from '../services/customers';
+import { create, getCustomers, updateCustomerById, deleteCustomerById,searchCustomers } from '../services/customers';
 const defaultBreadcrumb = [
   ['首页', '/'],
   ['客户管理', '/customer']
@@ -99,7 +99,7 @@ export default {
     *updateCustomer({ payload: customer }, { call, put, select }) {
       const customerId = yield select(({ customers }) => { return customers.currentCustomer._id });
       const newCustomer = { ...customer, customerId };
-      const res = yield call(getCustomerById, newCustomer)
+      const res = yield call(updateCustomerById, newCustomer)
       if (res && res.data && res.data.success) {
         yield put({ type:'changePageType',payload:'show'});
         yield put({ type: 'getCustomers' });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Button, Divider, Pagination } from 'antd';
 
-function ProductList({ products, total, currentPage, onModify, onDetails, onPageChange }) {
+function ProductList({ products, total, currentPage, onModify, onDetails, onDelete, onPageChange }) {
   const columns = [
     {
       title: '序号',
@@ -45,6 +45,8 @@ function ProductList({ products, total, currentPage, onModify, onDetails, onPage
           <a onClick={() => { onModify(record) }}>编辑</a>
           <Divider type="vertical" />
           <a onClick={() => { onDetails(record) }}>详情</a>
+          <Divider type="vertical" />
+          <a onClick={() => { onDelete(record) }}>删除</a>
         </span>
       )
     }

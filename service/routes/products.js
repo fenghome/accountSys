@@ -15,7 +15,6 @@ router.route('/')
     const currentPage = req.query && req.query.currentPage;
     const limit = 2;
     const skip = (currentPage - 1) * limit;
-    console.log(query)
     Products.count(query, function (err, count) {
       if (err) {
         res.send({
@@ -58,4 +57,22 @@ router.route('/')
     })
   })
 
+router.route('/:productId')
+  .put(function(req,res,next){
+    const productId = req.query.productId;
+    const product = req.body;
+    Product.findByIdAndUpdate({_id:productId},function(err,docs){
+      if(!err){
+        res.send({
+          success:true,
+          product:docs
+        })
+      }else{
+        res.send({
+          success:false,
+          err:err
+        })
+      }
+    })
+  })
 module.exports = router;

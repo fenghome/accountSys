@@ -23,7 +23,7 @@ class Products extends Component {
 
   onSearch = (value) => {
     this.props.dispatch({
-      type:'products/initState'
+      type: 'products/initState'
     });
     this.props.dispatch({
       type: 'products/setSearchProductName',
@@ -81,14 +81,24 @@ class Products extends Component {
     })
   }
 
-  onFormConfirm = (values) => {
+  addProduct = (values) => {
     const { dispatch } = this.props;
     const url = values.productImg.length > 0 ? values.productImg[0].response.data.url : '';
-    const data = { ...values, productImg: url };
+    values.productImg = url;
     dispatch({
       type: 'products/saveProduct',
-      payload: data
+      payload: values
     });
+  }
+
+  updateProduct = (values) => {
+    const { dispatch } = this.porps;
+    const url = values.productImg.length > 0 ? values.productImg[0].response.data.url : '';
+    values.productImg = url;
+    dispatch({
+      type: 'products/modifyProduct',
+      payload: values
+    })
   }
 
   onFormCancel = (values) => {
@@ -108,17 +118,22 @@ class Products extends Component {
     })
   }
 
-  onPageChange = (value)=>{
+
+  onDelete = (values) => {
+
+  }
+
+  onPageChange = (value) => {
     this.props.dispatch({
-      type:'products/setCurrentPage',
-      payload:value
+      type: 'products/setCurrentPage',
+      payload: value
     });
     this.props.dispatch({
-      type:'products/getProducts'
+      type: 'products/getProducts'
     })
   }
   render() {
-    const { pageType, breadcrmbItems, products, currProduct,total,currentPage } = this.props.products;
+    const { pageType, breadcrmbItems, products, currProduct, total, currentPage } = this.props.products;
     return (
       <div>
         <BreadcrumbList
@@ -138,11 +153,13 @@ class Products extends Component {
             </div>
             <ProductList
               products={products}
-              onModify={this.onModify}
-              onDetails={this.onDetails}
               total={total}
               currentPage={currentPage}
+              onModify={this.onModify}
+              onDetails={this.onDetails}
+              onDelete={this.onDelete}
               onPageChange={this.onPageChange}
+
             />
           </div>
         }
@@ -151,7 +168,7 @@ class Products extends Component {
           <div className={productContainer}>
             <Title title="商品信息" />
             <ProductForm
-              onConfirm={values => this.onFormConfirm(values)}
+              onConfirm={values => this.addProduct(values)}
               onCancel={values => this.onFormCancel(values)}
               onRemoveFile={values => this.onRemoveFile(values)}
             />
@@ -163,7 +180,7 @@ class Products extends Component {
             <Title title="商品信息" />
             <ProductForm
               product={currProduct}
-              onConfirm={values => this.onFormConfirm(values)}
+              onConfirm={values => this.updateProduct(values)}
               onCancel={values => this.onFormCancel(values)}
               onRemoveFile={values => this.onRemoveFile(values)}
             />
