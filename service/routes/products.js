@@ -9,20 +9,33 @@ router.route('/')
     const userId = req.session.userInfo['_id'];
     let query = { userId: userId };
     const searchProductName = req.query && req.query.searchProductName;
-    if(searchProductName){
+    if (searchProductName) {
       query.productName = new RegExp(searchProductName);
     }
+    const currentPage = req.query && req.query.currentPage;
+    const limit = 2;
+    const skip = (currentPage - 1) * limit;
     console.log(query)
-    Products.find(query, function (err, docs) {
+    Products.count(query, function (err, count) {
       if (err) {
         res.send({
           success: false,
           err: err
         })
       } else {
-        res.send({
-          success: true,
-          products: docs
+        Products.find(query).limit(limit).skip(skip).exec(function (err, docs) {
+          if (!err) {
+            res.send({
+              success: true,
+              products: docs,
+              total: count
+            })
+          } else {
+            res.send({
+              success: false,
+              err: err
+            })
+          }
         })
       }
     })

@@ -23,6 +23,9 @@ class Products extends Component {
 
   onSearch = (value) => {
     this.props.dispatch({
+      type:'products/initState'
+    });
+    this.props.dispatch({
       type: 'products/setSearchProductName',
       payload: value.productName
     });
@@ -105,8 +108,14 @@ class Products extends Component {
     })
   }
 
-  onPageChange = (values)=>{
-
+  onPageChange = (value)=>{
+    this.props.dispatch({
+      type:'products/setCurrentPage',
+      payload:value
+    });
+    this.props.dispatch({
+      type:'products/getProducts'
+    })
   }
   render() {
     const { pageType, breadcrmbItems, products, currProduct,total,currentPage } = this.props.products;

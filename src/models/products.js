@@ -36,13 +36,14 @@ export default {
   effects: {
 
     *getProducts({ payload }, { call, put, select }) { // eslint-disable-line
-      const searchProductName = yield select(state => state.products.searchProductName);
-      const params = { searchProductName };
-      const res = yield call(getProducts,params);
-      let products = [];
-      if (res && res.data && res.data.success) {
-        products = res.data.products;
-      }
+      const { searchProductName, currentPage } = yield select(state => state.products);
+      const params = { searchProductName, currentPage };
+      const res = yield call(getProducts, params);
+      const { products = [], total = 1 } = res.data && res.data.success && res.data;
+      yield put({
+        type: 'setTotal',
+        payload: total
+      })
       yield put({
         type: 'getProductsSuccess',
         payload: products
@@ -98,6 +99,14 @@ export default {
 
     setSearchProductName(state, { payload: searchProductName }) {
       return { ...state, searchProductName }
+    },
+
+    setCurrentPage(state, { payload: currentPage }) {
+      return { ...state, currentPage }
+    },
+
+    setTotal(state, { payload: total }) {
+      return { ...state, total }
     },
 
     setMessage(state, { payload: msg }) {
