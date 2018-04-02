@@ -31,8 +31,8 @@ export function removeFile(params) {
 }
 
 export function updateProductById(params){
-  const porductId = params.porductId;
-  return request(`/api/products/${porductId}`,{
+  const productId = params.productId;
+  return request(`/api/products/${productId}`,{
     method:'PUT',
     body:JSON.stringify(params)
   })

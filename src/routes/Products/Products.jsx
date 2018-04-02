@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, message } from 'antd';
+import { Button, message } from 'antd'; 
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import ProductList from '../../components/Products/PorductList/ProductList';
@@ -92,11 +92,11 @@ class Products extends Component {
   }
 
   updateProduct = (values) => {
-    const { dispatch } = this.porps;
+    const { dispatch } = this.props;
     const url = values.productImg.length > 0 ? values.productImg[0].response.data.url : '';
     values.productImg = url;
     dispatch({
-      type: 'products/modifyProduct',
+      type: 'products/updateProduct',
       payload: values
     })
   }

@@ -50,18 +50,19 @@ router.route('/')
         })
       } else {
         res.send({
-          success: false,
+          success: false, 
           err: err
         })
       }
     })
   })
 
-router.route('/:productId')
+router.route('/:productId')  
   .put(function(req,res,next){
-    const productId = req.query.productId;
+    const productId = req.params.productId;
+    console.log(productId);
     const product = req.body;
-    Product.findByIdAndUpdate({_id:productId},function(err,docs){
+    Products.findByIdAndUpdate({_id:productId},product,function(err,docs){
       if(!err){
         res.send({
           success:true,

@@ -61,9 +61,16 @@ export default {
     },
 
     *updateProduct({ payload: data }, { call, put, select }) {
-      const productId = yield select(state=>state.products.currentProduct._id);
+      const productId = yield select(state=>state.products.currProduct._id);
+      
       data.productId = productId;
-      const res = yield call(updateProductById,data);
+      const res = yield call(updateProductById,data); 
+      if(res.data && res.data.success){
+        yield put({ type: 'initState' });
+        yield put({ type:'getProducts'});
+      }else{
+        yield put({ type:'setMessage',payload:'修改产品失败'});
+      }
     },
 
     *removeFile({ payload: fileName }, { call, put }) {
@@ -76,7 +83,7 @@ export default {
       return { ...defautState };
     },
 
-    initBreadcrmbItems(state, action) {
+    initBreadcrmbItems(state, action) { 
       return { ...state, breadcrmbItems: defaultBreadcrumb }
     },
 
