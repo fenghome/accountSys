@@ -45,7 +45,6 @@ class Suppliers extends Component {
     })
   }
 
-
   onCancel = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -72,8 +71,8 @@ class Suppliers extends Component {
           pageType === 'add' &&
           <div>
             <Title title="供应商资料" />
-            <SupplierForm onConfirm={values => this.onSave(values)} onCancel={this.onCancel} />
-          </div>
+            <SupplierForm />
+          </div> 
         }
         {
           pageType === 'modify' &&

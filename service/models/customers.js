@@ -7,7 +7,7 @@ let customerSchema = new Schema({
   address: String,
   mem: String,
   accountName: String,
-  accountBank: String,
+  accountBank: String, 
   accountNo: String,
   userId: String
 });

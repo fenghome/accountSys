@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Form, Input, Button } from 'antd';
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -8,18 +9,13 @@ const formItemLayout = {
   wrapperCol: { span: 16 }
 }
 
-function SupplierForm({
-  supplier = {},
-  disabled = false,
-  onConfirm,
-  onCancel,
-  form: {
-    getFieldDecorator,
-    validateFields,
-  }
-}) {
+function SupplierForm({dispatch,suppliers,form})
+ {
+  const {pageType,currentSupplier} = suppliers;
+  const {getFieldDecorator,validateFields} = form;
+  const disabled = pageType==='details' ? true : false
   const {
-    _id = '',
+   
     supplierName = '',
     contactPeople = '',
     contactPhone = '',
@@ -28,18 +24,34 @@ function SupplierForm({
     accountName = '',
     accountBank = '',
     accountNo = '',
-  } = supplier
+  } = currentSupplier
 
-  function handlerConfirm() {
+  function saveSupplier() {
     validateFields((errors, values) => {
       if (!errors) {
-        onConfirm(values);
+        dispatch({
+          type:'suppliers/saveSupplier',
+          payload:values
+        });
+      }
+    })
+  }
+
+  function updateSupplier(){
+    validateFields((errors,values)=>{
+      if(!errors){
+        dispatch({
+          type:'suppliers/updateSupplier',
+          payload:values
+        });
       }
     })
   }
 
   function handlerCancle() {
-    onCancel();
+    dispatch({
+      type:'suppliers/initState'
+    })
   }
 
   return (
@@ -152,7 +164,11 @@ function SupplierForm({
       </div>
       <div className={buttonGroup}>
         {
-          disabled || <Button type="primary" onClick={handlerConfirm}>确定</Button>
+          disabled || 
+          <Button type="primary" 
+            onClick={pageType === 'add' ? saveSupplier : updateSupplier}>
+            确定
+          </Button>
         }
         <Button onClick={handlerCancle}>取消</Button>
       </div>
@@ -161,4 +177,8 @@ function SupplierForm({
   )
 }
 
-export default Form.create()(SupplierForm)
+function mapStateToProps(state){
+  return { suppliers:state.suppliers }
+}
+
+export default connect(mapStateToProps)(Form.create()(SupplierForm))
