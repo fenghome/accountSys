@@ -37,3 +37,10 @@ export function updateProductById(params){
     body:JSON.stringify(params)
   })
 }
+
+export function deleteProductById(params){
+  const productId = params;
+  return request(`/api/products/${productId}`,{
+    method:'DELETE'
+  })
+}

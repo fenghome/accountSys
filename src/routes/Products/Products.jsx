@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button, message } from 'antd'; 
+import { Button, message } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import ProductList from '../../components/Products/PorductList/ProductList';
@@ -120,7 +120,10 @@ class Products extends Component {
 
 
   onDelete = (values) => {
-
+    this.props.dispatch({
+      type:'products/deleteProduct',
+      payload:values._id
+    })
   }
 
   onPageChange = (value) => {
@@ -197,9 +200,6 @@ class Products extends Component {
             />
           </div>
         }
-
-
-
       </div>
     )
   }

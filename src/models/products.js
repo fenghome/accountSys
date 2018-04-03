@@ -1,4 +1,4 @@
-import { getProducts, saveProduct, removeFile,updateProductById } from '../services/products';
+import { getProducts, saveProduct, removeFile, updateProductById, deleteProductById } from '../services/products';
 
 const defaultBreadcrumb = [
   ['首页', '/'],
@@ -26,14 +26,17 @@ export default {
     setup({ dispatch, history }) { // eslint-disable-line
       history.listen(({ pathname }) => {
         if (pathname === '/product') {
-          dispatch({ type: 'initState' });
-          dispatch({ type: 'getProducts' });
+          dispatch({ type: 'initProducts' });
         }
       })
     }
   },
 
   effects: {
+    *initProducts(action, { call, put }) {
+      yield put({ type: 'initState' });
+      yield put({ type: 'getProducts' });
+    },
 
     *getProducts({ payload }, { call, put, select }) { // eslint-disable-line
       const { searchProductName, currentPage } = yield select(state => state.products);
@@ -61,15 +64,24 @@ export default {
     },
 
     *updateProduct({ payload: data }, { call, put, select }) {
-      const productId = yield select(state=>state.products.currProduct._id);
-      
+      const productId = yield select(state => state.products.currProduct._id);
       data.productId = productId;
-      const res = yield call(updateProductById,data); 
-      if(res.data && res.data.success){
+      const res = yield call(updateProductById, data);
+      if (res.data && res.data.success) {
         yield put({ type: 'initState' });
-        yield put({ type:'getProducts'});
+        yield put({ type: 'getProducts' });
+      } else {
+        yield put({ type: 'setMessage', payload: '修改产品失败' });
+      }
+    },
+
+    *deleteProduct({ payload:productId }, { call, put, select }) {
+      console.log('product',productId);
+      const res = yield call(deleteProductById,productId);
+      if(res.data && res.data.success){
+        yield put({type:'initProducts'});
       }else{
-        yield put({ type:'setMessage',payload:'修改产品失败'});
+        yield put({type:'setMessage',payload:'删除产品失败'})
       }
     },
 
@@ -83,7 +95,7 @@ export default {
       return { ...defautState };
     },
 
-    initBreadcrmbItems(state, action) { 
+    initBreadcrmbItems(state, action) {
       return { ...state, breadcrmbItems: defaultBreadcrumb }
     },
 

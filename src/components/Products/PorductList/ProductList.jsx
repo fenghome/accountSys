@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Divider, Pagination } from 'antd';
+import { Table, Button, Divider, Pagination, Popconfirm } from 'antd';
 
 function ProductList({ products, total, currentPage, onModify, onDetails, onDelete, onPageChange }) {
   const columns = [
@@ -46,7 +46,10 @@ function ProductList({ products, total, currentPage, onModify, onDetails, onDele
           <Divider type="vertical" />
           <a onClick={() => { onDetails(record) }}>详情</a>
           <Divider type="vertical" />
-          <a onClick={() => { onDelete(record) }}>删除</a>
+          <Popconfirm title="确实要删除产品吗" onConfirm={() => { onDelete(record) }}  okText="是" cancelText="否">
+            <a>删除</a>
+          </Popconfirm>
+
         </span>
       )
     }

@@ -50,19 +50,34 @@ router.route('/')
         })
       } else {
         res.send({
-          success: false, 
+          success: false,
           err: err
         })
       }
     })
   })
 
-router.route('/:productId')  
+router.route('/:productId')
   .put(function(req,res,next){
     const productId = req.params.productId;
-    console.log(productId);
     const product = req.body;
     Products.findByIdAndUpdate({_id:productId},product,function(err,docs){
+      if(!err){
+        res.send({
+          success:true,
+          product:docs
+        })
+      }else{
+        res.send({
+          success:false,
+          err:err
+        })
+      }
+    })
+  })
+  .delete(function(req,res,next){
+    const productId = req.params.productId;
+    Products.remove({_id:productId},function(err,docs){
       if(!err){
         res.send({
           success:true,
