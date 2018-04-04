@@ -11,44 +11,16 @@ import { suppliersBar } from './index.css';
 class Suppliers extends Component {
 
   onSearch = (value) => {
-    console.log(value);
+    this.props.disaptch({
+      type: 'suppliers/setSearchSupplierName',
+      payload: values.supplierName
+    })
   }
 
   onAdd = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'suppliers/changToAddPage'
-    })
-  }
-
-  onModify = (values) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'suppliers/changToModifyPage',
-      payload:values
-    })
-  }
-
-  onDetails = (values) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'suppliers/chanToDetailsPage',
-      payload:values
-    })
-  }
-
-  onSave = (values) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'suppliers/saveSupplier',
-      payload: values
-    })
-  }
-
-  onCancel = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'suppliers/initState'
     })
   }
 
@@ -64,7 +36,7 @@ class Suppliers extends Component {
               <SearchForm label="供应商名称：" fieldName="supplierName" onSearch={value => this.onSearch(value)} />
               <Button type="primary" onClick={this.onAdd}>增加</Button>
             </div>
-            <SupplierList suppliers={suppliers} onModify={this.onModify} onDetails={this.onDetails} />
+            <SupplierList />
           </div>
         }
         {
@@ -72,20 +44,20 @@ class Suppliers extends Component {
           <div>
             <Title title="供应商资料" />
             <SupplierForm />
-          </div> 
+          </div>
         }
         {
           pageType === 'modify' &&
           <div>
             <Title title="供应商资料" />
-            <SupplierForm supplier={currentSupplier} onConfirm={values => this.onSave(values)} onCancel={this.onCancel} />
+            <SupplierForm />
           </div>
         }
         {
           pageType === 'details' &&
           <div>
             <Title title="供应商资料" />
-            <SupplierForm supplier={currentSupplier} disabled={true} onConfirm={values => this.onSave(values)} onCancel={this.onCancel} />
+            <SupplierForm />
           </div>
         }
 

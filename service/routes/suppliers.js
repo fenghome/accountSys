@@ -9,7 +9,7 @@ router.route('/')
             if(!err){
                 res.send({
                     success:true,
-                    suppliers:docs 
+                    suppliers:docs
                 })
             }else{
                 res.send({
@@ -27,7 +27,7 @@ router.route('/')
             if(!err){
                 res.send({
                     success:true,
-                    supplier:docs   
+                    supplier:docs
                 })
             }else{
                 res.send({
@@ -55,5 +55,21 @@ router.route('/:supplierId')
                 })
             }
         })
+    })
+    .delete(function(req,res,next){
+      const supplierId = req.params.supplierId;
+      Supplier.deleteOne({_id:supplierId},function(err,docs){
+        if(!err){
+          res.send({
+            success:true,
+            supplier:docs
+          })
+        }else{
+          res.send({
+            success:false,
+            err:err
+          })
+        }
+      })
     })
 module.exports = router;

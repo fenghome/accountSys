@@ -1,8 +1,30 @@
 import React from 'react';
-import { Table, Button, Divider } from 'antd';
+import { connect } from 'dva';
+import { Table, Button, Divider, Popconfirm } from 'antd';
 import { tableClass } from './index.css';
 
-function SupplierList({ suppliers, onModify, onDetails }) {
+function SupplierList({ dispatch, suppliers: { suppliers } }) {
+
+  function onModify(recoder) {
+    dispatch({
+      type: 'suppliers/changToModifyPage',
+      payload: recoder
+    })
+  }
+
+  function onDetails(recoder) {
+    dispatch({
+      type: 'suppliers/chanToDetailsPage',
+      payload: recoder
+    })
+  }
+
+  function onDelete(recoder) {
+    dispatch({
+      type: 'suppliers/deleteSupplier',
+      payload: recoder._id
+    })
+  }
 
   const columns = [
     {
@@ -44,6 +66,13 @@ function SupplierList({ suppliers, onModify, onDetails }) {
           <a onClick={() => onModify(record)}>编辑</a>
           <Divider type="vertical" />
           <a onClick={() => onDetails(record)}>详情</a>
+          <Divider type="vertical" />
+          <Popconfirm title="你确定删除吗?"
+            onConfirm={() => onDelete(record)}
+            okText="是"
+            cancelText="否">
+            <a>删除</a>
+          </Popconfirm>
         </span>
       )
     }
@@ -58,4 +87,8 @@ function SupplierList({ suppliers, onModify, onDetails }) {
   )
 }
 
-export default SupplierList;
+function mapStateToProps(state) {
+  return { suppliers: state.suppliers }
+}
+
+export default connect(mapStateToProps)(SupplierList);

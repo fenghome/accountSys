@@ -7,14 +7,14 @@ const defaultBreadcrumb = [
 ]
 
 const defaultState = {
-  pageType:'show',
-  breadcrumbItems:defaultBreadcrumb,
-  suppliers:[],
-  currentSupplier:null,
-  searchSupplierName:'',
-  total:1,
-  currentPage:1,
-  msg:''
+  pageType: 'show',
+  breadcrumbItems: defaultBreadcrumb,
+  suppliers: [],
+  currentSupplier: null,
+  searchSupplierName: '',
+  total: 1,
+  currentPage: 1,
+  msg: ''
 }
 
 export default {
@@ -38,15 +38,15 @@ export default {
       yield put({ type: 'setDefaultState' });
       yield put({ type: 'getSuppliers' });
     },
-    
+
     *getSuppliers({ payload }, { call, put }) {
-      const res = yield call(request,`/api/suppliers`,{method:'GET'});
+      const res = yield call(request, `/api/suppliers`, { method: 'GET' });
       console.log(res);
       let suppliers = [];
-      if(res.data && res.data.success){
+      if (res.data && res.data.success) {
         suppliers = res.data.suppliers;
       }
-      yield put({ type:'getSuppliersSuccess',payload:suppliers});
+      yield put({ type: 'getSuppliersSuccess', payload: suppliers });
     },
 
     *changToAddPage({ payload }, { call, put }) {
@@ -68,34 +68,44 @@ export default {
     },
 
     *saveSupplier({ payload: supplier }, { call, put }) {
-      const res = yield call(request,`/api/suppliers`,{
-        method:'POST',
-        body:JSON.stringify(supplier)
+      const res = yield call(request, `/api/suppliers`, {
+        method: 'POST',
+        body: JSON.stringify(supplier)
       })
-      if( res.data && res.data.success ){
-        yield put({ type:'initState'});
-      }else{
-        yield put({ type: 'setMessage',payload:'新增失败' });
+      if (res.data && res.data.success) {
+        yield put({ type: 'initState' });
+      } else {
+        yield put({ type: 'setMessage', payload: '新增失败' });
       }
     },
 
-    *updateSupplier({ payload:supplier},{call,put,select}){
-      const supplierId = yield select(state=>state.suppliers.currentSupplier._id);
-      console.log('supplierId',supplierId);
-      const res = yield call(request,`/api/suppliers/${supplierId}`,{
-        method:'PUT',
-        body:supplier
+    *updateSupplier({ payload: supplier }, { call, put, select }) {
+      const supplierId = yield select(state => state.suppliers.currentSupplier._id);
+      const res = yield call(request, `/api/suppliers/${supplierId}`, {
+        method: 'PUT',
+        body: JSON.stringify(supplier)
       });
-      if( res.data && res.data.success){
-        yield put({ type:'initState'});
-      }else{
-        yield put({ type:'setMessage',payload:'编辑失败'});
+      if (res.data && res.data.success) {
+        yield put({ type: 'initState' });
+      } else {
+        yield put({ type: 'setMessage', payload: '编辑失败' });
       }
-    }
+    },
+
+    *deleteSupplier({ payload: supplierId }, { call, put }) {
+      const res = yield call(request, `/api/suppliers/${supplierId}`, {
+        method: 'DELETE'
+      });
+      if (res.data && res.data.success) {
+        yield put({ type: 'initState' });
+      } else {
+        yield put({ type: 'setMessage', payload: '删除失败' });
+      }
+    },
   },
 
   reducers: {
-    setDefaultState(state,action){
+    setDefaultState(state, action) {
       return { ...defaultState };
     },
 
@@ -119,9 +129,15 @@ export default {
       return { ...state, currentSupplier }
     },
 
-    setMessage( state, { payload: msg}){
+    setSearchSupplierName(state, { payload: searchSupplierName }) {
+      return { ...state, searchSupplierName }
+    },
+
+    setMessage(state, { payload: msg }) {
       return { ...state, msg }
-    }
+    },
+
+
   },
 
 };
