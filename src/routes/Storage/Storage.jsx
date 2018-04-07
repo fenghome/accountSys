@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 
-import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
+import BreadList from '../../components/BreadList/BradList';
 import StorageSearchBar from '../../components/Storage/StorageSearchBar/StorageSearchBar';
 import StorageList from '../../components/Storage/StorageList/Storagelist';
 import AddStorage from '../../components/Storage/AddStorage/AddStorage';
@@ -10,6 +10,17 @@ import ModifyStorage from '../../components/Storage/ModifyStorage/ModifyStorage'
 import { storageContainer, storageBar } from './index.css';
 
 class Storage extends Component {
+
+  componentWillReceiveProps(nextProps) {
+    const { msg } = nextProps.storage;
+    if (msg) {
+      message.info(msg);
+      this.props.dispatch({
+        type: 'storage/setMessage',
+        payload: ''
+      })
+    }
+  }
 
   onSearch = (values) => {
     //取得values对orders的数据进行筛选
@@ -19,18 +30,12 @@ class Storage extends Component {
   onAdd = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'storage/getStorageNumber'
-    });
-    dispatch({
-      type: 'storage/addBreadcrumbItem',
-      payload: {
-        item: ['新增入库', '/storage/add']
-      }
-    });
-    dispatch({
       type: 'storage/changePageType',
       payload: 'add'
     });
+    dispatch({
+      type: 'storage/addStorage'
+    })
   }
 
   onDetails = (orderId) => {
@@ -38,12 +43,6 @@ class Storage extends Component {
     dispatch({
       type: 'storage/getStorageById',
       payload: orderId
-    });
-    dispatch({
-      type: 'storage/addBreadcrumbItem',
-      payload: {
-        item: ['浏览入库', '/storage/details']
-      }
     });
     dispatch({
       type: 'storage/changePageType',
@@ -56,12 +55,6 @@ class Storage extends Component {
     dispatch({
       type: 'storage/getStorageById',
       payload: noteNumber
-    });
-    dispatch({
-      type: 'storage/addBreadcrumbItem',
-      payload: {
-        item: ['编辑入库', '/storage/modify']
-      }
     });
     dispatch({
       type: 'storage/changePageType',
@@ -78,7 +71,7 @@ class Storage extends Component {
     const { noteNumber } = storageSingle;
     return (
       <div>
-        <BreadcrumbList breadcrumbItems={breadcrumbItems} />
+        <BreadList />
         {
           pageType == 'show' && (
             <div className={storageContainer}>
@@ -86,12 +79,7 @@ class Storage extends Component {
                 <StorageSearchBar suppliers={suppliers} onSearch={this.onSearch} />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
-              <StorageList
-                list={list}
-                onModify={this.onModify}
-                onDelete={this.onDelete}
-                onDetails={this.onDetails}
-              />
+              <StorageList />
             </div>
           )
         }

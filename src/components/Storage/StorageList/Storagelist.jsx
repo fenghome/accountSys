@@ -1,12 +1,28 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function StorageList({ list, onModify, onDelete, onDetails }) {
+function StorageList({ dispatch, storage }) {
+
+  const { list } = storage
 
   function onDelete(value) {
     console.log(value);
+  }
+
+  function onModify(value){
+
+  }
+
+  function onDetails(value){
+
+
+  }
+
+  function onDelete(value){
+
   }
 
   const columns = [{
@@ -66,20 +82,20 @@ function StorageList({ list, onModify, onDelete, onDetails }) {
   ];
 
 
-	const rowSelection = {
-		onChange: (selectedRowKeys, selectedRows) => {
-			console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-		},
-		onSelect: (record, selected, selectedRows) => {
-			console.log(record, selected, selectedRows);
-		},
-		onSelectAll: (selected, selectedRows, changeRows) => {
-			console.log(selected, selectedRows, changeRows);
-		},
-		getCheckboxProps: record => ({
-			disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-		}),
-	};
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User',    // Column configuration not to be checked
+    }),
+  };
 
 
   return (
@@ -91,4 +107,8 @@ function StorageList({ list, onModify, onDelete, onDetails }) {
   )
 }
 
-export default StorageList;
+function mapStateToProps(state) {
+  return { storage: state.storage }
+}
+
+export default connect(mapStateToProps)(StorageList);

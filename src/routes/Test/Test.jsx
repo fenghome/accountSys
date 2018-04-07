@@ -1,52 +1,45 @@
 import React from 'react';
-import { Upload, Button, Icon, Form } from 'antd';
+import { Upload, Button, Icon, Form, Input } from 'antd';
 const FormItem = Form.Item;
-
+import { formItemClass } from './index.css';
 class Test extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      fileList:[]
-    }
-  }
 
-  onChange = (info) => {
-    console.log(info);
-  }
-
-  normFile = (e) => {
-		if (Array.isArray(e)) {
-			return e;
-		}
-		return e && e.fileList;
-	};
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+
     return (
       <Form>
-        <h2>上传文件</h2>
-        <FormItem>
+        <FormItem label="姓名：" {...formItemLayout} >
+
+            {
+              getFieldDecorator('name')(
+                <Input></Input>
+              )
+            }
+
+        </FormItem>
+        <FormItem label="单位名称" {...formItemLayout}>
           {
-            getFieldDecorator('file',{
-              valuePropName: 'fileList',
-							getValueFromEvent: this.normFile
-            })(
-              <Upload
-                action='/api/upload'
-                onChange={this.onChange}
-              >
-                <Button>
-                  <Icon type="upload" />Click
-                </Button>
-              </Upload>
+            getFieldDecorator('work')(
+              <Input></Input>
             )
           }
-
         </FormItem>
       </Form>
     )
   }
+
 }
 
 export default Form.create()(Test);

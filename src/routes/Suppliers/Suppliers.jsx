@@ -11,9 +11,13 @@ import { suppliersBar } from './index.css';
 class Suppliers extends Component {
 
   onSearch = (value) => {
-    this.props.disaptch({
+    const {dispatch} = this.props;
+    dispatch({
       type: 'suppliers/setSearchSupplierName',
-      payload: values.supplierName
+      payload: value.supplierName
+    });
+    dispatch({
+      type:'suppliers/getSuppliers'
     })
   }
 

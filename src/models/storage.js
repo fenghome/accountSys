@@ -1,3 +1,4 @@
+import request from '../utils/request';
 const defaultProduct = {
   key: '0',
   productId: '',
@@ -14,6 +15,7 @@ const defaultStorage = {
   noteNumber: '',
   supplierId: null,
   supplierName: null,
+  supplierFormMsg:'',
   products: [
     { ...defaultProduct }
   ],
@@ -22,8 +24,18 @@ const defaultStorage = {
   mem: ''
 };
 
-const initState = {
+const defaultState = {
   pageType: 'show',
+  breadcrumbItems: [
+    ['首页', ''],
+    ['入库', 'show'],
+    // ['新增','add'],
+    // ['编辑','modify'],
+    // ['详情','details'],
+  ],
+  timeRange: [],
+  searchSupplierName: '',
+  searchStorageId: '',
   list: [
     {
       sequence: null,
@@ -47,107 +59,92 @@ const initState = {
       mem: ''
     }
   ],
-  timeRange: [],
-  supplierId: '',
-  current: null,
-  currentItem: {},
-  breadcrumbItems: [
-    ['首页', '/'],
-    ['入库', '/storage'],
-  ],
   storageSingle: { ...defaultStorage },
   suppliers: [],
-  productList: []
+  productList: [],
+  msg: ''
 }
 
 export default {
 
   namespace: 'storage',
 
-  state: initState,
+  state: defaultState,
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
       history.listen(({ pathname }) => {
         if (pathname === '/storage') {
           dispatch({ type: 'initState' });
-          dispatch({ type: 'getList' });
-          dispatch({ type: 'getSuppliers' });
-          dispatch({ type: 'getproductList' });
         }
       });
     },
   },
 
   effects: {
-    *getList({ payload }, { call, put }) {
-      const list = [
-        {
-          _id: 1,
-          sequence: null,
-          createInstance: '2017-06-01',
-          noteNumber: 'MDC201802270001',
-          supplierId: 1,
-          supplierName: '张三',
-          products: [
-            {
-              key: '0',
-              productId: 1,
-              productName: '桌布',
-              quantity: 2,
-              productUnit: '个',
-              price: 5,
-              amount: 10,
-              remarks: ''
-            }
-          ],
-          totalAmount: 10,
-          paymentAmount: 10,
-          mem: 'aaaaa'
-        }
-      ];
-      yield put({
-        type: 'getListSuccess',
-        payload: list
-      })
+    *initState({ payload }, { call, put }) {
+      yield put({ type: 'setDefaultState' });
+      yield put({ type: 'getList' });
+      yield put({ type: 'getSuppliers' });
+      yield put({ type: 'getproductList' });
     },
-    *getSuppliers({ payload }, { call, put }) {  // eslint-disable-line
-      const suppliers = [
-        {
-          _id: 0,
-          supplierId: 0,
-          supplierName: '张三家'
-        }
-      ];
 
-      yield put({
-        type: 'getSuppliersSuccess',
-        payload: suppliers
+    *getList({ payload }, { call, put }) {
+      const res = yield call(request, `/api/storage`, {
+        method: 'GET'
       });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'getListSuccess',
+          payload: res.data.list
+        })
+      }
+    },
+
+    *getSuppliers({ payload }, { call, put }) {  // eslint-disable-line
+      const res = yield call(request, `/api/suppliers`, {
+        method: 'GET'
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'getSuppliersSuccess',
+          payload: res.data.suppliers
+        });
+      }
     },
 
     *getproductList({ payload }, { call, put }) {
-      const productList = [
-        {
-          productId: 0,
-          productName: '锤子',
-          productUnit: '个'
-        }
-      ];
-      yield put({
-        type: 'getProductListSuccess',
-        payload: productList
-      })
+      const res = yield call(request, `/api/products`, {
+        method: 'GET'
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'getProductListSuccess',
+          payload: res.data.products
+        })
+      }
     },
 
-    *getStorageNumber({ payload }, { call, put }) {
+    *addStorage({ payload }, { call, put }) {
       //模拟服务器产生1个number
-      const noteNumber = 'MDC201802270003';
-      const newStorageSingle = { ...defaultStorage, noteNumber };
-      yield put({
-        type:'getStorageNumberSuccess',
-        payload: newStorageSingle
+      const res = yield call(request, `/api/storage/getnotenumber`, {
+        method: 'GET'
       });
+      if (res.data && res.data.success) {
+        const newStorageSingle = { ...defaultStorage, noteNumber: res.data.noteNumber };
+        yield put({
+          type: 'addStorageSuccess',
+          payload: newStorageSingle
+        });
+      } else {
+        yield put({
+          type: 'initState'
+        });
+        yield put({
+          type: 'setMessage',
+          payload: '出库单生成失败'
+        })
+      }
     },
 
     *getStorageById({ payload: noteNumber }, { call, put, select }) {
@@ -165,8 +162,27 @@ export default {
   },
 
   reducers: {
-    initState(state, action) {
-      return { ...initState };
+    setDefaultState(state, action) {
+      return { ...defaultState };
+    },
+
+    changePageType(state, { payload: pageType }) {
+      let breadcrumbItems = [];
+      switch (pageType) {
+        case 'add':
+          breadcrumbItems = [['首页', ''], ['入库', 'show'], ['新增', 'add']];
+          break;
+        case 'modify':
+          breadcrumbItems = [['首页', ''], ['入库', 'show'], ['修改', 'modify']];
+          break;
+        case 'details':
+          breadcrumbItems = [['首页', ''], ['入库', 'show'], ['详情', 'details']];
+          break;
+        default:
+          breadcrumbItems = [['首页', ''], ['入库', 'show']];
+          break;
+      }
+      return { ...state, pageType, breadcrumbItems }
     },
 
     getListSuccess(state, { payload: list }) {
@@ -181,12 +197,8 @@ export default {
       return { ...state, productList }
     },
 
-    getStorageNumberSuccess(state, { payload: newStorageSingle }) {
+    addStorageSuccess(state, { payload: newStorageSingle }) {
       return { ...state, storageSingle: newStorageSingle }
-    },
-
-    changePageType(state, { payload: pageType }) {
-      return { ...state, pageType }
     },
 
     updateStorageSingle(state, { payload: storageSingle }) {
@@ -197,6 +209,10 @@ export default {
       const storageSingle = { ...state.storageSingle, mem }
       return { ...state, storageSingle }
     },
+
+    setMessage(state, { payload: msg }) {
+      return { ...state, msg }
+    }
 
 
 

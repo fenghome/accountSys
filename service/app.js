@@ -15,6 +15,7 @@ var upload = require('./routes/upload');
 var customers = require('./routes/customsers');
 var products = require('./routes/products');
 var suppliers = require('./routes/suppliers');
+var storage = require('./routes/storage');
 
 mongoose.connect('mongodb://localhost:27017/accountSys');
 
@@ -45,13 +46,14 @@ app.use(session({
   store: new MongoStore({url: 'mongodb://localhost:27017/accountSys'})
 }));
 
-app.use('/', index); 
+app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/upload', upload);
 app.use('/customers', customers);
 app.use('/products', products);
 app.use('/suppliers',suppliers);
+app.use('/storage',storage);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

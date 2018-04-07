@@ -1,3 +1,12 @@
+.formClass{
+  margin-top:20px;
+}
+
+.formItemClass{
+  display: flex;
+  flex-direction: row;
+}
+
 .buttonGroup{
   position: absolute;
   bottom: -30px;

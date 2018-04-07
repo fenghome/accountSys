@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Button, Divider, Popconfirm } from 'antd';
+import { Table, Button, Divider, Popconfirm, Pagination } from 'antd';
 import { tableClass } from './index.css';
 
-function SupplierList({ dispatch, suppliers: { suppliers } }) {
+function SupplierList({ dispatch, suppliers: { suppliers, total, currentPage } }) {
 
   function onModify(recoder) {
     dispatch({
@@ -23,6 +23,16 @@ function SupplierList({ dispatch, suppliers: { suppliers } }) {
     dispatch({
       type: 'suppliers/deleteSupplier',
       payload: recoder._id
+    })
+  }
+
+  function onPageChange(page) {
+    dispatch({
+      type: 'suppliers/setCurrentPage',
+      payload: page
+    });
+    dispatch({
+      type: 'suppliers/getSuppliers'
     })
   }
 
@@ -79,11 +89,22 @@ function SupplierList({ dispatch, suppliers: { suppliers } }) {
   ]
 
   return (
-    <Table
-      className={tableClass}
-      rowKey={record => record._id}
-      columns={columns}
-      dataSource={suppliers} />
+    <div>
+      <Table
+        className={tableClass}
+        rowKey={record => record._id}
+        columns={columns}
+        dataSource={suppliers}
+        pagination={false}
+      />
+      <Pagination
+        className="ant-table-pagination"
+        total={total}
+        pageSize={2}
+        current={parseInt(currentPage)}
+        onChange={onPageChange}
+      />
+    </div>
   )
 }
 

@@ -38,8 +38,8 @@ function StorageSearchBar({
           getFieldDecorator('supplierId')(
             <Select style={{ width: 150 }}>
               {
-                suppliers.map(({ supplierId, supplierName }) => (
-                  <Option key={supplierId}>{supplierName}</Option>
+                suppliers.map(({ _id, supplierName }) => (
+                  <Option key={_id}>{supplierName}</Option>
                 ))
               }
             </Select>

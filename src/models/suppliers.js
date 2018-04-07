@@ -1,5 +1,6 @@
 // import { getSuppliers } from '../services/suppliers';
 import request from '../utils/request';
+import qs from 'qs';
 
 const defaultBreadcrumb = [
   ['首页', '/'],
@@ -39,14 +40,18 @@ export default {
       yield put({ type: 'getSuppliers' });
     },
 
-    *getSuppliers({ payload }, { call, put }) {
-      const res = yield call(request, `/api/suppliers`, { method: 'GET' });
-      console.log(res);
-      let suppliers = [];
-      if (res.data && res.data.success) {
-        suppliers = res.data.suppliers;
+    *getSuppliers({ payload }, { call, put, select }) {
+      const { searchSupplierName, currentPage } = yield select(state => state.suppliers);
+      const params = {
+        searchSupplierName,
+        currentPage
       }
-      yield put({ type: 'getSuppliersSuccess', payload: suppliers });
+      const res = yield call(request, `/api/suppliers?${qs.stringify(params)}`, { method: 'GET' });
+      if (res.data && res.data.success) {
+        const { suppliers = [], total = 1 } = res.data;
+        yield put({ type: 'getSuppliersSuccess', payload: suppliers });
+        yield put({ type:'setTotal',payload:total});
+      }
     },
 
     *changToAddPage({ payload }, { call, put }) {
@@ -131,6 +136,14 @@ export default {
 
     setSearchSupplierName(state, { payload: searchSupplierName }) {
       return { ...state, searchSupplierName }
+    },
+
+    setCurrentPage(state, { payload: currentPage }) {
+      return { ...state, currentPage }
+    },
+
+    setTotal(state, { payload: total }) {
+      return { ...state, total }
     },
 
     setMessage(state, { payload: msg }) {
