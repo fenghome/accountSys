@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Table, Icon } from 'antd';
 import Spliter from '../../../Spliter/Spliter';
 import ListEditCell from '../../../ListEditCell/ListEditCell';
@@ -7,38 +8,65 @@ import { footerClass, footerItem } from './index.css';
 
 class StorageGrid extends React.Component {
 
-  constructor(props) {
-    super(props);
-    const { disabled = false } = props
-    this.defaultProduct = {
-      key: '0',
-      productId: '',
-      productName: '',
-      quantity: 0,
-      productUnit: '',
-      price: 0,
-      amount: 0,
-      remarks: ''
-    }
+  onAddRow = () => {
+    const { storageSingle } = this.state;
+    const newProductRow = { ...this.defaultProduct, key: storageSingle.products.length + 1 }
+    storageSingle.products.push(newProductRow);
+    this.setState({ storageSingle });
+  }
 
-    this.defaultStorageSingle = {
-      sequence: props.storageSingle.sequence,
-      orderNumber: props.storageSingle.orderNumber,
-      supplierId: null,
-      products: [
-        this.defaultProduct
-      ],
-      totalAmount: 0,
-      paymentAmount: 0,
-      men: ''
+  onDeleteRow = () => {
+    const { storageSingle } = this.state;
+    if (storageSingle.products.length >= 2) {
+      storageSingle.products.pop();
+      this.setState({ storageSingle });
     }
-    this.state = {
-      storageSingle: props.storageSingle
+  }
+
+  updateStorageSingleProduct = (index, obj) => {
+    const { dispatch,storage } = this.props;
+    const { storageSingle } = storage;
+    const { products } = storageSingle;
+    dispatch({
+      type:'storage/updateStorageSingleProduct',
+      payload:{index,obj}
+    })
+
+
+
+
+    let { totalAmount = 0 } = this.state;
+    const { products = [] } = storageSingle;
+    const currProductRow = products[index];
+    const newProductRow = { ...currProductRow, ...obj };
+    newProductRow.amount = newProductRow.quantity * newProductRow.price;
+    console.log('amount',newProductRow.amount);
+    storageSingle.products[index] = newProductRow;
+    for (let i of products) {
+      totalAmount = totalAmount + i.amount;
     }
+    storageSingle.totalAmount = totalAmount;
+    this.setState({
+      storageSingle
+    });
+    updateStorageSingle(this.state.storageSingle);
+  }
 
-    const { productList } = this.props;
+  updatePaymentAmount = (value) => {
+    const { updateStorageSingle } = this.props;
+    const { storageSingle } = this.state;
+    storageSingle.paymentAmount = value;
+    this.setState({
+      storageSingle
+    });
+    updateStorageSingle(storageSingle);
+  }
 
-    this.columns = [
+  render() {
+    const { storage } = this.props;
+    const disabled = storage.pageType==='details' ? true : false;
+    const { storageSingle={}, productList=[] } = storage;
+    const columns = [
       {
         title: '序号',
         dataIndex: 'serialNumber',
@@ -62,7 +90,7 @@ class StorageGrid extends React.Component {
         key: 'productName',
         width: '20%',
         render: (text, record, index) => (
-          <ListEditCell
+          <ListEditCell 
             productList={productList}
             record={record}
             defaultProduct={record}
@@ -94,7 +122,7 @@ class StorageGrid extends React.Component {
         dataIndex: 'productUnit',
         key: 'productUnit',
         render: (text, record, index) => {
-          const { products = [] } = this.state.storageSingle;
+          const { products = [] } = storageSingle;
           const { productUnit = "" } = products[index];
           return <span>{productUnit}</span>
         }
@@ -128,71 +156,19 @@ class StorageGrid extends React.Component {
             onInputValue={(remarks) => this.updateStorageProduct(index, { remarks })} />
         )
       }
-    ];
-  }
-
-  onAddRow = () => {
-    const { storageSingle } = this.state;
-    const newProductRow = { ...this.defaultProduct, key: storageSingle.products.length + 1 }
-    storageSingle.products.push(newProductRow);
-    this.setState({ storageSingle });
-  }
-
-  onDeleteRow = () => {
-    const { storageSingle } = this.state;
-    if (storageSingle.products.length >= 2) {
-      storageSingle.products.pop();
-      this.setState({ storageSingle });
-    }
-  }
-
-  updateStorageProduct = (index, obj) => {
-    const { updateStorageSingle } = this.props;
-    const { storageSingle } = this.state;
-    let { totalAmount = 0 } = this.state;
-    const { products = [] } = storageSingle;
-    const currProductRow = products[index];
-    const newProductRow = { ...currProductRow, ...obj };
-    newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    console.log('amount',newProductRow.amount);
-    storageSingle.products[index] = newProductRow;
-    for (let i of products) {
-      totalAmount = totalAmount + i.amount;
-    }
-    storageSingle.totalAmount = totalAmount;
-    this.setState({
-      storageSingle
-    });
-    updateStorageSingle(this.state.storageSingle);
-  }
-
-  updatePaymentAmount = (value) => {
-    const { updateStorageSingle } = this.props;
-    const { storageSingle } = this.state;
-    storageSingle.paymentAmount = value;
-    this.setState({
-      storageSingle
-    });
-    updateStorageSingle(storageSingle);
-  }
-
-
-
-  render() {
-    const { disabled = false } = this.props;
-    const { storageSingle } = this.state;
+    ]
     return (
       <div>
         <Table
           dataSource={storageSingle.products}
-          columns={this.columns}
+          columns={columns}
           bordered
           pagination={false}
           footer={() => (
             <div className={footerClass}>
               <div className={footerItem}>
                 <span>合计金额：￥</span>
-                {this.state.storageSingle.totalAmount}
+                {storageSingle.totalAmount}
               </div>
               <div className={footerItem}>
                 <span>支付金额：￥</span>
@@ -213,4 +189,8 @@ class StorageGrid extends React.Component {
 
 }
 
-export default StorageGrid;
+function mapStateToProps(state){
+  return { storage:state.storage}
+}
+
+export default connect(mapStateToProps)(StorageGrid);

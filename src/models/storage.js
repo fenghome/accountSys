@@ -201,6 +201,13 @@ export default {
       return { ...state, storageSingle: newStorageSingle }
     },
 
+    updateStorageSingleProduct(state,{ payload:{index,obj}}){
+      const newProduct = {...state.storageSingle.products[index],...obj};
+      state.storageSingle.products[index] = newProduct;
+      const storageSingle = { ...state.storageSingle}
+
+    },
+
     updateStorageSingle(state, { payload: storageSingle }) {
       return { ...state, storageSingle }
     },
