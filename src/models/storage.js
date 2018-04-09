@@ -15,7 +15,7 @@ const defaultStorage = {
   noteNumber: '',
   supplierId: null,
   supplierName: null,
-  supplierFormMsg:'',
+  supplierFormMsg: '',
   products: [
     { ...defaultProduct }
   ],
@@ -201,11 +201,12 @@ export default {
       return { ...state, storageSingle: newStorageSingle }
     },
 
-    updateStorageSingleProduct(state,{ payload:{index,obj}}){
-      const newProduct = {...state.storageSingle.products[index],...obj};
-      state.storageSingle.products[index] = newProduct;
-      const storageSingle = { ...state.storageSingle}
-
+    updateStorageSingleProduct(state, { payload: { index, obj } }) {
+      const newState = { ...state };
+      const newProduct = { ...newState.storageSingle.products[index], ...obj }
+      newProduct.amount = newProduct.quantity * newProduct.price;
+      newState.storageSingle.products[index] = newProduct;
+      return newState;
     },
 
     updateStorageSingle(state, { payload: storageSingle }) {

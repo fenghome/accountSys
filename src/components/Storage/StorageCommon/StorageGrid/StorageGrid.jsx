@@ -30,26 +30,7 @@ class StorageGrid extends React.Component {
     dispatch({
       type:'storage/updateStorageSingleProduct',
       payload:{index,obj}
-    })
-
-
-
-
-    let { totalAmount = 0 } = this.state;
-    const { products = [] } = storageSingle;
-    const currProductRow = products[index];
-    const newProductRow = { ...currProductRow, ...obj };
-    newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    console.log('amount',newProductRow.amount);
-    storageSingle.products[index] = newProductRow;
-    for (let i of products) {
-      totalAmount = totalAmount + i.amount;
-    }
-    storageSingle.totalAmount = totalAmount;
-    this.setState({
-      storageSingle
     });
-    updateStorageSingle(this.state.storageSingle);
   }
 
   updatePaymentAmount = (value) => {
@@ -90,13 +71,13 @@ class StorageGrid extends React.Component {
         key: 'productName',
         width: '20%',
         render: (text, record, index) => (
-          <ListEditCell 
+          <ListEditCell
             productList={productList}
             record={record}
             defaultProduct={record}
             disabled={disabled}
             onSelectProduct={(product) => {
-              this.updateStorageProduct(index, {
+              this.updateStorageSingleProduct(index, {
                 productId: product['_id'],
                 productName: product['productName'],
                 productUnit: product['productUnit']
@@ -114,7 +95,7 @@ class StorageGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(number) => this.updateStorageProduct(index, { quantity: number })}
+            onInputValue={(number) => this.updateStorageSingleProduct(index, { quantity: number })}
           />
         )
       }, {
@@ -136,7 +117,7 @@ class StorageGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(price) => this.updateStorageProduct(index, { price })}
+            onInputValue={(price) => this.updateStorageSingleProduct(index, { price })}
           />
         )
       }, {
@@ -153,7 +134,7 @@ class StorageGrid extends React.Component {
             type="text"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(remarks) => this.updateStorageProduct(index, { remarks })} />
+            onInputValue={(remarks) => this.updateStorageSingleProduct(index, { remarks })} />
         )
       }
     ]
