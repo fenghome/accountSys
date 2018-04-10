@@ -202,10 +202,21 @@ export default {
     },
 
     updateStorageSingleProduct(state, { payload: { index, obj } }) {
-      const newState = { ...state };
+      let newState = { ...state };
       const newProduct = { ...newState.storageSingle.products[index], ...obj }
       newProduct.amount = newProduct.quantity * newProduct.price;
       newState.storageSingle.products[index] = newProduct;
+      return newState;
+    },
+
+    calculateTotalAmount(state, action) {
+      let totalAmount = 0;
+      for (let i of state.storageSingle.products) {
+        console.log('i', i.amount);
+        totalAmount = parseInt(totalAmount) + parseInt(i.amount);
+      }
+      let newState = { ...state }
+      newState.storageSingle.totalAmount = totalAmount;
       return newState;
     },
 

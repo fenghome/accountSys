@@ -8,20 +8,26 @@ const Option = Select.Option;
 class ListEditCell extends React.Component {
   constructor(props) {
     super(props);
+    const { selectProductId, productList } = props;
+    let selectProduct = {};
+    if (selectProductId && productList.length > 0) {
+      selectProduct = productList.find((item) => {
+        return item._id === selectProductId
+      })
+    }
     this.state = {
       modifyState: false,
-      selectProduct: props.defaultProduct || null,
+      selectProduct,
     }
   }
 
   onChange = (productId) => {
-    const {productList} = this.props;
-    const product = productList.find((item)=>{
-      return item.productId == productId;
-    })
-
+    const { productList } = this.props;
+    const product = productList.find((item) => {
+      return item._id == productId;
+    });
     this.setState({
-      selectProduct:product
+      selectProduct: product
     })
   }
 
@@ -33,14 +39,14 @@ class ListEditCell extends React.Component {
 
   onSelect = () => {
     this.setState({
-      modifyState:false
+      modifyState: false
     })
     const { onSelectProduct } = this.props;
     onSelectProduct(this.state.selectProduct);
   }
 
   render() {
-    const { productList, record, defaultProductName="", disabled=false } = this.props;
+    const { productList=[], disabled = false } = this.props;
     const { modifyState, selectProduct } = this.state;
     const productName = selectProduct.productName || "";
     return (
@@ -49,8 +55,8 @@ class ListEditCell extends React.Component {
           <Select className={selectClass} onChange={this.onChange} defaultValue={productName} >
             {
               productList.map((item, index) => (
-              <Option key={item.productId} value={item.productId}>{item.productName}</Option>
-            ))
+                <Option key={index} value={item._id}>{item.productName}</Option>
+              ))
             }
           </Select>
           <Icon type="check" onClick={this.onSelect} />

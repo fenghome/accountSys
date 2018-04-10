@@ -31,6 +31,9 @@ class StorageGrid extends React.Component {
       type:'storage/updateStorageSingleProduct',
       payload:{index,obj}
     });
+    dispatch({
+      type:'storage/calculateTotalAmount'
+    })
   }
 
   updatePaymentAmount = (value) => {
@@ -73,8 +76,7 @@ class StorageGrid extends React.Component {
         render: (text, record, index) => (
           <ListEditCell
             productList={productList}
-            record={record}
-            defaultProduct={record}
+            selectProductId={record.productId}
             disabled={disabled}
             onSelectProduct={(product) => {
               this.updateStorageSingleProduct(index, {
@@ -137,7 +139,7 @@ class StorageGrid extends React.Component {
             onInputValue={(remarks) => this.updateStorageSingleProduct(index, { remarks })} />
         )
       }
-    ]
+    ];
     return (
       <div>
         <Table
