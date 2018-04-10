@@ -8,19 +8,20 @@ import { footerClass, footerItem } from './index.css';
 
 class StorageGrid extends React.Component {
 
-  onAddRow = () => {
-    const { storageSingle } = this.state;
-    const newProductRow = { ...this.defaultProduct, key: storageSingle.products.length + 1 }
-    storageSingle.products.push(newProductRow);
-    this.setState({ storageSingle });
+  onAddRow = (index) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'storage/addStorageSingleProduct',
+      payload:index
+    });
   }
 
-  onDeleteRow = () => {
-    const { storageSingle } = this.state;
-    if (storageSingle.products.length >= 2) {
-      storageSingle.products.pop();
-      this.setState({ storageSingle });
-    }
+  onDeleteRow = (index) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'storage/deleteStorageSingleProduct',
+      payload:index
+    });
   }
 
   updateStorageSingleProduct = (index, obj) => {
@@ -63,9 +64,9 @@ class StorageGrid extends React.Component {
         render: (text, record, index) => (
           disabled ||
           <div style={{ textAlign: 'center' }}>
-            <a onClick={this.onAddRow}><Icon type="plus" /></a>
+            <a onClick={()=>this.onAddRow(index)}><Icon type="plus" /></a>
             <Spliter />
-            <a onClick={this.onDeleteRow}><Icon type="minus" /></a>
+            <a onClick={()=>this.onDeleteRow(index)}><Icon type="minus" /></a>
           </div>
         )
       }, {
@@ -147,6 +148,7 @@ class StorageGrid extends React.Component {
           columns={columns}
           bordered
           pagination={false}
+          rowKey={record => record.key} 
           footer={() => (
             <div className={footerClass}>
               <div className={footerItem}>

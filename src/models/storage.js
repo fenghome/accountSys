@@ -1,6 +1,6 @@
 import request from '../utils/request';
 const defaultProduct = {
-  key: '0',
+  key:0,
   productId: '',
   productName: '',
   quantity: 0,
@@ -212,11 +212,30 @@ export default {
     calculateTotalAmount(state, action) {
       let totalAmount = 0;
       for (let i of state.storageSingle.products) {
-        console.log('i', i.amount);
         totalAmount = parseInt(totalAmount) + parseInt(i.amount);
       }
       let newState = { ...state }
       newState.storageSingle.totalAmount = totalAmount;
+      return newState;
+    },
+
+    addStorageSingleProduct(state,{payload:index}){
+      let newState = { ...state };
+      let { products } = newState.storageSingle;
+      products.splice(index+1,0,defaultProduct);
+      products.forEach((item,i,array)=>{
+        array[i].key=i;
+      })
+      return newState;
+    },
+
+    deleteStorageSingleProduct(state,{payload:index}){
+      let newState = { ...state };
+      if(index==0){
+        newState.storageSingle.products=[defaultProduct];
+      }else{
+        newState.storageSingle.products.splice(index,1);
+      }
       return newState;
     },
 
