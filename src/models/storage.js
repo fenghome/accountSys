@@ -1,6 +1,6 @@
 import request from '../utils/request';
 const defaultProduct = {
-  key:0,
+  key: 0,
   productId: '',
   productName: '',
   quantity: 0,
@@ -21,7 +21,8 @@ const defaultStorage = {
   ],
   totalAmount: 0,
   paymentAmount: 0,
-  mem: ''
+  mem: '',
+  msg: ''
 };
 
 const defaultState = {
@@ -126,7 +127,6 @@ export default {
     },
 
     *addStorage({ payload }, { call, put }) {
-      //模拟服务器产生1个number
       const res = yield call(request, `/api/storage/getnotenumber`, {
         method: 'GET'
       });
@@ -157,6 +157,9 @@ export default {
           payload: storageSingle
         }
       )
+    },
+
+    *saveStorage({ payload: values }, { call, put, select }) {
 
     }
   },
@@ -186,19 +189,19 @@ export default {
     },
 
     getListSuccess(state, { payload: list }) {
-      return { ...state, list }
+      return { ...state, list };
     },
 
     getSuppliersSuccess(state, { payload: suppliers }) {
-      return { ...state, suppliers }
+      return { ...state, suppliers };
     },
 
     getProductListSuccess(state, { payload: productList }) {
-      return { ...state, productList }
+      return { ...state, productList };
     },
 
     addStorageSuccess(state, { payload: newStorageSingle }) {
-      return { ...state, storageSingle: newStorageSingle }
+      return { ...state, storageSingle: newStorageSingle };
     },
 
     updateStorageSingleProduct(state, { payload: { index, obj } }) {
@@ -219,41 +222,48 @@ export default {
       return newState;
     },
 
-    addStorageSingleProduct(state,{payload:index}){
+    addStorageSingleProduct(state, { payload: index }) {
       let newState = { ...state };
       let { products } = newState.storageSingle;
-      products.splice(index+1,0,defaultProduct);
-      products.forEach((item,i,array)=>{
-        array[i].key=i;
-      })
+      products.splice(index + 1, 0, { ...defaultProduct });
+      products.forEach(function (item, i, arr) {
+        arr[i].key = i;
+      });
       return newState;
     },
 
-    deleteStorageSingleProduct(state,{payload:index}){
+    deleteStorageSingleProduct(state, { payload: index }) {
       let newState = { ...state };
-      if(index==0){
-        newState.storageSingle.products=[defaultProduct];
-      }else{
-        newState.storageSingle.products.splice(index,1);
+      if (index == 0) {
+        newState.storageSingle.products = [defaultProduct];
+      } else {
+        newState.storageSingle.products.splice(index, 1);
       }
       return newState;
     },
 
+    upadteStorageSinglePaymentAmount(state, { payload: paymentAmount }) {
+      const storageSingle = { ...state.storageSingle, paymentAmount };
+      return { ...state, storageSingle };
+    },
+
     updateStorageSingle(state, { payload: storageSingle }) {
-      return { ...state, storageSingle }
+      return { ...state, storageSingle };
     },
 
     changeStorageSingleMem(state, { payload: mem }) {
       const storageSingle = { ...state.storageSingle, mem }
-      return { ...state, storageSingle }
+      return { ...state, storageSingle };
+    },
+
+    setStorageSingleMsg(state, { payload: msg }) {
+      const storageSingle = { ...state.storageSingle, msg };
+      return { ...state, storageSingle };
     },
 
     setMessage(state, { payload: msg }) {
-      return { ...state, msg }
+      return { ...state, msg };
     }
-
-
-
   },
 
 };

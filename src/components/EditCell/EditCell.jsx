@@ -5,11 +5,16 @@ class EditCell extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       editState: false,
       value: props.defaultValue || (props.type === "number" ? 0 : "")
     }
+  }
+
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      value: nextProps.defaultValue || (nextProps.type === "number" ? 0 : "")
+    })
   }
 
   changeEdit = () => {

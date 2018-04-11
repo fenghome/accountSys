@@ -21,6 +21,19 @@ class ListEditCell extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    const { selectProductId,productList } = nextProps;
+    let selectProduct = {};
+    if (selectProductId && productList.length > 0) {
+      selectProduct = productList.find((item) => {
+        return item._id === selectProductId
+      });
+    }
+    this.setState({
+      selectProduct
+    })
+  }
+
   onChange = (productId) => {
     const { productList } = this.props;
     const product = productList.find((item) => {

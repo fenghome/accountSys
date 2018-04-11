@@ -13,32 +13,31 @@ import { formClass, formItemClass, buttonGroup, btnOk, btnCanel } from './index.
 function AddStorage({ dispatch, storage, form }) {
 
   const { suppliers, productList, storageSingle } = storage;
-  const { noteNumber } = storageSingle;
-  const { getFieldDecorator,validateFields } = form;
+  const { noteNumber, products, msg } = storageSingle;
+  const { getFieldDecorator, validateFields } = form;
 
-  function saveStorage(){
-    validateFields((errors,values)=>{
-      if(!errors){
-        console.log(values);
+  function saveStorage() {
+    validateFields((errors, values) => {
+      for (let item of products) {
+        if (!item.productId || !item.quantity || !item.price) {
+          dispatch({
+            type: 'storage/setStorageSingleMsg',
+            payload: '有填写不详细的商品条目'
+          });
+          return;
+        }
       }
-    })
-  }
-
-  function selectProduct(productId) {
-
-  }
-
-  function updateStorageSingle(storageSingle) {
-    dispatch({
-      type: 'storage/updateStorageSingle',
-      payload: storageSingle
-    })
-  }
-
-  function changeStorageSingleMem(mem) {
-    dispatch({
-      type: 'storage/changeStorageSingleMem',
-      payload: mem
+      const storageSingle = { ...storageSingle, products, ...values }
+      if (!errors) {
+        dispatch({
+          type: 'storage/setStorageSingleMsg',
+          payload: ''
+        });
+        dispatch({
+          type: 'storage/saveStorage',
+          payload: storageSingle
+        })
+      }
     })
   }
 
@@ -68,8 +67,12 @@ function AddStorage({ dispatch, storage, form }) {
 
         </FormItem>
         <FormItem>
-          <StorageGrid productList={productList} storageSingle={storageSingle} updateStorageSingle={updateStorageSingle} />
+          <StorageGrid />
+          {
+            <div style={{ color: "red" }}>{msg}</div>
+          }
         </FormItem>
+
         <FormItem label="备注信息" labelCol={{ span: 2 }} wrapperCol={{ span: 8 }} >
           {
             getFieldDecorator('mem')(
@@ -80,6 +83,7 @@ function AddStorage({ dispatch, storage, form }) {
             )
           }
         </FormItem>
+
         <div className={buttonGroup}>
           <Button type="primary" className={btnOk} onClick={saveStorage}>确定</Button>
           <Button className={btnCanel}>取消</Button>

@@ -11,46 +11,50 @@ class StorageGrid extends React.Component {
   onAddRow = (index) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'storage/addStorageSingleProduct',
-      payload:index
+      type: 'storage/addStorageSingleProduct',
+      payload: index
+    });
+    dispatch({
+      type: 'storage/calculateTotalAmount'
     });
   }
 
   onDeleteRow = (index) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'storage/deleteStorageSingleProduct',
-      payload:index
+      type: 'storage/deleteStorageSingleProduct',
+      payload: index
+    });
+    dispatch({
+      type: 'storage/calculateTotalAmount'
     });
   }
 
   updateStorageSingleProduct = (index, obj) => {
-    const { dispatch,storage } = this.props;
+    const { dispatch, storage } = this.props;
     const { storageSingle } = storage;
     const { products } = storageSingle;
     dispatch({
-      type:'storage/updateStorageSingleProduct',
-      payload:{index,obj}
+      type: 'storage/updateStorageSingleProduct',
+      payload: { index, obj }
     });
     dispatch({
-      type:'storage/calculateTotalAmount'
+      type: 'storage/calculateTotalAmount'
     })
   }
 
   updatePaymentAmount = (value) => {
-    const { updateStorageSingle } = this.props;
-    const { storageSingle } = this.state;
-    storageSingle.paymentAmount = value;
-    this.setState({
-      storageSingle
-    });
-    updateStorageSingle(storageSingle);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'storage/upadteStorageSinglePaymentAmount',
+      payload: value
+    })
   }
 
   render() {
     const { storage } = this.props;
-    const disabled = storage.pageType==='details' ? true : false;
-    const { storageSingle={}, productList=[] } = storage;
+    const disabled = storage.pageType === 'details' ? true : false;
+    const { storageSingle = {}, productList = [] } = storage;
     const columns = [
       {
         title: '序号',
@@ -64,9 +68,9 @@ class StorageGrid extends React.Component {
         render: (text, record, index) => (
           disabled ||
           <div style={{ textAlign: 'center' }}>
-            <a onClick={()=>this.onAddRow(index)}><Icon type="plus" /></a>
+            <a onClick={() => this.onAddRow(index)}><Icon type="plus" /></a>
             <Spliter />
-            <a onClick={()=>this.onDeleteRow(index)}><Icon type="minus" /></a>
+            <a onClick={() => this.onDeleteRow(index)}><Icon type="minus" /></a>
           </div>
         )
       }, {
@@ -88,6 +92,7 @@ class StorageGrid extends React.Component {
             }}
           />
         )
+
       }, {
         title: '数量',
         dataIndex: 'quantity',
@@ -148,7 +153,7 @@ class StorageGrid extends React.Component {
           columns={columns}
           bordered
           pagination={false}
-          rowKey={record => record.key} 
+          rowKey={record => record.key}
           footer={() => (
             <div className={footerClass}>
               <div className={footerItem}>
@@ -171,11 +176,10 @@ class StorageGrid extends React.Component {
       </div>
     )
   }
-
 }
 
-function mapStateToProps(state){
-  return { storage:state.storage}
+function mapStateToProps(state) {
+  return { storage: state.storage }
 }
 
 export default connect(mapStateToProps)(StorageGrid);
