@@ -11,18 +11,16 @@ const defaultProduct = {
 };
 
 const defaultStorage = {
-  sequence: null,
+  sequence: 0,
   noteNumber: '',
   supplierId: null,
   supplierName: null,
-  supplierFormMsg: '',
   products: [
     { ...defaultProduct }
   ],
-  totalAmount: 0,
+  totalAmount: 0, 
   paymentAmount: 0,
   mem: '',
-  msg: ''
 };
 
 const defaultState = {
@@ -127,6 +125,9 @@ export default {
     },
 
     *addStorage({ payload }, { call, put }) {
+      yield put({
+        type:'initStorageSingle'
+      });
       const res = yield call(request, `/api/storage/getnotenumber`, {
         method: 'GET'
       });
@@ -159,9 +160,14 @@ export default {
       )
     },
 
-    *saveStorage({ payload: values }, { call, put, select }) {
+    *saveStorage({ payload: storageSingle }, { call, put, select }) {
+      const res = yield call(request,`/api/storage/`,{
+        method:'POST',
+        body:JSON.stringify(storageSingle)
+      })
+    },
 
-    }
+
   },
 
   reducers: {
@@ -235,7 +241,7 @@ export default {
     deleteStorageSingleProduct(state, { payload: index }) {
       let newState = { ...state };
       if (index == 0) {
-        newState.storageSingle.products = [defaultProduct];
+        newState.storageSingle.products = [{...defaultProduct}];
       } else {
         newState.storageSingle.products.splice(index, 1);
       }
@@ -247,17 +253,17 @@ export default {
       return { ...state, storageSingle };
     },
 
+    initStorageSingle(state,action){
+      console.log({ ...state, storageSingle:{...defaultStorage}});
+      return { ...state, storageSingle:{...defaultStorage}};
+    },
+
     updateStorageSingle(state, { payload: storageSingle }) {
       return { ...state, storageSingle };
     },
 
     changeStorageSingleMem(state, { payload: mem }) {
       const storageSingle = { ...state.storageSingle, mem }
-      return { ...state, storageSingle };
-    },
-
-    setStorageSingleMsg(state, { payload: msg }) {
-      const storageSingle = { ...state.storageSingle, msg };
       return { ...state, storageSingle };
     },
 

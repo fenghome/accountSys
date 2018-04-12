@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, message } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -12,31 +12,44 @@ import { formClass, formItemClass, buttonGroup, btnOk, btnCanel } from './index.
 
 function AddStorage({ dispatch, storage, form }) {
 
-  const { suppliers, productList, storageSingle } = storage;
-  const { noteNumber, products, msg } = storageSingle;
+  let { suppliers, productList, storageSingle } = storage;
+  const { noteNumber, products,paymentAmount } = storageSingle;
   const { getFieldDecorator, validateFields } = form;
+  
 
-  function saveStorage() {
+  function saveStorage() { 
+    
     validateFields((errors, values) => {
       for (let item of products) {
         if (!item.productId || !item.quantity || !item.price) {
-          dispatch({
-            type: 'storage/setStorageSingleMsg',
-            payload: '有填写不详细的商品条目'
-          });
+          message.info('产品条目内容不全')
           return;
         }
       }
-      const storageSingle = { ...storageSingle, products, ...values }
+
+      if(paymentAmount==0){
+        message.info('支付金额不能为零');
+        return;
+      }
+      const { supplierId,mem } = values;
+      
+      const supplier = suppliers.find((item)=>{
+        return item._id == supplierId;
+      })
+      
+      let newStorageSingle = { 
+        ...storageSingle, 
+        products, 
+        supplierId:supplier._id,
+        supplierName:supplier.supplierName,
+        mem
+      }
+      
       if (!errors) {
         dispatch({
-          type: 'storage/setStorageSingleMsg',
-          payload: ''
-        });
-        dispatch({
           type: 'storage/saveStorage',
-          payload: storageSingle
-        })
+          payload: newStorageSingle
+        }); 
       }
     })
   }
@@ -47,7 +60,7 @@ function AddStorage({ dispatch, storage, form }) {
       <Form className={formClass} layout='horizontal' >
         <FormItem label="供应商名称" labelCol={{ span: 2 }} wrapperCol={{ span: 6 }} >
           {
-            getFieldDecorator('supplierName', {
+            getFieldDecorator('supplierId', {
               rules: [
                 {
                   required: true,
@@ -58,7 +71,7 @@ function AddStorage({ dispatch, storage, form }) {
               <Select>
                 {
                   suppliers.map((item, index) => (
-                    <Option key={index}>{item.supplierName}</Option>
+                    <Option key={index} value={item._id}>{item.supplierName}</Option>
                   ))
                 }
               </Select>
@@ -68,9 +81,6 @@ function AddStorage({ dispatch, storage, form }) {
         </FormItem>
         <FormItem>
           <StorageGrid />
-          {
-            <div style={{ color: "red" }}>{msg}</div>
-          }
         </FormItem>
 
         <FormItem label="备注信息" labelCol={{ span: 2 }} wrapperCol={{ span: 8 }} >

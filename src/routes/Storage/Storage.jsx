@@ -84,7 +84,7 @@ class Storage extends Component {
           )
         }
         {
-          pageType == 'add' && (
+          pageType == 'add' && ( 
             <div className={storageContainer}>
               <AddStorage
                 number={noteNumber}
