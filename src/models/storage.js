@@ -18,7 +18,7 @@ const defaultStorage = {
   products: [
     { ...defaultProduct }
   ],
-  totalAmount: 0, 
+  totalAmount: 0,
   paymentAmount: 0,
   mem: '',
 };
@@ -126,7 +126,7 @@ export default {
 
     *addStorage({ payload }, { call, put }) {
       yield put({
-        type:'initStorageSingle'
+        type: 'initStorageSingle'
       });
       const res = yield call(request, `/api/storage/getnotenumber`, {
         method: 'GET'
@@ -161,9 +161,9 @@ export default {
     },
 
     *saveStorage({ payload: storageSingle }, { call, put, select }) {
-      const res = yield call(request,`/api/storage/`,{
-        method:'POST',
-        body:JSON.stringify(storageSingle)
+      const res = yield call(request, `/api/storage/`, {
+        method: 'POST',
+        body: JSON.stringify(storageSingle)
       })
     },
 
@@ -211,11 +211,11 @@ export default {
     },
 
     updateStorageSingleProduct(state, { payload: { index, obj } }) {
-      let newState = { ...state };
-      const newProduct = { ...newState.storageSingle.products[index], ...obj }
-      newProduct.amount = newProduct.quantity * newProduct.price;
-      newState.storageSingle.products[index] = newProduct;
-      return newState;
+      let products = [...state.storageSingle.products];
+      products[index] = { ...products[index], ...obj };
+      products[index].amount = products[index].quantity * products[index].price;
+      let storageSingle = { ...state.storageSingle, products };
+      return { ...state, storageSingle };
     },
 
     calculateTotalAmount(state, action) {
@@ -223,29 +223,29 @@ export default {
       for (let i of state.storageSingle.products) {
         totalAmount = parseInt(totalAmount) + parseInt(i.amount);
       }
-      let newState = { ...state }
-      newState.storageSingle.totalAmount = totalAmount;
-      return newState;
+      let storageSingle = { ...state.storageSingle, totalAmount };
+      return { ...state, storageSingle };
     },
 
     addStorageSingleProduct(state, { payload: index }) {
-      let newState = { ...state };
-      let { products } = newState.storageSingle;
+      let products = [...state.storageSingle.products]
       products.splice(index + 1, 0, { ...defaultProduct });
       products.forEach(function (item, i, arr) {
         arr[i].key = i;
       });
-      return newState;
+      let storageSingle = { ...state.storageSingle, products };
+      return { ...state, storageSingle };
     },
 
     deleteStorageSingleProduct(state, { payload: index }) {
-      let newState = { ...state };
+      let products = [...state.storageSingle.products];
       if (index == 0) {
-        newState.storageSingle.products = [{...defaultProduct}];
+        products = [{ ...defaultProduct }];
       } else {
-        newState.storageSingle.products.splice(index, 1);
+        products.splice(index, 1);
       }
-      return newState;
+      let storageSingle = { ...state.storageSingle, products };
+      return { ...state, storageSingle };
     },
 
     upadteStorageSinglePaymentAmount(state, { payload: paymentAmount }) {
@@ -253,9 +253,9 @@ export default {
       return { ...state, storageSingle };
     },
 
-    initStorageSingle(state,action){
-      console.log({ ...state, storageSingle:{...defaultStorage}});
-      return { ...state, storageSingle:{...defaultStorage}};
+    initStorageSingle(state, action) {
+      console.log({ ...state, storageSingle: { ...defaultStorage } });
+      return { ...state, storageSingle: { ...defaultStorage } };
     },
 
     updateStorageSingle(state, { payload: storageSingle }) {
