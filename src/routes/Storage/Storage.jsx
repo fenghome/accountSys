@@ -50,21 +50,7 @@ class Storage extends Component {
     });
   }
 
-  onModify = (noteNumber) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'storage/getStorageById',
-      payload: noteNumber
-    });
-    dispatch({
-      type: 'storage/changePageType',
-      payload: 'modify'
-    });
-  }
 
-  onDelete = () => {
-
-  }
 
   render() {
     const { pageType, breadcrumbItems, suppliers, list, storageSingle, productList } = this.props.storage;
@@ -76,7 +62,7 @@ class Storage extends Component {
           pageType == 'show' && (
             <div className={storageContainer}>
               <div className={storageBar}>
-                <StorageSearchBar suppliers={suppliers} onSearch={this.onSearch} />
+                <StorageSearchBar />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
               <StorageList />
@@ -84,35 +70,9 @@ class Storage extends Component {
           )
         }
         {
-          pageType == 'add' && (
+          pageType != 'show' && (
             <div className={storageContainer}>
-              <AddStorage
-                number={noteNumber}
-                suppliers={suppliers}
-                productList={productList} />
-            </div>
-          )
-        }
-        {
-          pageType == 'modify' && (
-            <div className={storageContainer}>
-              <ModifyStorage
-                number={noteNumber}
-                suppliers={suppliers}
-                productList={productList}
-              />
-            </div>
-          )
-        }
-        {
-          pageType == 'details' && (
-            <div className={storageContainer}>
-              <ModifyStorage
-                number={noteNumber}
-                suppliers={suppliers}
-                productList={productList}
-                disabled={true}
-              />
+              <AddStorage />
             </div>
           )
         }

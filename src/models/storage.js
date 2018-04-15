@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import qs from 'qs';
 const defaultProduct = {
   key: 0,
   productId: '',
@@ -35,32 +36,12 @@ const defaultState = {
   timeRange: [],
   searchSupplierName: '',
   searchStorageId: '',
-  list: [
-    {
-      sequence: null,
-      noteNumber: '',
-      supplierId: '',
-      supplierName: '',
-      products: [
-        {
-          key: '0',
-          productId: '',
-          productName: '',
-          quantity: 0,
-          productUnit: '',
-          price: 0,
-          amount: 0,
-          remarks: ''
-        }
-      ],
-      totalAmount: '',
-      paymentAmount: '',
-      mem: ''
-    }
-  ],
+  list: [],
   storageSingle: { ...defaultStorage },
   suppliers: [],
   productList: [],
+  currentPage: 1,
+  total: 1,
   msg: ''
 }
 
@@ -88,11 +69,18 @@ export default {
       yield put({ type: 'getproductList' });
     },
 
-    *getList({ payload }, { call, put }) {
-      const res = yield call(request, `/api/storage`, {
+    *getList({ payload: values }, { call, put, select }) {
+      const { currentPage } = yield select(state => state.storage);
+      values = { currentPage, ...values };
+      const params = qs.stringify(values);
+      const res = yield call(request, `/api/storage?${params}`, {
         method: 'GET'
       });
       if (res.data && res.data.success) {
+        yield put({
+          type: 'setTotal',
+          payload: res.data.total
+        })
         yield put({
           type: 'getListSuccess',
           payload: res.data.list
@@ -148,10 +136,9 @@ export default {
       }
     },
 
-    *getStorageById({ payload: noteNumber }, { call, put, select }) {
+    *getStorage({ payload: storageSingle }, { call, put, select }) {
       //根据noteNumber得到storageSingle
-      const list = yield select(state => state.storage.list);
-      const storageSingle = list.find(item => item.noteNumber === noteNumber);
+
       yield put(
         {
           type: 'updateStorageSingle',
@@ -164,10 +151,52 @@ export default {
       const res = yield call(request, `/api/storage/`, {
         method: 'POST',
         body: JSON.stringify(storageSingle)
-      })
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'initState'
+        })
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '新增失败'
+        })
+      }
     },
 
+    *updateStorage({ payload: storageSingle }, { call, put }) {
+      const storageId = storageSingle._id;
+      const res = yield call(request, `/api/storage/${storageId}`, {
+        method: 'PUT',
+        body: JSON.stringify(storageSingle)
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'initState'
+        })
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '修改失败'
+        })
+      }
+    },
 
+    *deleteStorage({ payload: storageId }, { call, put }) {
+      const res = yield call(request, `/api/storage/${storageId}`, {
+        method: 'DELETE'
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'initState'
+        })
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '删除失败'
+        })
+      }
+    }
   },
 
   reducers: {
@@ -254,7 +283,6 @@ export default {
     },
 
     initStorageSingle(state, action) {
-      console.log({ ...state, storageSingle: { ...defaultStorage } });
       return { ...state, storageSingle: { ...defaultStorage } };
     },
 
@@ -265,6 +293,14 @@ export default {
     changeStorageSingleMem(state, { payload: mem }) {
       const storageSingle = { ...state.storageSingle, mem }
       return { ...state, storageSingle };
+    },
+
+    setCurrentPage(state, { payload: currentPage }) {
+      return { ...state, currentPage };
+    },
+
+    setTotal(state, { payload: total }) {
+      return { ...state, total };
     },
 
     setMessage(state, { payload: msg }) {

@@ -1,28 +1,51 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Divider, Popconfirm } from 'antd';
+import { Table, Divider, Popconfirm, Pagination } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
 function StorageList({ dispatch, storage }) {
 
-  const { list } = storage
+  const { list, currentPage, total } = storage;
 
-  function onDelete(value) {
-    console.log(value);
+  function onModify(record) {
+    dispatch({
+      type: 'storage/getStorage',
+      payload: record
+    });
+    dispatch({
+      type: 'storage/changePageType',
+      payload: 'modify'
+    });
   }
 
-  function onModify(value){
+  function onDetails(record) {
+    dispatch({
+      type: 'storage/getStorage',
+      payload: record
+    });
+    dispatch({
+      type: 'storage/changePageType',
+      payload: 'details'
+    });
 
   }
 
-  function onDetails(value){
-
-
+  function onDelete(storageId) {
+    dispatch({
+      type: 'storage/deleteStorage',
+      payload: storageId
+    })
   }
 
-  function onDelete(value){
-
+  function onPageChange(page) {
+    dispatch({
+      type: 'storage/setCurrentPage',
+      payload: page
+    });
+    dispatch({
+      type:'storage/getList'
+    })
   }
 
   const columns = [{
@@ -69,13 +92,13 @@ function StorageList({ dispatch, storage }) {
     key: 'operation',
     render: (text, record) => (
       <div>
-        <a onClick={() => { onModify(record.noteNumber) }}>编辑</a>
+        <a onClick={() => { onModify(record) }}>编辑</a>
         <Divider type="vertical" />
-        <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record.noteNumber) }} okText="确定" cancelText="取消">
+        <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record._id) }} okText="确定" cancelText="取消">
           <a>删除</a>
         </Popconfirm>
         <Divider type="vertical" />
-        <a onClick={() => { onDetails(record.noteNumber) }}>详情</a>
+        <a onClick={() => { onDetails(record) }}>详情</a>
       </div>
     )
   }
@@ -99,11 +122,23 @@ function StorageList({ dispatch, storage }) {
 
 
   return (
-    <Table
-      columns={columns}
-      dataSource={list}
-      rowKey={record => record.noteNumber}
-      rowSelection={rowSelection} />
+    <div>
+      <Table
+        columns={columns}
+        dataSource={list}
+        rowKey={record => record.noteNumber}
+        rowSelection={rowSelection}
+        pagination={false}
+      />
+      <Pagination
+        className="ant-table-pagination"
+        total={total}
+        pageSize={2}
+        current={parseInt(currentPage)}
+        onChange={onPageChange}
+      />
+    </div>
+
   )
 }
 

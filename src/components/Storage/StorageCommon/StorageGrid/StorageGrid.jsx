@@ -55,7 +55,7 @@ class StorageGrid extends React.Component {
     const { storage } = this.props;
     const disabled = storage.pageType === 'details' ? true : false;
     const { storageSingle = {}, productList = [] } = storage;
-    
+
     const columns = [
       {
         title: '序号',

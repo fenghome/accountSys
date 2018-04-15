@@ -12,13 +12,14 @@ import { formClass, formItemClass, buttonGroup, btnOk, btnCanel } from './index.
 
 function AddStorage({ dispatch, storage, form }) {
 
-  let { suppliers, productList, storageSingle } = storage;
-  const { noteNumber, products,paymentAmount } = storageSingle;
+  let { pageType, suppliers, productList, storageSingle } = storage;
+  const { noteNumber, products, paymentAmount, supplierId } = storageSingle;
   const { getFieldDecorator, validateFields } = form;
-  
+  const disabled = pageType == 'details' ? true : false;
 
-  function saveStorage() { 
-    
+
+  function saveStorage() {
+
     validateFields((errors, values) => {
       for (let item of products) {
         if (!item.productId || !item.quantity || !item.price) {
@@ -27,30 +28,43 @@ function AddStorage({ dispatch, storage, form }) {
         }
       }
 
-      if(paymentAmount==0){
+      if (paymentAmount == 0) {
         message.info('支付金额不能为零');
         return;
       }
-      const { supplierId,mem } = values;
-      
-      const supplier = suppliers.find((item)=>{
+      const { supplierId, mem } = values;
+
+      const supplier = suppliers.find((item) => {
         return item._id == supplierId;
       })
-      
-      let newStorageSingle = { 
-        ...storageSingle, 
-        products, 
-        supplierId:supplier._id,
-        supplierName:supplier.supplierName,
+
+      let newStorageSingle = {
+        ...storageSingle,
+        products,
+        supplierId: supplier._id,
+        supplierName: supplier.supplierName,
         mem
       }
-      
+
       if (!errors) {
-        dispatch({
-          type: 'storage/saveStorage',
-          payload: newStorageSingle
-        }); 
+        if (pageType == 'add') {
+          dispatch({
+            type: 'storage/saveStorage',
+            payload: newStorageSingle
+          });
+        } else if (pageType == 'modify') {
+          dispatch({
+            type: 'storage/updateStorage',
+            payload: newStorageSingle
+          })
+        }
       }
+    })
+  }
+
+  function onCanel(){
+    dispatch({
+      type:'storage/initState'
     })
   }
 
@@ -61,6 +75,7 @@ function AddStorage({ dispatch, storage, form }) {
         <FormItem label="供应商名称" labelCol={{ span: 2 }} wrapperCol={{ span: 6 }} >
           {
             getFieldDecorator('supplierId', {
+              initialValue: supplierId,
               rules: [
                 {
                   required: true,
@@ -68,7 +83,7 @@ function AddStorage({ dispatch, storage, form }) {
                 }
               ]
             })(
-              <Select>
+              <Select disabled={disabled}>
                 {
                   suppliers.map((item, index) => (
                     <Option key={index} value={item._id}>{item.supplierName}</Option>
@@ -86,7 +101,7 @@ function AddStorage({ dispatch, storage, form }) {
         <FormItem label="备注信息" labelCol={{ span: 2 }} wrapperCol={{ span: 8 }} >
           {
             getFieldDecorator('mem')(
-              <TextArea
+              <TextArea disabled={disabled}
                 rows={4}
                 placeholder="在此处填写备注..."
               />
@@ -95,8 +110,10 @@ function AddStorage({ dispatch, storage, form }) {
         </FormItem>
 
         <div className={buttonGroup}>
-          <Button type="primary" className={btnOk} onClick={saveStorage}>确定</Button>
-          <Button className={btnCanel}>取消</Button>
+          {
+            !disabled && <Button type="primary" className={btnOk} onClick={saveStorage}>确定</Button>
+          }
+          <Button className={btnCanel} onClick={onCanel}>取消</Button>
         </div>
       </Form>
     </div>
