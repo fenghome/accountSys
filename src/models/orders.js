@@ -1,6 +1,6 @@
 import request from '../utils/request';
 
-const defaultProduct = {
+const defaultProduct = { 
   key: '0',
   productId: '',
   productName: '',
@@ -57,7 +57,7 @@ export default {
   effects: {
 
     *setDefaultState(action, { put }) {
-      yield put({ type: 'initState' })
+      yield put({ type: 'initState' });
       yield put({ type: 'getOrders' });
       yield put({ type: 'getProductList' });
       yield put({ type: 'getCustomers' });
@@ -68,10 +68,13 @@ export default {
       const res = yield call(request,`/api/order`,{
         method:'GET'
       })
-      yield put({
-        type: 'getOrdersSuccess',
-        payload: orders
-      });
+      if(res.data && res.data.success){
+        yield put({
+          type: 'getOrdersSuccess',
+          payload: res.data.orders
+        });
+      }
+
     },
 
     *getProductList({ payload }, { call, put }) {
@@ -127,7 +130,7 @@ export default {
 
   reducers: {
     initState(state, action) {
-      return { ...state, pageType: 'show', breadcrumbItems: { ...defaultBreadcrumbItems } }
+      return { ...state, pageType: 'show', breadcrumbItems: [...defaultBreadcrumbItems ] }
     },
 
     changePageType(state, { payload: pageType }) {

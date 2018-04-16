@@ -4,9 +4,9 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({ dispatch, orders }) {
-  const { orders } = orders;
-  function onDelete(value) {
+function OrderList({ dispatch, orders:{orders} }) {
+  
+  function onDelete(value) { 
     console.log(value);
   }
 
@@ -16,7 +16,7 @@ function OrderList({ dispatch, orders }) {
     key: 'serialNumber',
     render: (text, record, index) => <sapn>{index + 1}</sapn>,
   },
-  {
+  { 
     title: '下单日期',
     dataIndex: 'createInstance',
     key: 'createInstance',

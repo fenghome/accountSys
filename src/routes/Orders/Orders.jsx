@@ -68,7 +68,7 @@ class Orders extends Component {
       payload: 'modify'
     });
   }
-
+ 
   onDelete = () => {
 
   }

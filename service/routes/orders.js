@@ -4,7 +4,7 @@ const Order = require('../models/orders');
 
 router.route('/')
   .get(function (req, res, next) {
-    const userId = req.session.uierInfo.userId;
+    const userId = req.session.userInfo.userId;
     Order.find({ userId: userId }, function (err, docs) {
       if (err) {
         return res.send({
@@ -19,4 +19,4 @@ router.route('/')
     })
   })
 
-module.exports = routre;
+module.exports = router;
