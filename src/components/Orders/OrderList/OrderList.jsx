@@ -4,8 +4,8 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({ orders, onModify, onDelete, onDetails }) {
-
+function OrderList({ dispatch, orders }) {
+  const { orders } = orders;
   function onDelete(value) {
     console.log(value);
   }
@@ -93,7 +93,7 @@ function OrderList({ orders, onModify, onDelete, onDetails }) {
 }
 
 function maptStateToProps(state) {
-  return { order: state.order };
+  return { orders: state.orders };
 }
 
 export default connect(maptStateToProps)(OrderList);

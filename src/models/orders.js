@@ -1,3 +1,5 @@
+import request from '../utils/request';
+
 const defaultProduct = {
   key: '0',
   productId: '',
@@ -13,7 +15,7 @@ const defaultOrder = {
   sequence: null,
   orderNumber: '',
   customerId: null,
-  customerName:null,
+  customerName: null,
   products: [
     { ...defaultProduct }
   ],
@@ -44,10 +46,9 @@ export default {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         if (pathname === '/orders') {
-          dispatch({ type: 'initState' })
-          dispatch({ type: 'getOrders' });
-          dispatch({ type: 'getProductList' });
-          dispatch({ type: 'getCustomers' });
+          dispatch({
+            type: 'setDefaultState'
+          })
         }
       });
     },
@@ -55,54 +56,18 @@ export default {
 
   effects: {
 
+    *setDefaultState(action, { put }) {
+      yield put({ type: 'initState' })
+      yield put({ type: 'getOrders' });
+      yield put({ type: 'getProductList' });
+      yield put({ type: 'getCustomers' });
+    },
+
     *getOrders({ payload }, { call, put }) {
       //访问service获得orders
-      const orders = [
-        {
-          _id: 1,
-          sequence: null,
-          orderNumber: 'MDC201802270133',
-          customerId: 1,
-          customerName: '张三',
-          products: [
-            {
-              key: '0',
-              productId: 1,
-              productName: '桌布',
-              quantity: 2,
-              productUnit: '个',
-              price: 5,
-              amount: 10,
-              remarks: ''
-            }
-          ],
-          totalAmount: 10,
-          paymentAmount: 10,
-          mem: 'aaaaa'
-        },
-        {
-          _id: 2,
-          sequence: null,
-          orderNumber: 'MDC201802270134',
-          customerId: 2,
-          customerName: '李四',
-          products: [
-            {
-              key: '0',
-              productId: 2,
-              productName: '餐巾',
-              quantity: 3,
-              productUnit: '个',
-              price: 3,
-              amount: 9,
-              remarks: ''
-            }
-          ],
-          totalAmount: 9,
-          paymentAmount: 9,
-          mem: 'bbbb'
-        }
-      ];
+      const res = yield call(request,`/api/order`,{
+        method:'GET'
+      })
       yield put({
         type: 'getOrdersSuccess',
         payload: orders
@@ -162,12 +127,13 @@ export default {
 
   reducers: {
     initState(state, action) {
-      return { ...state, pageType: 'show', breadcrumbItems: defaultBreadcrumbItems }
+      return { ...state, pageType: 'show', breadcrumbItems: { ...defaultBreadcrumbItems } }
     },
 
     changePageType(state, { payload: pageType }) {
       return { ...state, pageType }
     },
+
     getOrdersSuccess(state, { payload: orders }) {
       return { ...state, orders }
 
