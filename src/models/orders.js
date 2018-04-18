@@ -1,6 +1,6 @@
 import request from '../utils/request';
 
-const defaultProduct = { 
+const defaultProduct = {  
   key: '0',
   productId: '',
   productName: '',
@@ -39,7 +39,8 @@ export default {
     orders: [],
     customers: [],
     productList: [],
-    order: { ...defaultOrder }
+    order: { ...defaultOrder },
+    msg:''
   },
 
   subscriptions: {
@@ -74,43 +75,53 @@ export default {
           payload: res.data.orders
         });
       }
-
     },
 
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
-      const productList = [
-        { '_id': 1, productId: 1, productName: '桌布', productUnit: '个', price: 5, },
-        { '_id': 2, productId: 2, productName: '餐巾', productUnit: '台', price: 3, },
-      ];
-      yield put({
-        type: 'getProductListSuccess',
-        payload: productList
+      const res = yield call(request,`/api/products`,{
+        method:'GET'
       });
+      if(res.data && res.data.success){
+        yield put({
+          type: 'getProductListSuccess',
+          payload: res.data.porducts
+        });
+      }else{
+        yield put({
+          type:'setMessage',
+          payload:'获取产品列表错误'
+        })
+      }
     },
 
     *getCustomers({ payload }, { call, put }) {
-      const customers = [
-        { '_id': 1, customerName: '张三' },
-        { '_id': 2, customerName: '李四' }
-      ];
-      yield put({
-        type: 'getCustomersSuccess',
-        payload: customers
-      })
-    },
+      const res = yield call(request,`/api/customers`,{
+        method:'GET'
+      });
+      if(res.data && res.data.success){
+        yield put({
+          type: 'getCustomersSuccess',
+          payload: res.data.customers
+        }) 
+      }else{
+        yield put({
+          type:'setMessage',
+          payload:'获取客户列表失败'
+        })
+      }
+    }, 
 
     *getOrderNumber({ payload }, { call, put }) {
-      // const { data } = yield call(getOrderNumber, {});
-      // if (data && data.success) {
-      yield put({
-        type: 'getOrderNumberSuccess',
-        payload: {
-          // pageType: 'add',
-          sequence: 'sequence',
-          orderNumber: 'MDC201803010135'
-        }
-      })
+      const res = yield call(request,`/api/order/getordernumber`,{
+        method:'GET'
+      });
+      if(res.data && res.data.success){
+        yield put({
+          type:'getOrderNumberSuccess',
+          payload:res.data.orderNumber
+        })
+      }
     },
 
     *getOrderById({ payload: orderId }, { call, put, select }) {
@@ -150,11 +161,9 @@ export default {
       return { ...state, customers }
     },
 
-    getOrderNumberSuccess(state, action) {
-      const { sequence, orderNumber } = action.payload;
-      const order = state.order;
-      const newOrder = { ...order, sequence, orderNumber };
-      return { ...state, order: newOrder };
+    getOrderNumberSuccess(state, {payload:orderNumber}) {
+      const order = { ...state.order, orderNumber };
+      return { ...state, order };
     },
 
     getOrderByIdSuccess(state, action) {
