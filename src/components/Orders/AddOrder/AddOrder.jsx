@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Form,Button,Select } from 'antd';
+import { Form,Button,Select,Input } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const { TextArea } = Input;
 import OrderTitle from '../OrderCommon/OrderTitle/OrderTitle';
 import CustomersForm from '../OrderCommon/CustomersForm/CustomersForm';
 import OrderGrid from '../OrderCommon/OrderGrid/OrderGrid';
@@ -39,10 +40,10 @@ function AddOrder({dispatch, orders,form}) {
   }
 
   return (
-    
+
     <div>
       <OrderTitle title="门窗出货单" number={orderNumber} />
- 
+
       <Form>
         <FormItem label="客户名称：" labelCol={{ span: 2 }} wrapperCol={{ span: 6 }}>
           {
@@ -66,11 +67,18 @@ function AddOrder({dispatch, orders,form}) {
         <FormItem>
         <OrderGrid productList={productList} order={order} updateOrder={updateOrder}/>
         </FormItem>
-        <FormItem>
-        <RemarksForm changeOrderMem={changeOrderMem}/>
+        <FormItem label="填写备注" labelCol={{ span: 2 }} wrapperCol={{ span: 8 }}>
+          {
+            getFieldDecorator('mem')(
+              <TextArea
+                rows={4}
+                placeholder="在此处填写备注..."
+              />
+            )
+          }
         </FormItem>
       </Form>
-      
+
 
       <div className={buttonGroup}>
         <Button type="primary" className={btnOk}>确定</Button>

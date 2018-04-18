@@ -1,6 +1,6 @@
 import request from '../utils/request';
 
-const defaultProduct = {  
+const defaultProduct = {
   key: '0',
   productId: '',
   productName: '',
@@ -103,14 +103,14 @@ export default {
         yield put({
           type: 'getCustomersSuccess',
           payload: res.data.customers
-        }) 
+        })
       }else{
         yield put({
           type:'setMessage',
           payload:'获取客户列表失败'
         })
       }
-    }, 
+    },
 
     *getOrderNumber({ payload }, { call, put }) {
       const res = yield call(request,`/api/order/getordernumber`,{
