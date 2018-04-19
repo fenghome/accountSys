@@ -65,7 +65,7 @@ function AddOrder({dispatch, orders,form}) {
           }
         </FormItem>
         <FormItem>
-        <OrderGrid productList={productList} order={order} updateOrder={updateOrder}/>
+        <OrderGrid />
         </FormItem>
         <FormItem label="填写备注" labelCol={{ span: 2 }} wrapperCol={{ span: 8 }}>
           {

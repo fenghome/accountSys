@@ -259,10 +259,10 @@ export default {
     addStorageSingleProduct(state, { payload: index }) {
       let products = [...state.storageSingle.products]
       products.splice(index + 1, 0, { ...defaultProduct });
-      products.forEach(function (item, i, arr) {
-        arr[i].key = i;
+      const newProducts = products.map(function (item, i) {
+        return { ...item,key:i}
       });
-      let storageSingle = { ...state.storageSingle, products };
+      let storageSingle = { ...state.storageSingle, products:newProducts };
       return { ...state, storageSingle };
     },
 

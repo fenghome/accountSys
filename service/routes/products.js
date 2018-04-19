@@ -28,7 +28,8 @@ router.route('/')
               success: true,
               products: docs,
               total: count
-            })
+            });
+            console.log('products',docs)
           } else {
             res.send({
               success: false,

@@ -1,45 +1,69 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Table, Icon } from 'antd';
 import Spliter from '../../../Spliter/Spliter';
 import ListEditCell from '../../../ListEditCell/ListEditCell';
 import EditCell from '../../../EditCell/EditCell';
 import { footerClass, footerItem } from './index.css';
 
+
 class OrderGrid extends React.Component {
 
-  constructor(props) {
-    super(props);
-    const { disabled = false } = props
-    console.log(disabled);
-    this.defaultProduct = {
-      key: '0',
-      productId: '',
-      productName: '',
-      quantity: 0,
-      productUnit: '',
-      price: 0,
-      amount: 0,
-      remarks: ''
-    }
+  onAddRow = (index) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'orders/addOrederProduct',
+      payload:index
+    })
+    // const { order } = this.state;
+    // const newProductRow = { ...this.defaultProduct, key: order.products.length + 1 }
+    // order.products.push(newProductRow);
+    // this.setState({ order: order });
+  }
 
-    this.defaultOrder = {
-      sequence: props.order.sequence,
-      orderNumber: props.order.orderNumber,
-      customerId: null,
-      products: [
-        this.defaultProduct
-      ],
-      totalAmount: 0,
-      paymentAmount: 0,
-      men: ''
-    }
-    this.state = {
-      order: props.order
-    }
+  onDeleteRow = (index) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type:'orders/deleteOrderProduct',
+      payload:index
+    })
+  }
 
-    const { productList } = this.props;
+  updateOrderProduct = (index, obj) => {
 
-    this.columns = [
+    const { updateOrder } = this.props;
+    const { order } = this.state;
+    let { totalAmount = 0 } = this.state;
+    const { products = [] } = order;
+    const currProductRow = products[index];
+    const newProductRow = { ...currProductRow, ...obj }
+    newProductRow.amount = newProductRow.quantity * newProductRow.price;
+    order.products[index] = newProductRow;
+    for (let i of products) {
+      totalAmount = totalAmount + i.amount;
+    }
+    order.totalAmount = totalAmount;
+    this.setState({
+      order
+    });
+    updateOrder(this.state.order);
+  }
+
+  updatePaymentAmount = (value) => {
+    const { updateOrder } = this.props;
+    const { order } = this.state;
+    order.paymentAmount = value;
+    this.setState({
+      order: order
+    });
+    updateOrder(order);
+  }
+
+  render() {
+    const { pageType,order,productList } = this.props.orders;
+    console.log('orders',this.props.orders);
+    const disabled = pageType == 'details' ? true:false;
+    const columns = [
       {
         title: '序号',
         dataIndex: 'serialNumber',
@@ -52,9 +76,9 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (
           disabled ||
           <div style={{ textAlign: 'center' }}>
-            <a onClick={this.onAddRow}><Icon type="plus" /></a>
+            <a onClick={()=>this.onAddRow(index)}><Icon type="plus" /></a>
             <Spliter />
-            <a onClick={this.onDeleteRow}><Icon type="minus" /></a>
+            <a onClick={()=>this.onDeleteRow(index)}><Icon type="minus" /></a>
           </div>
         )
       }, {
@@ -95,7 +119,7 @@ class OrderGrid extends React.Component {
         dataIndex: 'productUnit',
         key: 'productUnit',
         render: (text, record, index) => {
-          const { products = [] } = this.state.order;
+          const { products = [] } = order;
           const { productUnit = "" } = products[index];
           return <span>{productUnit}</span>
         }
@@ -130,70 +154,19 @@ class OrderGrid extends React.Component {
         )
       }
     ];
-  }
-
-  onAddRow = () => {
-    const { order } = this.state;
-    const newProductRow = { ...this.defaultProduct, key: order.products.length + 1 }
-    order.products.push(newProductRow);
-    this.setState({ order: order });
-  }
-
-  onDeleteRow = () => {
-    const { order } = this.state;
-    if (order.products.length >= 2) {
-      order.products.pop();
-      this.setState({ order: order });
-    }
-  }
-
-  updateOrderProduct = (index, obj) => {
-
-    const { updateOrder } = this.props;
-    const { order } = this.state;
-    let { totalAmount = 0 } = this.state;
-    const { products = [] } = order;
-    const currProductRow = products[index];
-    const newProductRow = { ...currProductRow, ...obj }
-    newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    order.products[index] = newProductRow;
-    for (let i of products) {
-      totalAmount = totalAmount + i.amount;
-    }
-    order.totalAmount = totalAmount;
-    this.setState({
-      order
-    });
-    updateOrder(this.state.order);
-  }
-
-  updatePaymentAmount = (value) => {
-    const { updateOrder } = this.props;
-    const { order } = this.state;
-    order.paymentAmount = value;
-    this.setState({
-      order: order
-    });
-    updateOrder(order);
-  }
-
-
-
-  render() {
-    const { disabled = false } = this.props;
-    const { order } = this.state;
+    console.log(this.props.orders.order.products);
     return (
       <div>
         <Table
           dataSource={order.products}
-          columns={this.columns}
+          columns={columns}
           bordered
           pagination={false}
           footer={() => (
             <div className={footerClass}>
               <div className={footerItem}>
                 <span>合计金额：￥</span>
-                {this.state.order.totalAmount}
+                {order.totalAmount}
               </div>
               <div className={footerItem}>
                 <span>支付金额：￥</span>
@@ -214,4 +187,8 @@ class OrderGrid extends React.Component {
 
 }
 
-export default OrderGrid;
+function mapStateToProps(state){
+  return { orders:state.orders}
+}
+
+export default connect(mapStateToProps)(OrderGrid);

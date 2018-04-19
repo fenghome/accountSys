@@ -98,10 +98,7 @@ class Orders extends Component {
         {
           pageType == 'add' && (
             <div className={orderContainer}>
-              <AddOrder
-                number={orderNumber}
-                customers={customers}
-                productList={productList} />
+              <AddOrder />
             </div>
           )
         }
