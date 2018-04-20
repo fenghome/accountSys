@@ -12,57 +12,41 @@ class OrderGrid extends React.Component {
   onAddRow = (index) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'orders/addOrederProduct',
-      payload:index
-    })
-    // const { order } = this.state;
-    // const newProductRow = { ...this.defaultProduct, key: order.products.length + 1 }
-    // order.products.push(newProductRow);
-    // this.setState({ order: order });
+      type: 'orders/addOrederProduct',
+      payload: index
+    });
   }
 
   onDeleteRow = (index) => {
     const { dispatch } = this.props;
     dispatch({
-      type:'orders/deleteOrderProduct',
-      payload:index
+      type: 'orders/deleteOrderProduct',
+      payload: index
     })
   }
 
   updateOrderProduct = (index, obj) => {
-
-    const { updateOrder } = this.props;
-    const { order } = this.state;
-    let { totalAmount = 0 } = this.state;
-    const { products = [] } = order;
-    const currProductRow = products[index];
-    const newProductRow = { ...currProductRow, ...obj }
-    newProductRow.amount = newProductRow.quantity * newProductRow.price;
-    order.products[index] = newProductRow;
-    for (let i of products) {
-      totalAmount = totalAmount + i.amount;
-    }
-    order.totalAmount = totalAmount;
-    this.setState({
-      order
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'orders/updateOrderProduct',
+      payload: { index, obj }
     });
-    updateOrder(this.state.order);
+    dispatch({
+      type: 'orders/updateTotalAmount'
+    })
   }
 
   updatePaymentAmount = (value) => {
-    const { updateOrder } = this.props;
-    const { order } = this.state;
-    order.paymentAmount = value;
-    this.setState({
-      order: order
-    });
-    updateOrder(order);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'orders/updatePaymentAmount',
+      payload: value
+    })
   }
 
   render() {
-    const { pageType,order,productList } = this.props.orders;
-    console.log('orders',this.props.orders);
-    const disabled = pageType == 'details' ? true:false;
+    const { pageType, order, productList } = this.props.orders;
+    const disabled = pageType == 'details' ? true : false;
     const columns = [
       {
         title: '序号',
@@ -76,9 +60,9 @@ class OrderGrid extends React.Component {
         render: (text, record, index) => (
           disabled ||
           <div style={{ textAlign: 'center' }}>
-            <a onClick={()=>this.onAddRow(index)}><Icon type="plus" /></a>
+            <a onClick={() => this.onAddRow(index)}><Icon type="plus" /></a>
             <Spliter />
-            <a onClick={()=>this.onDeleteRow(index)}><Icon type="minus" /></a>
+            <a onClick={() => this.onDeleteRow(index)}><Icon type="minus" /></a>
           </div>
         )
       }, {
@@ -90,12 +74,12 @@ class OrderGrid extends React.Component {
           <ListEditCell
             productList={productList}
             record={record}
-            defaultProduct={record}
+            selectProductId={record.productId}
             disabled={disabled}
             onSelectProduct={(product) => {
               this.updateOrderProduct(index, {
                 productId: product['_id'],
-                productId: product['productName'],
+                productName: product['productName'],
                 productUnit: product['productUnit']
               })
             }}
@@ -154,7 +138,6 @@ class OrderGrid extends React.Component {
         )
       }
     ];
-    console.log(this.props.orders.order.products);
     return (
       <div>
         <Table
@@ -187,8 +170,8 @@ class OrderGrid extends React.Component {
 
 }
 
-function mapStateToProps(state){
-  return { orders:state.orders}
+function mapStateToProps(state) {
+  return { orders: state.orders }
 }
 
 export default connect(mapStateToProps)(OrderGrid);

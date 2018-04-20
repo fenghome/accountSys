@@ -40,7 +40,7 @@ export default {
     customers: [],
     productList: [],
     order: { ...defaultOrder },
-    msg:''
+    msg: ''
   },
 
   subscriptions: {
@@ -66,61 +66,60 @@ export default {
 
     *getOrders({ payload }, { call, put }) {
       //访问service获得orders
-      const res = yield call(request,`/api/order`,{
-        method:'GET'
+      const res = yield call(request, `/api/order`, {
+        method: 'GET'
       })
-      if(res.data && res.data.success){
+      if (res.data && res.data.success) {
         yield put({
           type: 'getOrdersSuccess',
           payload: res.data.orders
-        }); 
+        });
       }
     },
 
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
-      const res = yield call(request,`/api/products`,{
-        method:'GET'
+      const res = yield call(request, `/api/products`, {
+        method: 'GET'
       });
-      console.log(res);
-      if(res.data && res.data.success){
+      if (res.data && res.data.success) {
         yield put({
           type: 'getProductListSuccess',
           payload: res.data.products
         });
-      }else{
+      } else {
         yield put({
-          type:'setMessage',
-          payload:'获取产品列表错误'
+          type: 'setMessage',
+          payload: '获取产品列表错误'
         })
       }
     },
 
     *getCustomers({ payload }, { call, put }) {
-      const res = yield call(request,`/api/customers`,{
-        method:'GET'
+      const res = yield call(request, `/api/customers`, {
+        method: 'GET'
       });
-      if(res.data && res.data.success){
+      if (res.data && res.data.success) {
         yield put({
           type: 'getCustomersSuccess',
           payload: res.data.customers
         })
-      }else{
+      } else {
         yield put({
-          type:'setMessage',
-          payload:'获取客户列表失败'
+          type: 'setMessage',
+          payload: '获取客户列表失败'
         })
       }
     },
 
     *getOrderNumber({ payload }, { call, put }) {
-      const res = yield call(request,`/api/order/getordernumber`,{
-        method:'GET'
+      const res = yield call(request, `/api/order/getordernumber`, {
+        method: 'GET'
       });
-      if(res.data && res.data.success){
+      if (res.data && res.data.success) {
         yield put({
-          type:'getOrderNumberSuccess',
-          payload:res.data.orderNumber
+          type: 'getOrderNumberSuccess',
+          payload: res.data.orderNumber
         })
       }
     },
@@ -142,7 +141,7 @@ export default {
 
   reducers: {
     initState(state, action) {
-      return { ...state, pageType: 'show', breadcrumbItems: [...defaultBreadcrumbItems ] }
+      return { ...state, pageType: 'show', breadcrumbItems: [...defaultBreadcrumbItems] }
     },
 
     changePageType(state, { payload: pageType }) {
@@ -155,7 +154,6 @@ export default {
     },
 
     getProductListSuccess(state, { payload: productList }) {
-      console.log('aaaa',productList);
       return { ...state, productList }
     },
 
@@ -163,7 +161,7 @@ export default {
       return { ...state, customers }
     },
 
-    getOrderNumberSuccess(state, {payload:orderNumber}) {
+    getOrderNumberSuccess(state, { payload: orderNumber }) {
       const order = { ...state.order, orderNumber };
       return { ...state, order };
     },
@@ -179,34 +177,63 @@ export default {
       return { ...state, breadcrumbItems: newItems }
     },
 
-    addOrederProduct(state,{ payload:index}){
+    addOrederProduct(state, { payload: index }) {
       const product = { ...defaultProduct };
-      const products = [ ...state.order.products];
-      products.splice(index+1,0,product);
-      const newProducts = products.map((item,i)=>{
-        return { ...item,key:i}
+      const products = [...state.order.products];
+      products.splice(index + 1, 0, product);
+      const newProducts = products.map((item, i) => {
+        return { ...item, key: i }
       })
-      const order = { ...state.order,products:newProducts};
-      return { ...state,order}
+      const order = { ...state.order, products: newProducts };
+      return { ...state, order }
     },
 
-    deleteOrderProduct(state,{payload:index}){
-      const products = [ ...state.order.products ];
-      if(products.length > 1){
-        products.splice(index,1);
-        const order = { ...state.order,products};
-        return { ...state,order };
+    deleteOrderProduct(state, { payload: index }) {
+      const products = [...state.order.products];
+      if (products.length > 1) {
+        products.splice(index, 1);
+        const order = { ...state.order, products };
+        return { ...state, order };
       }
+    },
+
+    updateOrderProduct(state, { payload: { index, obj } }) {
+      const products = [...state.order.products];
+      products[index] = { ...state.order.products[index], ...obj };
+      products[index].amount = products[index].quantity * products[index].price;
+      const order = { ...state.order, products };
+      return { ...state, order };
+    },
+
+    updateTotalAmount(state, action) {
+      let totalAmount = 0;
+      state.order.products.forEach((item, index) => {
+        totalAmount += item.amount;
+      });
+      const order = { ...state.order, totalAmount };
+      return { ...state, order };
+    },
+
+    updatePaymentAmount(state, { payload: paymentAmount }) {
+      const order = { ...state.order, paymentAmount };
+      return { ...state, order };
+    },
+
+    updateOrderCustomer(state, { payload: { customerId, customerName } }) {
+      const order = { ...state.order, customerId, customerName };
+      return { ...state, order };
+    },
+
+    updateOrderMem(state, { payload: mem }) {
+      const order = { ...state.order, mem }
+      return { ...state, order }
     },
 
     updateOrder(state, { payload: order }) {
       return { ...state, order }
     },
 
-    changeOrderMem(state, { payload: mem }) {
-      const newOrder = { ...state.order, mem }
-      return { ...state, order: newOrder }
-    }
+
   },
 
 }
