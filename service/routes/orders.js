@@ -18,6 +18,23 @@ router.route('/')
       })
     })
   })
+  .post(function(req,res,next){
+    const userId = req.session.userInfo.userId;
+    let order = req.body;
+    order.userId = userId;
+    Order.create(order,function(err,docs){
+      if(err){
+        return res.send({
+          success:false,
+          err:err
+        })
+      }
+      res.send({
+        success:true,
+        order:docs
+      })
+    });
+  })
 
 router.route('/getordernumber')
   .get(function(req,res,next){

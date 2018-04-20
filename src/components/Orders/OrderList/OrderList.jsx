@@ -4,11 +4,69 @@ import { Table, Divider, Popconfirm } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({ dispatch, orders:{orders} }) {
-  
-  function onDelete(value) { 
+function OrderList({ dispatch, orders: { orders } }) {
+
+  function onDelete(value) {
     console.log(value);
   }
+
+  function onAdd() {
+    dispatch({
+      type: 'orders/getOrderNumber'
+    });
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['新增订单', '/orders/addorder']
+      }
+    });
+    dispatch({
+      type: 'orders/changePageType',
+      payload: 'add'
+    });
+    dispatch({
+      type: 'orders/setDefaultOrder'
+    });
+  }
+
+  function onDetails(order) {
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['浏览订单', '/orders/detailsorder']
+      }
+    });
+    dispatch({
+      type: 'orders/changePageType',
+      payload: 'details'
+    });
+    dispatch({
+      type: 'orders/setOrder',
+      payload: order
+    });
+  }
+
+  function onModify(order) {
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['编辑订单', '/orders/modifyorder']
+      }
+    });
+    dispatch({
+      type: 'orders/changePageType',
+      payload: 'modify'
+    });
+    dispatch({
+      type: 'orders/setOrder',
+      payload: order
+    });
+  }
+
+  function onDelete(){
+
+  }
+
 
   const columns = [{
     title: '序号',
@@ -16,7 +74,7 @@ function OrderList({ dispatch, orders:{orders} }) {
     key: 'serialNumber',
     render: (text, record, index) => <sapn>{index + 1}</sapn>,
   },
-  { 
+  {
     title: '下单日期',
     dataIndex: 'createInstance',
     key: 'createInstance',
@@ -54,17 +112,18 @@ function OrderList({ dispatch, orders:{orders} }) {
     key: 'operation',
     render: (text, record) => (
       <div>
-        <a onClick={() => { onModify(record['_id']) }}>编辑</a>
+        <a onClick={() => { onModify(record) }}>编辑</a>
         <Divider type="vertical" />
         <Popconfirm title="确定要删除记录？" onConfirm={() => { onDelete(record['_id']) }} okText="确定" cancelText="取消">
           <a>删除</a>
         </Popconfirm>
         <Divider type="vertical" />
-        <a onClick={() => { onDetails(record['_id']) }}>详情</a>
+        <a onClick={() => { onDetails(record) }}>详情</a>
       </div>
     )
   }
   ];
+
 
 
   const rowSelection = {

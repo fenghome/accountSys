@@ -14,39 +14,19 @@ function AddOrder({ dispatch, orders, form }) {
   const { customers, productList, order } = orders;
   const { orderNumber, customerId, products } = order;
   const { getFieldDecorator, validateFields } = form;
+  console.log('adfdfsdfsdfd',customerId);
 
   function selectProduct(productId) {
 
   }
 
-  function updateOrder(order) {
-    dispatch({
-      type: 'orders/updateOrder',
-      payload: order
-    })
-  }
-
-  function changeOrderMem(mem) {
-    dispatch({
-      type: 'orders/changeOrderMem',
-      payload: mem
-    })
-  }
-
   function saveOrder() {
     validateFields((errors, values) => {
-      console.log('errors',errors);
-      console.log('values',values);
       if (!errors) {
         const { customerId, mem } = values;
-        console.log('customerId',customerId);
-        // const { customerName = '' } = customers.find((item) => {
-        //   return item._id == customerId
-        // });
-        const aaaaa= customers.find((item) => {
+        const { customerName = '' } = customers.find((item) => {
           return item._id == customerId
         });
-        console.log('aaaa',aaaaa);
         dispatch({
           type: 'orders/updateOrderCustomer',
           payload: { customerId, customerName }
@@ -55,15 +35,21 @@ function AddOrder({ dispatch, orders, form }) {
           type: 'orders/updateOrderMem',
           payload: mem
         });
+
         //判断products是否有空数据
         let validateProducts = true;
         for(let item of products){
-          if(item.productId || item.quantity || item.price){
+          if(!item.productId || !item.quantity || !item.price){
             validateProducts = false;
+            message.info('出货单条目信息不全')
             break;
           }
         }
-        if(validateProducts){console.log('aaaaaaa');};
+        if(validateProducts){
+          dispatch({
+            type:'orders/saveOrder'
+          })
+        };
       }
     })
   }
@@ -78,12 +64,11 @@ function AddOrder({ dispatch, orders, form }) {
 
     <div>
       <OrderTitle title="门窗出货单" number={orderNumber} />
-
       <Form>
         <FormItem label="客户名称：" labelCol={{ span: 2 }} wrapperCol={{ span: 6 }}>
           {
             getFieldDecorator('customerId', {
-              initalValue: customerId,
+              initialValue: customerId,
               rules: [{
                 required: true,
                 message: '客户不能为空'
@@ -108,14 +93,11 @@ function AddOrder({ dispatch, orders, form }) {
               <TextArea
                 rows={4}
                 placeholder="在此处填写备注..."
-
               />
             )
           }
         </FormItem>
       </Form>
-
-
       <div className={buttonGroup}>
         <Button type="primary" className={btnOk} onClick={saveOrder}>确定</Button>
         <Button className={btnCanel} onClick={clickCanel}>取消</Button>

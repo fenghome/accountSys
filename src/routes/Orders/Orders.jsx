@@ -16,62 +16,7 @@ class Orders extends Component {
     console.log(values);
   }
 
-  onAdd = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'orders/getOrderNumber'
-    });
-    dispatch({
-      type: 'orders/addBreadcrumbItem',
-      payload: {
-        item: ['新增订单', '/orders/addorder']
-      }
-    });
-    dispatch({
-      type: 'orders/changePageType',
-      payload: 'add'
-    });
-  }
 
-  onDetails = (orderId) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'orders/getOrderById',
-      payload: orderId
-    });
-    dispatch({
-      type: 'orders/addBreadcrumbItem',
-      payload: {
-        item: ['浏览订单', '/orders/detailsorder']
-      }
-    });
-    dispatch({
-      type: 'orders/changePageType',
-      payload: 'details'
-    });
-  }
-
-  onModify = (orderId) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'orders/getOrderById',
-      payload: orderId
-    });
-    dispatch({
-      type: 'orders/addBreadcrumbItem',
-      payload: {
-        item: ['编辑订单', '/orders/modifyorder']
-      }
-    });
-    dispatch({
-      type: 'orders/changePageType',
-      payload: 'modify'
-    });
-  }
- 
-  onDelete = () => {
-
-  }
 
   render() {
     const { pageType, breadcrumbItems, customers, orders, order, productList } = this.props.orders;
@@ -86,12 +31,7 @@ class Orders extends Component {
                 <OrderSearchBar customers={customers} onSearch={this.onSearch} />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
-              <OrderList
-                orders={orders}
-                onModify={this.onModify}
-                onDelete={this.onDelete}
-                onDetails={this.onDetails}
-              />
+              <OrderList />
             </div>
           )
         }
@@ -105,11 +45,7 @@ class Orders extends Component {
         {
           pageType == 'modify' && (
             <div className={orderContainer}>
-              <ModifyOrder
-                number={orderNumber}
-                customers={customers}
-                productList={productList}
-              />
+              <AddOrder />
             </div>
           )
         }

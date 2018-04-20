@@ -124,19 +124,25 @@ export default {
       }
     },
 
-    *getOrderById({ payload: orderId }, { call, put, select }) {
-      //远程获得order
-      //在这里我模拟获得的order
-      const orders = yield select(state => state.orders.orders);
-      yield put({
-        type: 'getOrderByIdSuccess',
-        payload: {
-          // pageType: 'modify',
-          order: orders[orderId - 1]
-        }
-      });
+    *saveOrder({ payload }, { call, put, select }) {
+      const { order } = yield select(state => state.orders);
 
+      const res = yield call(request, `/api/order`, {
+        method: 'POSt',
+        body: JSON.stringify(order)
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'setDefaultState'
+        });
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '新增订单失败'
+        })
+      }
     }
+
   },
 
   reducers: {
@@ -151,6 +157,14 @@ export default {
     getOrdersSuccess(state, { payload: orders }) {
       return { ...state, orders }
 
+    },
+
+    setDefaultOrder(state, action) {
+      return { ...state, order: { ...defaultOrder } }
+    },
+
+    setOrder(state, { payload: order }) {
+      return { ...state, order }
     },
 
     getProductListSuccess(state, { payload: productList }) {
