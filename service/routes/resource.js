@@ -32,13 +32,14 @@ router.route('/').get(function (req, res, next) {
           Object.keys(productGroup).forEach(function (key) {
             let computerObj = { _id: key, outAmount: 0, salePrice: 0, averagePrice: 0 }
             productGroup[key].forEach(function (product) {
-              computerObj.outAmount += product.quantity;
+              computerObj.outAmount += parseInt(product.quantity);
               computerObj.salePrice += product.amount;
             });
             computerObj.averagePrice = computerObj.salePrice / computerObj.outAmount;
+            orderComputerProducts.push(computerObj);
           })
           res.send({
-            products: productGroup
+            orderComputerProducts: orderComputerProducts
           })
         }
       })
