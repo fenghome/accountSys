@@ -89,7 +89,7 @@ export default {
     },
 
     *getSuppliers({ payload }, { call, put }) {  // eslint-disable-line
-      const res = yield call(request, `/api/suppliers`, {
+      const res = yield call(request, `/api/suppliers/all`, {
         method: 'GET'
       });
       if (res.data && res.data.success) {
@@ -101,7 +101,7 @@ export default {
     },
 
     *getproductList({ payload }, { call, put }) {
-      const res = yield call(request, `/api/products`, {
+      const res = yield call(request, `/api/products/all`, {
         method: 'GET'
       });
       if (res.data && res.data.success) {

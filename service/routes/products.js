@@ -4,6 +4,24 @@ let path = require('path');
 let fs = require('fs');
 let Products = require('../models/products');
 
+router.route('/all')
+  .get(function (req, res, next) {
+    const userId = req.session.userInfo._id;
+    Products.find({ userId: userId }, function (err, docs) {
+      if (!err) {
+        res.send({
+          success: true,
+          products: docs
+        })
+      } else {
+        res.send({
+          success: false,
+          err: err
+        })
+      }
+    });
+  });
+
 router.route('/')
   .get(function (req, res, next) {
     const userId = req.session.userInfo['_id'];
@@ -29,7 +47,7 @@ router.route('/')
               products: docs,
               total: count
             });
-            console.log('products',docs)
+            console.log('products', docs)
           } else {
             res.send({
               success: false,
@@ -59,35 +77,35 @@ router.route('/')
   })
 
 router.route('/:productId')
-  .put(function(req,res,next){
+  .put(function (req, res, next) {
     const productId = req.params.productId;
     const product = req.body;
-    Products.findByIdAndUpdate({_id:productId},product,function(err,docs){
-      if(!err){
+    Products.findByIdAndUpdate({ _id: productId }, product, function (err, docs) {
+      if (!err) {
         res.send({
-          success:true,
-          product:docs
+          success: true,
+          product: docs
         })
-      }else{
+      } else {
         res.send({
-          success:false,
-          err:err
+          success: false,
+          err: err
         })
       }
     })
   })
-  .delete(function(req,res,next){
+  .delete(function (req, res, next) {
     const productId = req.params.productId;
-    Products.remove({_id:productId},function(err,docs){
-      if(!err){
+    Products.remove({ _id: productId }, function (err, docs) {
+      if (!err) {
         res.send({
-          success:true,
-          product:docs
+          success: true,
+          product: docs
         })
-      }else{
+      } else {
         res.send({
-          success:false,
-          err:err
+          success: false,
+          err: err
         })
       }
     })

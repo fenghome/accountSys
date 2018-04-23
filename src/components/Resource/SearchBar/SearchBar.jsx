@@ -1,36 +1,33 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Form, Input, Select, Button } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-function SearchBar({
-  label,
-  list,
-  onSearch,
-  form: {
-    getFieldDecorator,
-    validateFields
-  }
- }) {
+function SearchBar({ dispatch, resource, form }) {
+  const { products } = resource;
+  const { getFieldDecorator, validateFields } = form;
 
-  function onClick(){
-    validateFields((errors,values)=>{
-      if(!errors){
-        onSearch(values);
-
+  function onSearch() {
+    validateFields((errors, values) => {
+      if (!errors) {
+        dispatch({
+          type: 'resource/query',
+          payload: values
+        })
       }
     })
   }
 
   return (
     <Form layout="inline">
-      <FormItem label={label}>
+      <FormItem label="商品名称">
         {
           getFieldDecorator('productId')(
-            <Select style={{width:150}}>
+            <Select style={{ width: 150 }}>
               {
-                list.map((item, index) => (
-                  <Option key={index} value={item.productId}>{item.productName}</Option>
+                products.map((item, index) => (
+                  <Option key={item._id} value={item._id}>{item.productName}</Option>
                 ))
               }
             </Select>
@@ -38,10 +35,14 @@ function SearchBar({
         }
       </FormItem>
       <FormItem>
-        <Button type="primary" onClick={onClick}>搜索</Button>
+        <Button type="primary" onClick={onSearch}>搜索</Button>
       </FormItem>
     </Form>
   )
 }
 
-export default Form.create()(SearchBar);
+function mapStateToProps(state) {
+  return { resource: state.resource }
+}
+
+export default connect(mapStateToProps)(Form.create()(SearchBar));

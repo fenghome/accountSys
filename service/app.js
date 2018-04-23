@@ -17,6 +17,7 @@ var products = require('./routes/products');
 var suppliers = require('./routes/suppliers');
 var storage = require('./routes/storage');
 var order = require('./routes/orders');
+var resource = require('./routes/resource');
 
 mongoose.connect('mongodb://localhost:27017/accountSys');
 
@@ -56,6 +57,7 @@ app.use('/products', products);
 app.use('/suppliers',suppliers);
 app.use('/storage',storage);
 app.use('/order',order);
+app.use('/resource',resource);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

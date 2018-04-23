@@ -1,4 +1,5 @@
-
+import request from '../utils/request';
+import qs from 'qs';
 export default {
 
   namespace: 'resource',
@@ -18,10 +19,7 @@ export default {
       history.listen(location => {
         if (location.pathname == '/resource') {
           dispatch({
-            type: 'queryProducts'
-          });
-          dispatch({
-            type: 'query'
+            type: 'getProducts'
           });
         }
       });
@@ -29,45 +27,31 @@ export default {
   },
 
   effects: {
-    *queryProducts({ payload }, { call, put, select }) {
-      const isLogin = yield select(({ systemUser }) => systemUser.isLogin);
-      const data = {
-        success: 'ok',
-        products: [
-          {
-            productId: 0,
-            productName: '锤子'
-          }
-        ]
-      };
-      yield put({
-        type: 'queryProductsSuccess',
-        payload: data.products
+    *getProducts({ payload }, { call, put, select }) {
+      const res = yield call(request, `/api/products/all`, {
+        method: 'GET'
       });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'queryProductsSuccess',
+          payload: res.data.products
+        });
+      }
     },
 
     *query({ payload }, { select, call, put }) {
       let productId = payload && payload.productId != '00000' ? payload.productId : '';
-      const data = {
-        success: 'ok',
-        products: [
-          {
-            productId:0,
-            productName:'被子'
-          },
-          {
-            productId:1,
-            productName:'枕头'
-          }
-        ]
-      };
-      if (data && data.success) {
-        yield put({
-          type: 'querySuccess',
-          stocks: [...data.products],
-          funds: [...data.products]
-        });
-      }
+      const params = qs.stringify({productId})
+      const res = yield call(request,`/api/resource?${params}`,{
+        method:'GET'
+      });
+      // if (data && data.success) {
+      //   yield put({
+      //     type: 'querySuccess',
+      //     stocks: [...data.products],
+      //     funds: [...data.products]
+      //   });
+      // }
     }
   },
 

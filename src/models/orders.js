@@ -1,5 +1,5 @@
 import request from '../utils/request';
-
+import qs from 'qs';
 const defaultProduct = {
   key: '0',
   productId: '',
@@ -40,6 +40,8 @@ export default {
     customers: [],
     productList: [],
     order: { ...defaultOrder },
+    total: 1,
+    currentPage: 1,
     msg: ''
   },
 
@@ -64,9 +66,12 @@ export default {
       yield put({ type: 'getCustomers' });
     },
 
-    *getOrders({ payload }, { call, put }) {
+    *getOrders({ payload: values }, { call, put, select }) {
+      const { currentPage } = yield select(state => state.orders);
+      const data = values ? { ...values, currentPage } : { currentPage };
+      const params = qs.stringify(data);
       //访问service获得orders
-      const res = yield call(request, `/api/order`, {
+      const res = yield call(request, `/api/order?${params}`, {
         method: 'GET'
       })
       if (res.data && res.data.success) {
@@ -74,12 +79,16 @@ export default {
           type: 'getOrdersSuccess',
           payload: res.data.orders
         });
+        yield put({
+          type: 'setTotal',
+          payload: res.data.total
+        })
       }
     },
 
     *getProductList({ payload }, { call, put }) {
       //访问service获得products
-      const res = yield call(request, `/api/products`, {
+      const res = yield call(request, `/api/products/all`, {
         method: 'GET'
       });
       if (res.data && res.data.success) {
@@ -96,7 +105,7 @@ export default {
     },
 
     *getCustomers({ payload }, { call, put }) {
-      const res = yield call(request, `/api/customers`, {
+      const res = yield call(request, `/api/customers/all`, {
         method: 'GET'
       });
       if (res.data && res.data.success) {
@@ -126,7 +135,6 @@ export default {
 
     *saveOrder({ payload }, { call, put, select }) {
       const { order } = yield select(state => state.orders);
-
       const res = yield call(request, `/api/order`, {
         method: 'POSt',
         body: JSON.stringify(order)
@@ -141,8 +149,42 @@ export default {
           payload: '新增订单失败'
         })
       }
-    }
+    },
 
+    *updateOrder({ payload }, { call, put, select }) {
+      const { order } = yield select(state => state.orders);
+      const orderId = order._id;
+      const res = yield call(request, `/api/order/${orderId}`, {
+        method: 'PUT',
+        body: JSON.stringify(order)
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'setDefaultState'
+        })
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '更新订单失败'
+        })
+      }
+    },
+
+    *deleteOrderById({ payload: orderId }, { call, put }) {
+      const res = yield call(request, `/api/order/${orderId}`, {
+        method: 'DELETE'
+      });
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'setDefaultState'
+        })
+      } else {
+        yield put({
+          type: 'setMessage',
+          payload: '删除订单失败'
+        })
+      }
+    }
   },
 
   reducers: {
@@ -238,16 +280,18 @@ export default {
       return { ...state, order };
     },
 
+    setCurrentPage(state, { payload: currentPage }) {
+      return { ...state, currentPage }
+    },
+
+    setTotal(state, { payload: total }) {
+      return { ...state, total }
+    },
+
     updateOrderMem(state, { payload: mem }) {
       const order = { ...state.order, mem }
       return { ...state, order }
     },
-
-    updateOrder(state, { payload: order }) {
-      return { ...state, order }
-    },
-
-
   },
 
 }

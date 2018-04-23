@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Form, Button, Select, Input,message } from 'antd';
+import { Form, Button, Select, Input, message } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -11,10 +11,10 @@ import RemarksForm from '../OrderCommon/RemarksForm/RemarksForm';
 import { buttonGroup, btnOk, btnCanel } from './index.css';
 
 function AddOrder({ dispatch, orders, form }) {
-  const { customers, productList, order } = orders;
+  const { pageType, customers, productList, order } = orders;
   const { orderNumber, customerId, products } = order;
   const { getFieldDecorator, validateFields } = form;
-  console.log('adfdfsdfsdfd',customerId);
+  const disabled = pageType == 'details' ? true : false;
 
   function selectProduct(productId) {
 
@@ -38,17 +38,23 @@ function AddOrder({ dispatch, orders, form }) {
 
         //判断products是否有空数据
         let validateProducts = true;
-        for(let item of products){
-          if(!item.productId || !item.quantity || !item.price){
+        for (let item of products) {
+          if (!item.productId || !item.quantity || !item.price) {
             validateProducts = false;
             message.info('出货单条目信息不全')
             break;
           }
         }
-        if(validateProducts){
-          dispatch({
-            type:'orders/saveOrder'
-          })
+        if (validateProducts) {
+          if (pageType == 'add') {
+            dispatch({
+              type: 'orders/saveOrder'
+            })
+          } else if (pageType == 'modify') {
+            dispatch({
+              type: 'orders/updateOrder'
+            })
+          }
         };
       }
     })
@@ -74,7 +80,7 @@ function AddOrder({ dispatch, orders, form }) {
                 message: '客户不能为空'
               }]
             })(
-              <Select>
+              <Select disabled={disabled}>
                 {
                   customers.map((item, index) => (
                     <Option key={index} value={item._id}>{item.customerName}</Option>
@@ -92,6 +98,7 @@ function AddOrder({ dispatch, orders, form }) {
             getFieldDecorator('mem')(
               <TextArea
                 rows={4}
+                disabled={disabled}
                 placeholder="在此处填写备注..."
               />
             )
@@ -99,7 +106,7 @@ function AddOrder({ dispatch, orders, form }) {
         </FormItem>
       </Form>
       <div className={buttonGroup}>
-        <Button type="primary" className={btnOk} onClick={saveOrder}>确定</Button>
+        {disabled || <Button type="primary" className={btnOk} onClick={saveOrder}>确定</Button>}
         <Button className={btnCanel} onClick={clickCanel}>取消</Button>
       </div>
     </div>

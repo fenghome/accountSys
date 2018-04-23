@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'dva';
 import { Form, DatePicker, Select, Input, Button } from 'antd';
 import { formItemLayout } from '../../../constents/constents';
 
@@ -7,22 +8,26 @@ const { RangePicker } = DatePicker;
 const Option = Select.Option;
 
 
-function OrderSearchBar({
-  customers,
-  onSearch,
-  form: {
-    getFieldDecorator,
-    validateFields
-  }
-}) {
+function OrderSearchBar({ dispatch, orders, form }) {
+  const { customers } = orders;
+  const { getFieldDecorator, validateFields } = form;
 
-  function onClick() {
+  function onSearch() {
     validateFields((errors, values) => {
       if (!errors) {
-        onSearch(values);
-      }
+        if (values.timeRange) {
+          values.timeRange = values.timeRange.map((item) => {
+            return item.toLocaleString();
+          })
+        }
+      };
+      dispatch({
+        type: 'orders/getOrders',
+        payload: values
+      })
     })
   }
+
 
   return (
     <Form layout="inline">
@@ -54,10 +59,14 @@ function OrderSearchBar({
         }
       </FormItem>
       <FormItem>
-        <Button type="primary" onClick={onClick}>搜索</Button>
+        <Button type="primary" onClick={onSearch}>搜索</Button>
       </FormItem>
     </Form>
   )
 }
 
-export default Form.create()(OrderSearchBar);
+function mapStateToProps(state) {
+  return { orders: state.orders }
+}
+
+export default connect(mapStateToProps)(Form.create()(OrderSearchBar));

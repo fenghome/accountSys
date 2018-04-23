@@ -88,5 +88,23 @@ router.route('/:supplierId')
         })
       }
     })
+  });
+
+router.route('/all').get(function (req, res, next) {
+  const userId = req.session.userInfo._id;
+  Supplier.find({ userId: userId }, function (err, docs) {
+    if (!err) {
+      res.send({
+        success: true,
+        suppliers: docs
+      })
+    } else {
+      res.send({
+        success: false,
+        err: err
+      })
+    }
   })
+});
+
 module.exports = router;

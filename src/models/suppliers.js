@@ -149,8 +149,6 @@ export default {
     setMessage(state, { payload: msg }) {
       return { ...state, msg }
     },
-
-
   },
 
 };

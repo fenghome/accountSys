@@ -1,33 +1,10 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Divider, Popconfirm } from 'antd';
+import { Table, Divider, Popconfirm,Pagination } from 'antd';
 import * as moment from 'moment';
 import numberFormat from '../../../utils/numberFormat';
 
-function OrderList({ dispatch, orders: { orders } }) {
-
-  function onDelete(value) {
-    console.log(value);
-  }
-
-  function onAdd() {
-    dispatch({
-      type: 'orders/getOrderNumber'
-    });
-    dispatch({
-      type: 'orders/addBreadcrumbItem',
-      payload: {
-        item: ['新增订单', '/orders/addorder']
-      }
-    });
-    dispatch({
-      type: 'orders/changePageType',
-      payload: 'add'
-    });
-    dispatch({
-      type: 'orders/setDefaultOrder'
-    });
-  }
+function OrderList({ dispatch, orders: { orders, total, currentPage } }) {
 
   function onDetails(order) {
     dispatch({
@@ -63,10 +40,22 @@ function OrderList({ dispatch, orders: { orders } }) {
     });
   }
 
-  function onDelete(){
-
+  function onDelete(orderId) {
+    dispatch({
+      type: 'orders/deleteOrderById',
+      payload: orderId
+    });
   }
 
+  function onPageChange(page){
+    dispatch({
+      type:'orders/setCurrentPage',
+      payload:page
+    });
+    dispatch({
+      type:'orders/getOrders'
+    })
+  }
 
   const columns = [{
     title: '序号',
@@ -143,11 +132,22 @@ function OrderList({ dispatch, orders: { orders } }) {
 
 
   return (
-    <Table
-      columns={columns}
-      dataSource={orders}
-      rowKey={record => record.orderNumber}
-      rowSelection={rowSelection} />
+    <div>
+      <Table
+        columns={columns}
+        dataSource={orders}
+        rowKey={record => record.orderNumber}
+        rowSelection={rowSelection}
+        pagination={false} />
+      <Pagination
+        className="ant-table-pagination"
+        total={total}
+        pageSize={2}
+        current={parseInt(currentPage)}
+        onChange={onPageChange}
+      />
+    </div>
+
   )
 }
 

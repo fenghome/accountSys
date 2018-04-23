@@ -3,13 +3,12 @@ import { connect } from 'dva';
 import { Button } from 'antd';
 import BreadcrumbList from '../../components/BreadcrumbList/BreadcrumbList';
 import SearchBar from '../../components/Resource/SearchBar/SearchBar';
-import { reaourceBar } from './index.css';
+import Title from '../../components/Title/Title';
+import StockGrid from '../../components/Resource/StockGrid/StockGrid';
+import FundsGrid from '../../components/Resource/FundsGrid/FundsGird';
+import { reaourceBar,gridClass } from './index.css';
 
 class Resource extends Component {
-
-  onSearch = (values) => {
-    console.log('values is',values);
-  }
 
   render() {
     const { breadcrumbItems, products } = this.props.resource;
@@ -17,9 +16,18 @@ class Resource extends Component {
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
         <div className={reaourceBar}>
-          <SearchBar label="商品名称:" list={products} onSearch={this.onSearch}/>
+          <SearchBar />
           <Button type="primary">结算</Button>
         </div>
+        <div className={gridClass}>
+          <Title title="仓库明细表" />
+          <StockGrid />
+        </div>
+        <div className={gridClass}>
+          <Title title="资金明细表" />
+          <FundsGrid />
+        </div>
+
       </div>
     )
   }

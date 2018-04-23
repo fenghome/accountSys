@@ -11,16 +11,28 @@ import { orderContainer, orderBar } from './index.css';
 
 class Orders extends Component {
 
-  onSearch = (values) => {
-    //取得values对orders的数据进行筛选
-    console.log(values);
+  onAdd = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'orders/getOrderNumber'
+    });
+    dispatch({
+      type: 'orders/addBreadcrumbItem',
+      payload: {
+        item: ['新增订单', '/orders/addorder']
+      }
+    });
+    dispatch({
+      type: 'orders/changePageType',
+      payload: 'add'
+    });
+    dispatch({
+      type: 'orders/setDefaultOrder'
+    });
   }
 
-
-
   render() {
-    const { pageType, breadcrumbItems, customers, orders, order, productList } = this.props.orders;
-    const { orderNumber } = order;
+    const { pageType, breadcrumbItems } = this.props.orders;
     return (
       <div>
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
@@ -28,7 +40,7 @@ class Orders extends Component {
           pageType == 'show' && (
             <div className={orderContainer}>
               <div className={orderBar}>
-                <OrderSearchBar customers={customers} onSearch={this.onSearch} />
+                <OrderSearchBar />
                 <Button type="primary" onClick={this.onAdd}>添加</Button>
               </div>
               <OrderList />
@@ -52,18 +64,10 @@ class Orders extends Component {
         {
           pageType == 'details' && (
             <div className={orderContainer}>
-              <ModifyOrder
-                number={orderNumber}
-                customers={customers}
-                productList={productList}
-                disabled={true}
-              />
+             <AddOrder />
             </div>
           )
         }
-
-
-
       </div>
     )
   }

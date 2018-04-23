@@ -4,14 +4,14 @@ let Customer = require('../models/customers');
 
 router.route('/all')
   .get(function (req, res, next) {
-    Customer
-      .find({}, function (err, docs) {
-        if (err) {
-          return res.send({ success: false, error: err });
-        } else {
-          return res.send({ success: true, customers: docs })
-        }
-      })
+    const userId = req.session.userInfo._id;
+    Customer.find({ userId: userId }, function (err, docs) {
+      if (err) {
+        return res.send({ success: false, error: err });
+      } else {
+        return res.send({ success: true, customers: docs })
+      }
+    })
   })
 
 router.route('/')
