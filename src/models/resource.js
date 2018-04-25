@@ -19,7 +19,7 @@ export default {
       history.listen(location => {
         if (location.pathname == '/resource') {
           dispatch({
-            type: 'getProducts'
+            type: 'setDefaultState'
           });
         }
       });
@@ -27,6 +27,15 @@ export default {
   },
 
   effects: {
+    *setDefaultState(action,{put}){
+      yield put({
+        type:'getProducts'
+      });
+      yield put({
+        type:'query'
+      });
+    },
+
     *getProducts({ payload }, { call, put, select }) {
       const res = yield call(request, `/api/products/all`, {
         method: 'GET'
@@ -45,13 +54,13 @@ export default {
       const res = yield call(request,`/api/resource?${params}`,{
         method:'GET'
       });
-      // if (data && data.success) {
-      //   yield put({
-      //     type: 'querySuccess',
-      //     stocks: [...data.products],
-      //     funds: [...data.products]
-      //   });
-      // }
+      if (res.data && res.data.success) {
+        yield put({
+          type: 'querySuccess',
+          stocks: res.data.resProducts,
+          funds: []
+        });
+      }
     }
   },
 

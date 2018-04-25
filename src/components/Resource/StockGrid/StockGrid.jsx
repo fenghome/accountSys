@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Table } from 'antd';
-import { numberFormat } from '../../../utils/numberFormat';
+import  numberFormat  from '../../../utils/numberFormat';
 
-function StockGrid({ dispatch, resource}) {
-  const dataSource=[];
+function StockGrid({ dispatch, resource }) {
+  const { stocks } = resource;
   const columns = [
     {
       title: '序号',
@@ -46,13 +46,13 @@ function StockGrid({ dispatch, resource}) {
       title: '库存量',
       dataIndex: 'amount',
       key: 'amount',
-      render: text => <span style={{ color: "red" }}>text</span>
+      render: text => <span style={{ color: "red" }}>{text}</span>
     },
     {
       title: '销售均价',
       dataIndex: 'averagePrice',
       key: 'averagePrice',
-      render: (text, record, index) => <span>{record._id == 'total' ? numberFormat(text) : null}</span>
+      render: (text, record, index) => <span>{ numberFormat(text) }</span>
     },
     {
       title: '库存资金',
@@ -64,7 +64,7 @@ function StockGrid({ dispatch, resource}) {
 
   return (
     <div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={stocks} columns={columns} rowKey={record => record.productCode}/>
     </div>
   )
 }
