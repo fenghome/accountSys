@@ -29,11 +29,69 @@ router.route('/').get(function (req, res, next) {
           productUnit: { $last: "$products.productUnit" },
           stockPrice: { $sum: "$products.amount" }
         })
-        .exec(function (err, docs) {
-          res.send({
-            docs
-          })
+        .exec(function (err, storageProducts) {
+          Orders.aggregate()
+            .match(query)
+            .unwind('products')
+            .group({
+              _id: "$products.productId",
+              productName: { $last: "$products.productName" },
+              productUnit: { $last: "$products.productUnit" },
+              outAmount: { $sum: "$products.quantity" },
+              salePrice: { $sum: "$products.amount" },
+            })
+            .project({
+              productName: 1,
+              productUnit: 1,
+              outAmount: 1,
+              salePrice: 1,
+              averagePrice: { $divide: ['$salePrice', '$outAmount'] }
+            })
+            .exec(function (err, orderProducts) {
+              Product.find(query, function (err, products) {
+                let productCodeMap = {};
+                let productTypeMap = {};
+                products.forEach(function (product) {
+                  productCodeMap[product._id] = product.productCode;
+                  productTypeMap[product._id] = product.productType;
+                })
+
+                let allProducts = [...orderProducts, ...storageProducts];
+                let productGroup = {}
+                allProducts.forEach(function (product) {
+                  let id = product._id;
+                  productGroup[id] = {
+                    ...productGroup[id],
+                    ...product,
+                    productCode: productCodeMap[id],
+                    productType: productTypeMap[id],
+                  };
+                  productGroup[id].inAmount = productGroup[id].inAmount || 0;
+                  productGroup[id].outAmount = productGroup[id].outAmount || 0;
+                  productGroup[id].amount = productGroup[id].inAmount - productGroup[id].outAmount;
+                  productGroup[id].stockFunds = productGroup[id].amount * productGroup[id].averagePrice;
+                });
+                const resProducts = Object.keys(productGroup)
+                  .map(function (key) {
+                    return productGroup[key];
+                  })
+                  .sort(function (a, b) {
+                    return parseInt(a.productCode.substr(-3)) - parseInt(b.productCode.substr(-3));
+                  })
+                  .filter(function (item) {
+                    return req.query.productId ? item._id == req.query.productId : item;
+                  })
+                res.send({
+                  success: true,
+                  resProducts
+                })
+              })
+
+
+            })
         })
+
+
 
 
       // let ordersProudcts = [];

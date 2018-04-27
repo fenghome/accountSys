@@ -76,7 +76,6 @@ export default {
     },
 
     *deleteProduct({ payload:productId }, { call, put, select }) {
-      console.log('product',productId);
       const res = yield call(deleteProductById,productId);
       if(res.data && res.data.success){
         yield put({type:'initProducts'});

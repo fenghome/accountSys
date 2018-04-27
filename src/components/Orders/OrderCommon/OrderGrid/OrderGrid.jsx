@@ -15,6 +15,9 @@ class OrderGrid extends React.Component {
       type: 'orders/addOrederProduct',
       payload: index
     });
+    dispatch({
+      type: 'orders/updateTotalAmount'
+    });
   }
 
   onDeleteRow = (index) => {
@@ -22,7 +25,10 @@ class OrderGrid extends React.Component {
     dispatch({
       type: 'orders/deleteOrderProduct',
       payload: index
-    })
+    });
+    dispatch({
+      type: 'orders/updateTotalAmount'
+    });
   }
 
   updateOrderProduct = (index, obj) => {
@@ -33,7 +39,7 @@ class OrderGrid extends React.Component {
     });
     dispatch({
       type: 'orders/updateTotalAmount'
-    })
+    });
   }
 
   updatePaymentAmount = (value) => {
