@@ -95,7 +95,7 @@ class OrderGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(number) => this.updateOrderProduct(index, { quantity: number })}
+            onInputValue={(number) => this.updateOrderProduct(index, { quantity: parseInt(number) })}
           />
         )
       }, {
@@ -117,7 +117,7 @@ class OrderGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(price) => this.updateOrderProduct(index, { price })}
+            onInputValue={(price) => this.updateOrderProduct(index, { price:parseInt(price) })}
           />
         )
       }, {

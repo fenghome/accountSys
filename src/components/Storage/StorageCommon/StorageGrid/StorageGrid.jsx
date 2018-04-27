@@ -104,7 +104,7 @@ class StorageGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(number) => this.updateStorageSingleProduct(index, { quantity: number })}
+            onInputValue={(number) => this.updateStorageSingleProduct(index, { quantity: parseInt(number) })}
           />
         )
       }, {
@@ -126,7 +126,7 @@ class StorageGrid extends React.Component {
             type="number"
             defaultValue={text}
             disabled={disabled}
-            onInputValue={(price) => this.updateStorageSingleProduct(index, { price })}
+            onInputValue={(price) => this.updateStorageSingleProduct(index, { price:parseInt(price) })}
           />
         )
       }, {
