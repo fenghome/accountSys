@@ -10,6 +10,13 @@ import { reaourceBar,gridClass } from './index.css';
 
 class Resource extends Component {
 
+  onSettlement = ()=>{
+    const { dispatch } = this.props;
+    dispatch({
+      type:'resource/onSettlement'
+    })
+  }
+
   render() {
     const { breadcrumbItems, products } = this.props.resource;
     return (
@@ -17,7 +24,7 @@ class Resource extends Component {
         <BreadcrumbList breadcrumbItems={breadcrumbItems} />
         <div className={reaourceBar}>
           <SearchBar />
-          <Button type="primary">结算</Button>
+          <Button type="primary" onClick={this.onSettlement}>结算</Button>
         </div>
         <div className={gridClass}>
           <Title title="仓库明细表" />

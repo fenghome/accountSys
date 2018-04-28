@@ -61,6 +61,13 @@ export default {
           funds: []
         });
       }
+    },
+
+    *onSettlement(action,{call,put}){
+      const res = yield call(request,`/api/resource`,{
+        method:'POST',
+        body:{}
+      })
     }
   },
 

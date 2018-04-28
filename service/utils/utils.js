@@ -7,6 +7,14 @@ function getAuthToken(len) {
   return token;
 }
 
+function getOrderNumber(maxNumber) {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  return 'O' + year + month + ('0000' + maxNumber).substr(-4);
+}
+
 module.exports = {
-  getAuthToken:getAuthToken
+  getAuthToken: getAuthToken,
+  getOrderNumber:getOrderNumber
 }
